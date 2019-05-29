@@ -59,12 +59,7 @@ Module GenI2C
                     Console.WriteLine("Please Input your device name correctly (e.g. " & Chr(34) & "TPD0" & Chr(34) & ")!")
                 End If
             End While
-
             Device = "Device (" & TPAD & ")"
-            Matched = False
-            line = 0
-            i = 0
-            total = 0
             Countline()
         Catch ex As Exception
             Console.WriteLine()
@@ -79,19 +74,18 @@ Module GenI2C
         Try
             FileOpen(1, DSDTFile, OpenMode.Input, OpenAccess.Read)
             While Not EOF(1)
-
                 DSDTLine = LineInput(1)
                 line = line + 1
                 If InStr(DSDTLine, "If (USTP)") > 0 Then
-                    Console.WriteLine("Found for USTP in DSDT at line " & line)
+                    Console.WriteLine("Found for USTP in DSDT at line " & line + 1)
                     ExUSTP = True
                 End If
                 If InStr(DSDTLine, "SSCN") > 0 Then
-                    Console.WriteLine("Found for SSCN in DSDT at line " & line)
+                    Console.WriteLine("Found for SSCN in DSDT at line " & line + 1)
                     ExSSCN = True
                 End If
                 If InStr(DSDTLine, "FMCN") > 0 Then
-                    Console.WriteLine("Found for FMCN in DSDT at line " & line)
+                    Console.WriteLine("Found for FMCN in DSDT at line " & line + 1)
                     ExFMCN = True
                 End If
                 If InStr(DSDTLine, Device) > 0 Then
@@ -272,39 +266,46 @@ Module GenI2C
                 End If
             ElseIf ExAPIC = True And (APICPIN > 47 Or APICPIN = 0) Then
                 If InterruptEnabled = True Then
-                    Console.WriteLine("Failed to extract APIC Pin, filled by system start up. Please input your APIC Pin in Hex")
-                    Console.Write("APIC Pin: ")
-                    APICPIN = Convert.ToInt32(Console.ReadLine(), 16)
-                    While APICPIN < 24 Or APICPIN > 119
-                        Console.WriteLine()
-                        Console.WriteLine("APIC Pin out of range!")
-                        Console.WriteLine("Select your choice:")
-                        Console.WriteLine("1) Input again")
-                        Console.WriteLine("2) Exit")
-                        Console.WriteLine()
-                        Console.Write("Your Choice: ")
-                        If Console.ReadLine() = 1 Then
+                    If ExGPIO = False Then
+                        If APICPIN = 0 Then
+                            Console.WriteLine("Failed to extract APIC Pin, filled by system start up. Please input your APIC Pin in Hex")
                             Console.Write("APIC Pin: ")
                             APICPIN = Convert.ToInt32(Console.ReadLine(), 16)
-                        ElseIf Console.ReadLine() = 2 Then
-                            Console.WriteLine("Exiting")
-                            Console.ReadLine()
-                            End
-                        Else
-                            Console.WriteLine("Unknown Behaviour, Exiting")
-                            Console.ReadLine()
-                            End
-                        End If
-                    End While
-                    If APICPIN >= 24 And APICPIN <= 47 Then
-                        Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, using instead")
-                        If Hetero = True Then APICNAME = "SBFX"
-                        PatchCRS2APIC()
-                    Else
-                        If ExGPIO = False Then
-                            GPIONAME = "SBFZ"
+                            While APICPIN < 24 Or APICPIN > 119
+                                Console.WriteLine()
+                                Console.WriteLine("APIC Pin out of range!")
+                                Console.WriteLine("Select your choice:")
+                                Console.WriteLine("1) Input again")
+                                Console.WriteLine("2) Exit")
+                                Console.WriteLine()
+                                Console.Write("Your Choice: ")
+                                If Console.ReadLine() = 1 Then
+                                    Console.Write("APIC Pin: ")
+                                    APICPIN = Convert.ToInt32(Console.ReadLine(), 16)
+                                ElseIf Console.ReadLine() = 2 Then
+                                    Console.WriteLine("Exiting")
+                                    Console.ReadLine()
+                                    End
+                                Else
+                                    Console.WriteLine("Unknown Behaviour, Exiting")
+                                    Console.ReadLine()
+                                    End
+                                End If
+                            End While
+                            If APICPIN >= 24 And APICPIN <= 47 Then
+                                Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, using instead")
+                                If Hetero = True Then APICNAME = "SBFX"
+                                PatchCRS2APIC()
+                            Else
+                                GPIONAME = "SBFZ"
+                                APIC2GPIO()
+                                PatchCRS2GPIO()
+                            End If
+                        ElseIf APICPIN > 47 Then
                             APIC2GPIO()
+                            PatchCRS2GPIO()
                         End If
+                    ElseIf ExGPIO = True Then
                         PatchCRS2GPIO()
                     End If
                 ElseIf PollingEnabled = True Then
@@ -590,9 +591,6 @@ Module GenI2C
                 ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
                 ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
             End If
-
-            'Console.WriteLine(ManualSPED.Length)
-
         End If
     End Sub
 End Module' to do: Generate SSDT(DefinitionBlock)
