@@ -520,68 +520,70 @@ Module GenI2C
 
     Sub GenSSDT()
         Try
-            Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-" & TPAD & ".dsl"
-            Dim fs As FileStream = File.Create(path)
+            If ExAPIC = False And ExGPIO = False And APICPIN < 47 Then
+                'No Patch Required, No SSDT Generated
+            Else
+                Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-" & TPAD & ".dsl"
+                Dim fs As FileStream = File.Create(path)
 
-            Dim Rename(4) As String
-            Rename(0) = "/*"
-            Rename(1) = " * Find _CRS:          5F 43 52 53"
-            Rename(2) = " * Replace XCRS:       58 43 52 53"
-            Rename(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
-            Rename(4) = " */"
-            Dim Filehead(8) As String
-            Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
-            Filehead(1) = "{"
-            Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
-            Console.WriteLine(CheckSLAVLocation)
-            Console.WriteLine(CRSMethodLine)
-            If CheckSLAVLocation < CRSMethodLine Then
-                Filehead(3) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & SLAVName & ", UnknownObj)"
-                If (PollingEnabled = True And ExAPIC = True) Or Hetero = True Or APICPIN < 47 Then
-                    Filehead(4) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & APICNAME & ", UnknownObj)"
+                Dim Rename(4) As String
+                Rename(0) = "/*"
+                Rename(1) = " * Find _CRS:          5F 43 52 53"
+                Rename(2) = " * Replace XCRS:       58 43 52 53"
+                Rename(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
+                Rename(4) = " */"
+                Dim Filehead(8) As String
+                Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
+                Filehead(1) = "{"
+                Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
+                If CheckSLAVLocation < CRSMethodLine Then
+                    Filehead(3) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & SLAVName & ", UnknownObj)"
+                    If (PollingEnabled = True And ExAPIC = True And Hetero = False) Or APICPIN < 47 And APICPIN <> 0 And ExAPIC = True And Hetero = False Then
+                        Filehead(4) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & APICNAME & ", UnknownObj)"
+                    End If
+                    If InterruptEnabled = True And ExGPIO = True And (APICPIN > 47 Or APICPIN = 0 Or ExAPIC = False) Then
+                        Filehead(5) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & GPIONAME & ", UnknownObj)"
+                    End If
                 End If
-                If InterruptEnabled = True And ExGPIO = True And APICPIN > 47 Then
-                    Filehead(5) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & GPIONAME & ", UnknownObj)"
+                If ExUSTP = True Then
+                    Filehead(6) = "    Name (USTP, One)"
                 End If
-            End If
-            If ExUSTP = True Then
-                Filehead(6) = "    Name (USTP, One)"
-            End If
-            Filehead(7) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
-            Filehead(8) = "    {"
+                Filehead(7) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
+                Filehead(8) = "    {"
 
-            For i = 0 To 4
-                fs.Write(New UTF8Encoding(True).GetBytes(Rename(i) & vbLf), 0, (Rename(i) & vbLf).Length)
-            Next
+                For i = 0 To 4
+                    fs.Write(New UTF8Encoding(True).GetBytes(Rename(i) & vbLf), 0, (Rename(i) & vbLf).Length)
+                Next
 
-            For i = 0 To 8
-                fs.Write(New UTF8Encoding(True).GetBytes(Filehead(i) & vbLf), 0, (Filehead(i) & vbLf).Length)
-            Next
-            If ExUSTP = False Then
-                GenSPED()
-                For GenIndex = 0 To ManualSPED.Length - 1
-                    fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
+                For i = 0 To 8
+                    fs.Write(New UTF8Encoding(True).GetBytes(Filehead(i) & vbLf), 0, (Filehead(i) & vbLf).Length)
                 Next
-            End If
-            If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
-                GenGPIO()
-                For GenIndex = 0 To ManualGPIO.Length - 1
-                    fs.Write(New UTF8Encoding(True).GetBytes(ManualGPIO(GenIndex) & vbLf), 0, (ManualGPIO(GenIndex) & vbLf).Length)
+                If ExUSTP = False Then
+                    GenSPED()
+                    For GenIndex = 0 To ManualSPED.Length - 1
+                        fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
+                    Next
+                End If
+                If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
+                    GenGPIO()
+                    For GenIndex = 0 To ManualGPIO.Length - 1
+                        fs.Write(New UTF8Encoding(True).GetBytes(ManualGPIO(GenIndex) & vbLf), 0, (ManualGPIO(GenIndex) & vbLf).Length)
+                    Next
+                End If
+                If (PollingEnabled = True And ExAPIC = False) Or Hetero = True Then
+                    GenAPIC()
+                    For GenIndex = 0 To ManualAPIC.Length - 1
+                        fs.Write(New UTF8Encoding(True).GetBytes(ManualAPIC(GenIndex) & vbLf), 0, (ManualAPIC(GenIndex) & vbLf).Length)
+                    Next
+                End If
+                For GenIndex = 0 To CRSInfo.Length - 2
+                    fs.Write(New UTF8Encoding(True).GetBytes(CRSInfo(GenIndex) & vbLf), 0, (CRSInfo(GenIndex) & vbLf).Length)
                 Next
-            End If
-            If (PollingEnabled = True And ExAPIC = False) Or Hetero = True Then
-                GenAPIC()
-                For GenIndex = 0 To ManualAPIC.Length - 1
-                    fs.Write(New UTF8Encoding(True).GetBytes(ManualAPIC(GenIndex) & vbLf), 0, (ManualAPIC(GenIndex) & vbLf).Length)
-                Next
-            End If
-            For GenIndex = 0 To CRSInfo.Length - 2
-                fs.Write(New UTF8Encoding(True).GetBytes(CRSInfo(GenIndex) & vbLf), 0, (CRSInfo(GenIndex) & vbLf).Length)
-            Next
-            fs.Write(New UTF8Encoding(True).GetBytes("    }" & vbLf), 0, ("    }" & vbLf).Length)
-            fs.Write(New UTF8Encoding(True).GetBytes("}" & vbLf), 0, ("}" & vbLf).Length)
+                fs.Write(New UTF8Encoding(True).GetBytes("    }" & vbLf), 0, ("    }" & vbLf).Length)
+                fs.Write(New UTF8Encoding(True).GetBytes("}" & vbLf), 0, ("}" & vbLf).Length)
 
-            fs.Close()
+                fs.Close()
+            End If
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine("Unknown error, please open an issue and provide your files")
