@@ -38,9 +38,8 @@ An Automatic tool to get your DSDT ready for VoodooI2C
 
 ## To do
 
-- [ ] Generate SSDT
 - [ ] Add a friendly interface (Perhaps)
-- [ ] **Translate the project into Swift 5**
+- [x] **Translate the project into Swift 5** In progress!
 
 ## Credits
 
