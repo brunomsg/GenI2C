@@ -352,7 +352,7 @@ Module GenI2C
                 Console.ReadLine()
                 End
             End If
-            GenSSDT()
+            GenDSDT()
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine("Unknown error, please open an issue and provide your files")
@@ -440,7 +440,7 @@ Module GenI2C
             ManualGPIO(0) = Spacing & "Name (SBFZ, ResourceTemplate ()"
             ManualGPIO(1) = Spacing & "{"
             ManualGPIO(2) = Spacing & "    GpioInt (Level, ActiveLow, Exclusive, PullUp, 0x0000,"
-            ManualGPIO(3) = Spacing & "       " & Chr(34) & "\\ _SB.PCI0.GPI0," & Chr(34) & "0x00, ResourceConsumer, ,"
+            ManualGPIO(3) = Spacing & "       " & Chr(34) & "\\ _SB.PCI0.GPI0" & Chr(34) & ", 0x00, ResourceConsumer, ,"
             ManualGPIO(4) = Spacing & "        )"
             ManualGPIO(5) = Spacing & "        {   // Pin list"
             If GPIOPIN2 = 0 Then
@@ -477,7 +477,7 @@ Module GenI2C
         End Try
     End Sub
 
-    Sub GenSSDT()
+    Sub GenDSDT()
         Try
             Dim GenIndex As Integer
             'Dim path As String = Path & TPAD & ".dsl"
