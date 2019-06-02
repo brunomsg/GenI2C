@@ -2,10 +2,10 @@
 Imports System.Text
 Module GenI2C
 
-    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD As String
+    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice As String
     Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(0) As String
     Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero As Boolean
-    Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckConbLine, CheckSLAVLocation As Integer
+    Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckConbLine, CheckSLAVLocation As Integer
 
     Sub Main()
         Try
@@ -104,7 +104,8 @@ Module GenI2C
                     Loop Until spaceclose = spaceopen
                     If total = 0 Then
                         total = total + (line - startline)
-                    Else total = total + (line - startline) + 1
+                    Else
+                        total = total + (line - startline) + 1
                     End If
                     If spaceclose = spaceopen Then
                         Matched = True
@@ -459,14 +460,61 @@ Module GenI2C
 
     Sub APIC2GPIO()
         Try
-            If APICPIN >= 24 And APICPIN <= 47 Then '< 0x2F Group A & E
+            If APICPIN >= 24 And APICPIN <= 47 Then           '< 0x2F Group A & E (& I)
                 Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, Generation Cancelled")
-            ElseIf APICPIN > 47 And APICPIN <= 79 Then '0x30 Group B & F
-                GPIOPIN = APICPIN - 24
-                GPIOPIN2 = APICPIN + 72
-            ElseIf APICPIN > 79 And APICPIN <= 119 Then '0x50
-                GPIOPIN = APICPIN - 24
             End If
+            While (CPUChoice < 1 Or CPUChoice > 3) And APICPIN > 47
+                Console.WriteLine()
+                Console.WriteLine("Select your CPU architecture:")
+                Console.WriteLine()
+                Console.WriteLine("1) Sunrise Point:  SKL, KBL, KBL-R")
+                Console.WriteLine("2) Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)")
+                Console.WriteLine("3) Cannon Lake (Point)-LP: CFL-R (8565U, 8265U)")
+                Console.WriteLine()
+                Console.Write("Your Choice: ")
+                CPUChoice = Console.ReadLine()
+                Select Case CPUChoice
+                    Case 1
+                        If APICPIN > 47 And APICPIN <= 79 Then      '0x30 Group B & F
+                            GPIOPIN = APICPIN - 24   'B
+                            GPIOPIN2 = APICPIN + 72  'F
+                        ElseIf APICPIN > 79 And APICPIN <= 119 Then '0x50 Group C & D & G
+                            GPIOPIN = APICPIN - 24
+                        End If
+
+                    Case 2
+                        If APICPIN > 47 And APICPIN <= 71 Then      '0x30 Group B & F & J
+                            GPIOPIN = APICPIN - 16   'B
+                            GPIOPIN2 = APICPIN + 240 'F
+                            If APICPIN > 47 And APICPIN <= 59 Then GPIOPIN3 = APICPIN + 304  'J
+                        ElseIf APICPIN > 71 And APICPIN <= 95 Then  '0x48 Group C & H & K
+                            GPIOPIN = APICPIN - 8    'C
+                            GPIOPIN3 = APICPIN + 152 'H
+                            GPIOPIN2 = APICPIN + 120 'K
+                        ElseIf APICPIN > 95 And APICPIN <= 119 Then '0x60 Group D & G
+                            GPIOPIN = APICPIN        'D
+                            If APICPIN > 108 And APICPIN <= 115 Then GPIOPIN2 = APICPIN + 20 'G
+                        End If
+
+                    Case 3
+                        If APICPIN > 47 And APICPIN <= 71 Then      '0x30 Group B & F
+                            GPIOPIN = APICPIN - 16   'B
+                            GPIOPIN2 = APICPIN + 80  'F
+                        ElseIf APICPIN > 71 And APICPIN <= 95 Then  '0x48 Group C & H
+                            GPIOPIN2 = APICPIN + 184 'C
+                            GPIOPIN = APICPIN + 88   'H
+                        ElseIf APICPIN > 95 And APICPIN <= 119 Then '0x60 Group D & G
+                            GPIOPIN = APICPIN        'D
+                            If APICPIN > 108 And APICPIN <= 115 Then GPIOPIN2 = APICPIN - 44 'G
+                        End If
+
+                    Case Else
+                        Console.WriteLine("Unknown Behaviour, Exiting")
+                        Console.ReadLine()
+                        End
+                End Select
+            End While
+
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine("Unknown error, please open an issue and provide your files")
@@ -486,8 +534,10 @@ Module GenI2C
             ManualGPIO(5) = Spacing & "        {   // Pin list"
             If GPIOPIN2 = 0 Then
                 ManualGPIO(6) = Spacing & "            0x" & Hex(GPIOPIN)
-            Else
+            ElseIf GPIOPIN2 <> 0 And GPIOPIN3 = 0 Then
                 ManualGPIO(6) = Spacing & "            0x" & Hex(GPIOPIN) & " // Try this if the first one doesn't work: 0x" & Hex(GPIOPIN2)
+            Else
+                ManualGPIO(6) = Spacing & "            0x" & Hex(GPIOPIN) & " // Try the following ones if the first one doesn't work: 0x" & Hex(GPIOPIN2) & " 0x" & Hex(GPIOPIN3)
             End If
             ManualGPIO(7) = Spacing & "        }"
             ManualGPIO(8) = Spacing & "})"
