@@ -233,6 +233,18 @@ Module GenI2C
                 End
             End If
 
+            While CPUChoice < 1 Or CPUChoice > 3
+                Console.WriteLine()
+                Console.WriteLine("Select your CPU architecture:")
+                Console.WriteLine()
+                Console.WriteLine("1) Sunrise Point:  SKL, KBL, KBL-R")
+                Console.WriteLine("2) Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)")
+                Console.WriteLine("3) Cannon Lake (Point)-LP: CFL-R (8565U, 8265U)")
+                Console.WriteLine()
+                Console.Write("Your Choice: ")
+                CPUChoice = Console.ReadLine()
+            End While
+
             Console.WriteLine()
             Console.WriteLine("Choose the mode you'd like to patch")
             Console.WriteLine()
@@ -254,7 +266,7 @@ Module GenI2C
                 End
             End If
 
-            If ExAPIC = True And 24 <= APICPIN <= 47 Then '<= 0x2F Group A & E
+            If ExAPIC = True And 24 <= APICPIN And APICPIN <= 47 Then '<= 0x2F Group A & E
                 Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, using instead")
                 If Hetero = True Then APICNAME = "SBFX"
                 PatchCRS2APIC()
@@ -454,17 +466,7 @@ Module GenI2C
         Try
             If APICPIN >= 24 And APICPIN <= 47 Then           '< 0x2F Group A & E (& I)
                 Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, Generation Cancelled")
-            End If
-            While (CPUChoice < 1 Or CPUChoice > 3) And APICPIN > 47
-                Console.WriteLine()
-                Console.WriteLine("Select your CPU architecture:")
-                Console.WriteLine()
-                Console.WriteLine("1) Sunrise Point:  SKL, KBL, KBL-R")
-                Console.WriteLine("2) Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)")
-                Console.WriteLine("3) Cannon Lake (Point)-LP: CFL-R (8565U, 8265U)")
-                Console.WriteLine()
-                Console.Write("Your Choice: ")
-                CPUChoice = Console.ReadLine()
+            Else
                 Select Case CPUChoice
                     Case 1
                         If APICPIN > 47 And APICPIN <= 79 Then      '0x30 Group B & F
@@ -505,7 +507,7 @@ Module GenI2C
                         Console.ReadLine()
                         End
                 End Select
-            End While
+            End If
 
         Catch ex As Exception
             Console.WriteLine()
@@ -618,7 +620,7 @@ Module GenI2C
                         fs.Write(New UTF8Encoding(True).GetBytes(ManualGPIO(GenIndex) & vbLf), 0, (ManualGPIO(GenIndex) & vbLf).Length)
                     Next
                 End If
-                If (PollingEnabled = True And ExAPIC = False) Or (Hetero = True And PollingEnabled = True) Then
+                If (PollingEnabled = True And ExAPIC = False) Or Hetero = True Then
                     GenAPIC()
                     For GenIndex = 0 To ManualAPIC.Length - 1
                         fs.Write(New UTF8Encoding(True).GetBytes(ManualAPIC(GenIndex) & vbLf), 0, (ManualAPIC(GenIndex) & vbLf).Length)
