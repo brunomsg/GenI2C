@@ -3,7 +3,7 @@ Imports System.Text
 Module GenI2C
 
     Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice As String
-    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(0) As String
+    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1) As String
     Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero As Boolean
     Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckConbLine, CheckSLAVLocation As Integer
 
@@ -66,7 +66,7 @@ Module GenI2C
             Countline()
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (main), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -107,9 +107,7 @@ Module GenI2C
                     Else
                         total = total + (line - startline) + 1
                     End If
-                    If spaceclose = spaceopen Then
-                        Matched = True
-                    End If
+                    Matched = True
                 End If
             End While
             FileClose()
@@ -125,7 +123,7 @@ Module GenI2C
             End If
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (CL), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -256,17 +254,7 @@ Module GenI2C
                 End
             End If
 
-            If ExAPIC = True And ExGPIO = False And APICPIN > 47 Then
-                If InterruptEnabled = True Then
-                    Console.WriteLine("No native GpioInt found, Generating instead")
-                    GPIONAME = "SBFZ"
-                    APIC2GPIO()
-                    PatchCRS2GPIO()
-                ElseIf PollingEnabled = True Then
-                    If Hetero = True Then APICNAME = "SBFX"
-                    PatchCRS2APIC()
-                End If
-            ElseIf ExAPIC = True And APICPIN <= 47 And APICPIN >= 24 Then '<= 0x2F Group A & E
+            If ExAPIC = True And 24 <= APICPIN <= 47 Then '<= 0x2F Group A & E
                 Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, using instead")
                 If Hetero = True Then APICNAME = "SBFX"
                 PatchCRS2APIC()
@@ -317,6 +305,8 @@ Module GenI2C
                                 PatchCRS2GPIO()
                             End If
                         ElseIf APICPIN > 47 Then
+                            Console.WriteLine("No native GpioInt found, Generating instead")
+                            GPIONAME = "SBFZ"
                             APIC2GPIO()
                             PatchCRS2GPIO()
                         End If
@@ -324,8 +314,11 @@ Module GenI2C
                         PatchCRS2GPIO()
                     End If
                 ElseIf PollingEnabled = True Then
+                    If Hetero = True Then
+                        APICNAME = "SBFX"
+                        APICPIN = 63
+                    End If
                     If APICPIN = 0 Then Console.WriteLine("APIC Pin size uncertain, could be either APIC or polling")
-                    If Hetero = True Then APICNAME = "SBFX"
                     PatchCRS2APIC()
                 End If
             ElseIf ExAPIC = False And ExGPIO = False And ExSLAV = True Then ' I don't think this situation exists
@@ -370,7 +363,7 @@ Module GenI2C
             GenSSDT()
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (AL), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -410,7 +403,7 @@ Module GenI2C
             If CRSPatched = False Then Console.WriteLine("Error! No _CRS Patch Applied!")
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (P2G), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -450,7 +443,7 @@ Module GenI2C
             If CRSPatched = False Then Console.WriteLine("Error! No _CRS Patch Applied!")
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (P2A), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -516,7 +509,7 @@ Module GenI2C
 
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (A2G), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -542,7 +535,7 @@ Module GenI2C
             ManualGPIO(8) = Spacing & "})"
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (GG), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -560,7 +553,7 @@ Module GenI2C
             ManualAPIC(6) = Spacing & "})"
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (GA), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -609,9 +602,15 @@ Module GenI2C
                 Next
                 If ExUSTP = False And CPUChoice = 1 Then
                     GenSPED()
-                    For GenIndex = 0 To ManualSPED.Length - 1
-                        fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
-                    Next
+                    If ExSSCN = False And ExFMCN = True Then
+                        fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(0) & vbLf), 0, (ManualSPED(0) & vbLf).Length)
+                    ElseIf ExFMCN = False And ExSSCN = True Then
+                        fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(1) & vbLf), 0, (ManualSPED(1) & vbLf).Length)
+                    Else
+                        For GenIndex = 0 To 1
+                            fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
+                        Next
+                    End If
                 End If
                 If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
                     GenGPIO()
@@ -619,7 +618,7 @@ Module GenI2C
                         fs.Write(New UTF8Encoding(True).GetBytes(ManualGPIO(GenIndex) & vbLf), 0, (ManualGPIO(GenIndex) & vbLf).Length)
                     Next
                 End If
-                If (PollingEnabled = True And ExAPIC = False) Or Hetero = True Then
+                If (PollingEnabled = True And ExAPIC = False) Or (Hetero = True And PollingEnabled = True) Then
                     GenAPIC()
                     For GenIndex = 0 To ManualAPIC.Length - 1
                         fs.Write(New UTF8Encoding(True).GetBytes(ManualAPIC(GenIndex) & vbLf), 0, (ManualAPIC(GenIndex) & vbLf).Length)
@@ -633,9 +632,15 @@ Module GenI2C
 
                 fs.Close()
             End If
+            Console.WriteLine()
+            Console.WriteLine("Enjoy!")
+            Console.WriteLine("Type in " & Chr(34) & "Exit" & Chr(34) & " to exit")
+            While True
+                If Console.ReadLine() = "Exit" Then End
+            End While
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (GS), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -649,7 +654,7 @@ Module GenI2C
             Next
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
+            Console.WriteLine("Unknown error (BC), please open an issue and provide your files")
             Console.WriteLine("Exiting")
             Console.ReadLine()
             End
@@ -657,41 +662,18 @@ Module GenI2C
     End Sub
 
     Sub GenSPED()
-        If ExUSTP = False And ExSSCN = False And ExFMCN = True Then
-            If Scope = 0 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-            ElseIf Scope = 1 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 528, 640, 30 })"
-            ElseIf Scope = 2 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-            ElseIf Scope = 3 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-            End If
-        ElseIf ExUSTP = False And ExSSCN = True And ExFMCN = False Then
-            If Scope = 0 Then
-                ManualSPED(0) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-            ElseIf Scope = 1 Then
-                ManualSPED(0) = Spacing & "Name (FMCN, Package () { 128, 160, 30 })"
-            ElseIf Scope = 2 Then
-                ManualSPED(0) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-            ElseIf Scope = 3 Then
-                ManualSPED(0) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-            End If
-        ElseIf ExUSTP = False And ExSSCN = False And ExFMCN = False Then
-            ReDim ManualSPED(1)
-            If Scope = 0 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-                ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-            ElseIf Scope = 1 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 528, 640, 30 })"
-                ManualSPED(1) = Spacing & "Name (FMCN, Package () { 128, 160, 30 })"
-            ElseIf Scope = 2 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-                ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-            ElseIf Scope = 3 Then
-                ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-                ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-            End If
+        If Scope = 0 Then
+            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
+            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
+        ElseIf Scope = 1 Then
+            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 528, 640, 30 })"
+            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 128, 160, 30 })"
+        ElseIf Scope = 2 Then
+            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
+            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
+        ElseIf Scope = 3 Then
+            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
+            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
         End If
     End Sub
 End Module
