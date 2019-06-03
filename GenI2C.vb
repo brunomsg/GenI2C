@@ -368,7 +368,6 @@ Module GenI2C
                 End
             End If
             GenSSDT()
-            GenDSDT()
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine("Unknown error, please open an issue and provide your files")
@@ -634,63 +633,6 @@ Module GenI2C
 
                 fs.Close()
             End If
-        Catch ex As Exception
-            Console.WriteLine()
-            Console.WriteLine("Unknown error, please open an issue and provide your files")
-            Console.WriteLine("Exiting")
-            Console.ReadLine()
-            End
-        End Try
-    End Sub
-
-    Sub GenDSDT()
-        Try
-            Console.WriteLine()
-            Console.WriteLine("Copy the Code from here and replace it into your DSDT")
-            Console.WriteLine()
-            Console.WriteLine("*****************************************************")
-            Console.WriteLine()
-            If ExUSTP = True Then
-                Console.WriteLine("    Name (USTP, One)")
-            End If
-            Console.WriteLine()
-            Console.WriteLine("    Scope(_SB.PCI0.I2C" & Scope & ")")
-            Console.WriteLine("    {")
-            If ExUSTP = False And CPUChoice = 1 Then
-                GenSPED()
-                For GenIndex = 0 To ManualSPED.Length - 1
-                    Console.WriteLine(ManualSPED(GenIndex))
-                Next
-                Console.WriteLine()
-            End If
-            Console.WriteLine(Code(0))
-            Console.WriteLine(Code(1))
-            If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
-                GenGPIO()
-                For GenIndex = 0 To ManualGPIO.Length - 1
-                    Console.WriteLine(ManualGPIO(GenIndex))
-                Next
-            End If
-            If (PollingEnabled = True And ExAPIC = False) Or Hetero = True Then
-                GenAPIC()
-                For GenIndex = 0 To ManualAPIC.Length - 1
-                    Console.WriteLine(ManualAPIC(GenIndex))
-                Next
-            End If
-            For i = 2 To total
-                Console.WriteLine(Code(i))
-            Next
-            Console.WriteLine("    }")
-            Console.WriteLine()
-            Console.WriteLine("*****************************************************")
-            Console.WriteLine()
-            Console.WriteLine("Copy the Code above and replace it into your DSDT")
-            Console.WriteLine()
-            Console.WriteLine("Enjoy!")
-            Console.WriteLine("Type in " & Chr(34) & "Exit" & Chr(34) & " to exit")
-            While True
-                If Console.ReadLine() = "Exit" Then End
-            End While
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine("Unknown error, please open an issue and provide your files")
