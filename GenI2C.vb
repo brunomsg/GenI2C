@@ -2,9 +2,9 @@
 Imports System.Text
 Module GenI2C
 
-    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice As String
+    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15) As String
     Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1) As String
-    Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero As Boolean
+    Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, GenGPIOSSDT As Boolean
     Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckConbLine, CheckSLAVLocation As Integer
 
     Sub Main()
@@ -250,21 +250,46 @@ Module GenI2C
             Console.WriteLine()
             Console.WriteLine("1) Interrupt (APIC or GPIO)")
             Console.WriteLine("2) Polling (Will be set back to APIC if supported)")
+            Console.WriteLine("3) Block an I2C Bus")
             Console.WriteLine()
             Console.Write("Selection: ")
             Dim Choice As Integer = Console.ReadLine()
-            If Choice = 1 Then
-                InterruptEnabled = True
-                Console.WriteLine()
-            ElseIf Choice = 2 Then
-                PollingEnabled = True
-                Console.WriteLine()
-            Else
-                Console.WriteLine()
-                Console.WriteLine("Undefined Behaviour, Exiting")
-                Console.ReadLine()
-                End
-            End If
+            Select Case Choice
+                Case 1
+                    InterruptEnabled = True
+                    Console.WriteLine()
+                Case 2
+                    PollingEnabled = True
+                    Console.WriteLine()
+                Case 3
+                    Console.WriteLine()
+                    Console.WriteLine("Which I2C Bus you'd like to block?")
+                    Console.WriteLine()
+                    Console.WriteLine("1) I2C0")
+                    Console.WriteLine("2) I2C1")
+                    Console.WriteLine("3) I2C2")
+                    Console.WriteLine("4) I2C3")
+                    Console.WriteLine()
+                    Console.Write("Selection: ")
+                    Choice = Console.ReadLine()
+                    Select Case Choice
+                        Case 1
+                            BlockBus = "I2C0"
+                        Case 2
+                            BlockBus = "I2C1"
+                        Case 3
+                            BlockBus = "I2C2"
+                        Case 4
+                            BlockBus = "I2C3"
+                    End Select
+                    GenBlockI2C()
+                    BlockI2C = True
+                Case Else
+                    Console.WriteLine()
+                    Console.WriteLine("Undefined Behaviour, Exiting")
+                    Console.ReadLine()
+                    End
+            End Select
 
             If ExAPIC = True And 24 <= APICPIN And APICPIN <= 47 Then '<= 0x2F Group A & E
                 Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, using instead")
@@ -398,20 +423,6 @@ Module GenI2C
                     Next
                 End If
             Next
-            For CRSLine = 0 To total
-                If InStr(Code(CRSLine), "Method (_CRS") > 0 Then ' Find _CRS
-                    For CRSReturnline = CRSLine To (total - 2) ' Change All Returns in _CRS to GpioInt Name
-                        If InStr(Code(CRSReturnline), "Return (ConcatenateResTemplate") > 0 Then
-                            Code(CRSReturnline) = Code(CRSReturnline).Substring(0, InStr(Code(CRSReturnline), ", SBF") - 1) & ", " & GPIONAME & "))"
-                            CRSPatched = True
-                        ElseIf InStr(Code(CRSReturnline), "Return (SBF") > 0 Then
-                            ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add GpioInt Name                       
-                            Code(CRSReturnline) = Code(CRSReturnline).Substring(0, InStr(Code(CRSReturnline), "(") - 1) & "(ConcatenateResTemplate (" & SLAVName & ", " & GPIONAME & ")) // Usually this return won't function, please check your Windows Patch"
-                            CRSPatched = True
-                        End If
-                    Next
-                End If
-            Next
             If CRSPatched = False Then Console.WriteLine("Error! No _CRS Patch Applied!")
         Catch ex As Exception
             Console.WriteLine()
@@ -433,20 +444,6 @@ Module GenI2C
                         ElseIf InStr(CRSInfo(CRSReturnline), "Return (SBF") > 0 Then
                             ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add APIC Name
                             CRSInfo(CRSReturnline) = CRSInfo(CRSReturnline).Substring(0, InStr(CRSInfo(CRSReturnline), "(") - 1) & "(ConcatenateResTemplate (" & SLAVName & ", " & APICNAME & ")) // Usually this return won't function, please check your Windows Patch"
-                            CRSPatched = True
-                        End If
-                    Next
-                End If
-            Next
-            For CRSLine = 0 To total
-                If InStr(Code(CRSLine), "Method (_CRS") > 0 Then ' Find _CRS
-                    For CRSReturnline = CRSLine To (total - 2) ' Change All Returns in _CRS to APIC Name
-                        If InStr(Code(CRSReturnline), "Return (ConcatenateResTemplate") > 0 Then
-                            Code(CRSReturnline) = Code(CRSReturnline).Substring(0, InStr(Code(CRSReturnline), ", SBF") - 1) & ", " & APICNAME & "))"
-                            CRSPatched = True
-                        ElseIf InStr(Code(CRSReturnline), "Return (SBF") > 0 Then
-                            ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add APIC Name
-                            Code(CRSReturnline) = Code(CRSReturnline).Substring(0, InStr(Code(CRSReturnline), "(") - 1) & "(ConcatenateResTemplate (" & SLAVName & ", " & APICNAME & ")) // Usually this return won't function, please check your Windows Patch"
                             CRSPatched = True
                         End If
                     Next
@@ -535,6 +532,32 @@ Module GenI2C
             End If
             ManualGPIO(7) = Spacing & "        }"
             ManualGPIO(8) = Spacing & "})"
+
+
+            GPI0SSDT(0) = "/* "
+            GPI0SSDT(1) = " * Find _STA:          5F 53 54 41"
+            GPI0SSDT(2) = " * Replace XSTA:       58 53 54 41"
+            GPI0SSDT(3) = " * Target Bridge GPI0: 47 50 49 30"
+            GPI0SSDT(4) = " */"
+            GPI0SSDT(5) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "GPI0" & Chr(34) & ", 0)"
+            GPI0SSDT(6) = "{"
+            GPI0SSDT(7) = "    External(_SB.PCI0.GPI0, DeviceObj)"
+            GPI0SSDT(8) = "    Scope (_SB.PCI0.GPI0)"
+            GPI0SSDT(9) = "    {"
+            GPI0SSDT(10) = "        Method (_STA, 0, NotSerialized)"
+            GPI0SSDT(11) = "        {"
+            GPI0SSDT(12) = "            Return (0x0F)"
+            GPI0SSDT(13) = "        }"
+            GPI0SSDT(14) = "    }"
+            GPI0SSDT(15) = "}"
+
+            Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-GPI0.dsl"
+            Dim fs As FileStream = File.Create(path)
+            For Genindex = 0 To 15
+                fs.Write(New UTF8Encoding(True).GetBytes(GPI0SSDT(Genindex) & vbLf), 0, (GPI0SSDT(Genindex) & vbLf).Length)
+            Next
+            fs.Close()
+
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine("Unknown error (GG), please open an issue and provide your files")
@@ -564,76 +587,108 @@ Module GenI2C
 
     Sub GenSSDT()
         Try
-            If ExAPIC = False And ExGPIO = False And APICPIN < 47 Then
-                'No Patch Required, No SSDT Generated
-            Else
-                Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-" & TPAD & ".dsl"
-                Dim fs As FileStream = File.Create(path)
-
-                Dim Rename(4) As String
-                Rename(0) = "/*"
-                Rename(1) = " * Find _CRS:          5F 43 52 53"
-                Rename(2) = " * Replace XCRS:       58 43 52 53"
-                Rename(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
-                Rename(4) = " */"
-                Dim Filehead(8) As String
-                Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
-                Filehead(1) = "{"
-                Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
-                If CheckSLAVLocation < CRSMethodLine Then
-                    Filehead(3) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & SLAVName & ", UnknownObj)"
-                    If (PollingEnabled = True And ExAPIC = True And Hetero = False) Or APICPIN < 47 And APICPIN <> 0 And ExAPIC = True And Hetero = False Then
-                        Filehead(4) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & APICNAME & ", UnknownObj)"
+            If InterruptEnabled = True Or PollingEnabled = True Then
+                If ExAPIC = False And ExGPIO = False And APICPIN < 47 Then
+                    'No Patch Required, No SSDT Generated
+                Else
+                    Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-" & TPAD & ".dsl"
+                    Dim fs As FileStream = File.Create(path)
+                    Dim Rename(4) As String
+                    Rename(0) = "/*"
+                    Rename(1) = " * Find _CRS:          5F 43 52 53"
+                    Rename(2) = " * Replace XCRS:       58 43 52 53"
+                    Rename(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
+                    Rename(4) = " */"
+                    Dim Filehead(8) As String
+                    Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
+                    Filehead(1) = "{"
+                    Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
+                    If CheckSLAVLocation < CRSMethodLine Then
+                        Filehead(3) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & SLAVName & ", UnknownObj)"
+                        If (PollingEnabled = True And ExAPIC = True And Hetero = False) Or APICPIN < 47 And APICPIN <> 0 And ExAPIC = True And Hetero = False Then
+                            Filehead(4) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & APICNAME & ", UnknownObj)"
+                        End If
+                        If InterruptEnabled = True And ExGPIO = True And (APICPIN > 47 Or APICPIN = 0 Or ExAPIC = False) Then
+                            Filehead(5) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & GPIONAME & ", UnknownObj)"
+                        End If
                     End If
-                    If InterruptEnabled = True And ExGPIO = True And (APICPIN > 47 Or APICPIN = 0 Or ExAPIC = False) Then
-                        Filehead(5) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & GPIONAME & ", UnknownObj)"
+                    If ExUSTP = True Then
+                        Filehead(6) = "    Name (USTP, One)"
                     End If
-                End If
-                If ExUSTP = True Then
-                    Filehead(6) = "    Name (USTP, One)"
-                End If
-                Filehead(7) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
-                Filehead(8) = "    {"
+                    Filehead(7) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
+                    Filehead(8) = "    {"
 
-                For i = 0 To 4
-                    fs.Write(New UTF8Encoding(True).GetBytes(Rename(i) & vbLf), 0, (Rename(i) & vbLf).Length)
-                Next
+                    For i = 0 To 4
+                        fs.Write(New UTF8Encoding(True).GetBytes(Rename(i) & vbLf), 0, (Rename(i) & vbLf).Length)
+                    Next
 
-                For i = 0 To 8
-                    fs.Write(New UTF8Encoding(True).GetBytes(Filehead(i) & vbLf), 0, (Filehead(i) & vbLf).Length)
-                Next
-                If ExUSTP = False And CPUChoice = 1 Then
-                    GenSPED()
-                    If ExSSCN = False And ExFMCN = True Then
-                        fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(0) & vbLf), 0, (ManualSPED(0) & vbLf).Length)
-                    ElseIf ExFMCN = False And ExSSCN = True Then
-                        fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(1) & vbLf), 0, (ManualSPED(1) & vbLf).Length)
-                    Else
-                        For GenIndex = 0 To 1
-                            fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
+                    For i = 0 To 8
+                        fs.Write(New UTF8Encoding(True).GetBytes(Filehead(i) & vbLf), 0, (Filehead(i) & vbLf).Length)
+                    Next
+                    If ExUSTP = False And CPUChoice = 1 Then
+                        GenSPED()
+                        If ExSSCN = False And ExFMCN = True Then
+                            fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(0) & vbLf), 0, (ManualSPED(0) & vbLf).Length)
+                        ElseIf ExFMCN = False And ExSSCN = True Then
+                            fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(1) & vbLf), 0, (ManualSPED(1) & vbLf).Length)
+                        Else
+                            For GenIndex = 0 To 1
+                                fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
+                            Next
+                        End If
+                    End If
+                    If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
+                        GenGPIO()
+                        For GenIndex = 0 To ManualGPIO.Length - 1
+                            fs.Write(New UTF8Encoding(True).GetBytes(ManualGPIO(GenIndex) & vbLf), 0, (ManualGPIO(GenIndex) & vbLf).Length)
                         Next
                     End If
-                End If
-                If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
-                    GenGPIO()
-                    For GenIndex = 0 To ManualGPIO.Length - 1
-                        fs.Write(New UTF8Encoding(True).GetBytes(ManualGPIO(GenIndex) & vbLf), 0, (ManualGPIO(GenIndex) & vbLf).Length)
+                    If (PollingEnabled = True And ExAPIC = False) Or Hetero = True Then
+                        GenAPIC()
+                        For GenIndex = 0 To ManualAPIC.Length - 1
+                            fs.Write(New UTF8Encoding(True).GetBytes(ManualAPIC(GenIndex) & vbLf), 0, (ManualAPIC(GenIndex) & vbLf).Length)
+                        Next
+                    End If
+                    For GenIndex = 0 To CRSInfo.Length - 2
+                        fs.Write(New UTF8Encoding(True).GetBytes(CRSInfo(GenIndex) & vbLf), 0, (CRSInfo(GenIndex) & vbLf).Length)
                     Next
-                End If
-                If (PollingEnabled = True And ExAPIC = False) Or Hetero = True Then
-                    GenAPIC()
-                    For GenIndex = 0 To ManualAPIC.Length - 1
-                        fs.Write(New UTF8Encoding(True).GetBytes(ManualAPIC(GenIndex) & vbLf), 0, (ManualAPIC(GenIndex) & vbLf).Length)
-                    Next
-                End If
-                For GenIndex = 0 To CRSInfo.Length - 2
-                    fs.Write(New UTF8Encoding(True).GetBytes(CRSInfo(GenIndex) & vbLf), 0, (CRSInfo(GenIndex) & vbLf).Length)
-                Next
-                fs.Write(New UTF8Encoding(True).GetBytes("    }" & vbLf), 0, ("    }" & vbLf).Length)
-                fs.Write(New UTF8Encoding(True).GetBytes("}" & vbLf), 0, ("}" & vbLf).Length)
+                    fs.Write(New UTF8Encoding(True).GetBytes("    }" & vbLf), 0, ("    }" & vbLf).Length)
+                    fs.Write(New UTF8Encoding(True).GetBytes("}" & vbLf), 0, ("}" & vbLf).Length)
 
+                    fs.Close()
+                End If
+            End If
+
+            If BlockI2C = True Then
+                Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-Block-" & BlockBus & ".dsl"
+                Dim fs As FileStream = File.Create(path)
+                For Genindex = 0 To 15
+                    fs.Write(New UTF8Encoding(True).GetBytes(BlockSSDT(Genindex) & vbLf), 0, (BlockSSDT(Genindex) & vbLf).Length)
+                Next
                 fs.Close()
             End If
+
+            Console.WriteLine()
+            Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
+            Console.WriteLine()
+            If InterruptEnabled = True Or PollingEnabled = True Then
+                Console.WriteLine("Find _CRS:          5F 43 52 53")
+                Console.WriteLine("Replace XCRS:       58 43 52 53")
+                Console.WriteLine("Target Bridge " & TPAD & ": " & HexTPAD)
+                Console.WriteLine()
+                If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
+                    Console.WriteLine("Find _STA:          5F 53 54 41")
+                    Console.WriteLine("Replace XSTA:       58 53 54 41")
+                    Console.WriteLine("Target Bridge GPI0: 47 50 49 30")
+                    Console.WriteLine()
+                End If
+            ElseIf BlockI2C = True Then
+                Console.WriteLine("Find _STA:          5F 53 54 41")
+                Console.WriteLine("Replace XSTA:       58 53 54 41")
+                Console.WriteLine("Target Bridge " & BlockBus & ": " & HexBlockBus)
+                Console.WriteLine()
+            End If
+            Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
             Console.WriteLine()
             Console.WriteLine("Enjoy!")
             Console.WriteLine("Type in " & Chr(34) & "Exit" & Chr(34) & " to exit")
@@ -677,5 +732,27 @@ Module GenI2C
             ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
             ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
         End If
+    End Sub
+
+    Sub GenBlockI2C()
+        BlockSSDT(0) = "/*"
+        BlockSSDT(1) = " * Find _STA:          5F 53 54 41"
+        BlockSSDT(2) = " * Replace XSTA:       58 53 54 41"
+        BlockSSDT(3) = " * Target Bridge " & BlockBus & ": " & HexBlockBus
+        BlockSSDT(4) = " */"
+        BlockSSDT(5) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "PCI-" & BlockBus & Chr(34) & ", 0)"
+        BlockSSDT(6) = "{"
+        BlockSSDT(7) = "    External(_SB.PCI0." & BlockBus & ", DeviceObj)"
+        BlockSSDT(8) = "    Scope (_SB.PCI0." & BlockBus & ")"
+        BlockSSDT(9) = "    {"
+        BlockSSDT(10) = "        Method (_STA, 0, NotSerialized)"
+        BlockSSDT(11) = "        {"
+        BlockSSDT(12) = "            Return (0)"
+        BlockSSDT(13) = "        }"
+        BlockSSDT(14) = "    }"
+        BlockSSDT(15) = "}"
+        For GenIndex = 0 To 3
+            HexBlockBus += Hex(Asc(BlockBus.Substring(GenIndex, 1))) + " "
+        Next GenIndex
     End Sub
 End Module
