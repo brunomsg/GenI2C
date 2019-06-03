@@ -223,7 +223,7 @@ Module GenI2C
                 End If
                 If SLAVNameLineFound = True And APICNameLineFound = True And SLAVName = APICNAME And Hetero = False Then
                     Hetero = True
-                    BreakConbine()
+                    BreakCombine()
                 End If
             Next
 
@@ -608,7 +608,7 @@ Module GenI2C
                 For i = 0 To 8
                     fs.Write(New UTF8Encoding(True).GetBytes(Filehead(i) & vbLf), 0, (Filehead(i) & vbLf).Length)
                 Next
-                If ExUSTP = False Then
+                If ExUSTP = False And CPUChoice = 1 Then
                     GenSPED()
                     For GenIndex = 0 To ManualSPED.Length - 1
                         fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
@@ -656,7 +656,7 @@ Module GenI2C
             Console.WriteLine()
             Console.WriteLine("    Scope(_SB.PCI0.I2C" & Scope & ")")
             Console.WriteLine("    {")
-            If ExUSTP = False Then
+            If ExUSTP = False And CPUChoice = 1 Then
                 GenSPED()
                 For GenIndex = 0 To ManualSPED.Length - 1
                     Console.WriteLine(ManualSPED(GenIndex))
@@ -700,7 +700,7 @@ Module GenI2C
         End Try
     End Sub
 
-    Sub BreakConbine()
+    Sub BreakCombine()
         Try
             For CheckConbLine = (CheckConbLine + 6) To (CheckConbLine + 9)
                 Code(CheckConbLine) = ""
