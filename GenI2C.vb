@@ -593,12 +593,11 @@ Module GenI2C
                 Else
                     Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-" & TPAD & ".dsl"
                     Dim fs As FileStream = File.Create(path)
-                    Dim Rename(4) As String
-                    Rename(0) = "/*"
-                    Rename(1) = " * Find _CRS:          5F 43 52 53"
-                    Rename(2) = " * Replace XCRS:       58 43 52 53"
-                    Rename(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
-                    Rename(4) = " */"
+                    Dim RenameCRS(3) As String
+                    RenameCRS(0) = "/*"
+                    RenameCRS(1) = " * Find _CRS:          5F 43 52 53"
+                    RenameCRS(2) = " * Replace XCRS:       58 43 52 53"
+                    RenameCRS(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
                     Dim Filehead(8) As String
                     Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
                     Filehead(1) = "{"
@@ -618,11 +617,22 @@ Module GenI2C
                     Filehead(7) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
                     Filehead(8) = "    {"
 
-                    For i = 0 To 4
-                        fs.Write(New UTF8Encoding(True).GetBytes(Rename(i) & vbLf), 0, (Rename(i) & vbLf).Length)
+                    For Genindex = 0 To RenameCRS.Length - 1
+                        fs.Write(New UTF8Encoding(True).GetBytes(RenameCRS(Genindex) & vbLf), 0, (RenameCRS(Genindex) & vbLf).Length)
                     Next
+                    If ExUSTP = True Then
+                        Dim RenameUSTP(2) As String
+                        RenameUSTP(0) = " * "
+                        RenameUSTP(1) = " * Find USTP:          55 53 54 50"
+                        RenameUSTP(2) = " * Replace XSTP:       58 53 54 50"
+                        For Genindex = 0 To RenameUSTP.Length - 1
+                            fs.Write(New UTF8Encoding(True).GetBytes(RenameUSTP(Genindex) & vbLf), 0, (RenameUSTP(Genindex) & vbLf).Length)
+                        Next
+                    End If
 
-                    For i = 0 To 8
+                    fs.Write(New UTF8Encoding(True).GetBytes(" */" & vbLf), 0, (" */" & vbLf).Length)
+
+                    For i = 0 To Filehead.Length - 1
                         fs.Write(New UTF8Encoding(True).GetBytes(Filehead(i) & vbLf), 0, (Filehead(i) & vbLf).Length)
                     Next
                     If ExUSTP = False And CPUChoice = 1 Then
@@ -676,7 +686,7 @@ Module GenI2C
                 Console.WriteLine("Replace XCRS:       58 43 52 53")
                 Console.WriteLine("Target Bridge " & TPAD & ": " & HexTPAD)
                 Console.WriteLine()
-                If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
+                If InterruptEnabled = True And APICPIN > 47 Then
                     Console.WriteLine("Find _STA:          5F 53 54 41")
                     Console.WriteLine("Replace XSTA:       58 53 54 41")
                     Console.WriteLine("Target Bridge GPI0: 47 50 49 30")
@@ -686,6 +696,11 @@ Module GenI2C
                 Console.WriteLine("Find _STA:          5F 53 54 41")
                 Console.WriteLine("Replace XSTA:       58 53 54 41")
                 Console.WriteLine("Target Bridge " & BlockBus & ": " & HexBlockBus)
+                Console.WriteLine()
+            End If
+            If ExUSTP = True Then
+                Console.WriteLine("Find USTP:          55 53 54 50")
+                Console.WriteLine("Replace XSTP:       58 53 54 50")
                 Console.WriteLine()
             End If
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
