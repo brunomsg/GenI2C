@@ -5,7 +5,7 @@ Module GenI2C
     Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual As String
     Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1) As String
     Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
-    Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckConbLine, CheckSLAVLocation As Integer
+    Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
 
     Sub Main()
         Try
@@ -150,22 +150,20 @@ Module GenI2C
                         Code(i) = Paranthesesclose
                         i = i + 1
                     Loop Until spaceclose = spaceopen
-                    For CRSMethodLine = 0 To total
-                        If InStr(Code(CRSMethodLine), "Method (_CRS,") > 0 Then
-                            n = total - CRSMethodLine
-                            ReDim CRSInfo(n)
-                            n = 0
-                            For CRSInfoLine = CRSMethodLine To total - 1
-                                CRSInfo(n) = Code(CRSInfoLine)
-                                n = n + 1
-                            Next
-                        End If
-                    Next
                 End If
             End While
             FileClose()
 
             For i = 0 To total
+                If InStr(Code(i), "Method (_CRS,") > 0 Then
+                    n = total - i
+                    ReDim CRSInfo(n)
+                    n = 0
+                    For CRSInfoLine = i To total - 1
+                        CRSInfo(n) = Code(CRSInfoLine)
+                        n = n + 1
+                    Next
+                End If
                 If InStr(Code(i), "GpioInt") > 0 Then
                     If ExGPIO = True Then
                         ExGPIO = False
@@ -182,7 +180,7 @@ Module GenI2C
                     Next
                     GPIOPinLine = i + 4
                     GPIOPIN = Convert.ToInt32(Code(GPIOPinLine).Substring(InStr(Code(GPIOPinLine), "0x") - 1), 16)
-                    Console.WriteLine("GPIO Pin " & GPIOPIN)
+                    Console.WriteLine("GPIO Pin " & GPIOPIN & " (0x" & Hex(GPIOPIN) & ")")
                 End If
                 If InStr(Code(i), "Interrupt (ResourceConsumer") > 0 Then
                     If ExAPIC = True Then APICNameLineFound = False
@@ -197,7 +195,7 @@ Module GenI2C
                     Next
                     APICPinLine = i + 2
                     APICPIN = Convert.ToInt32(Code(APICPinLine).Substring(InStr(Code(APICPinLine), "0x") - 1, 10), 16)
-                    Console.WriteLine("APIC Pin " & APICPIN)
+                    Console.WriteLine("APIC Pin " & APICPIN & " (0x" & Hex(APICPIN) & ")")
                 End If
                 If InStr(Code(i), "I2cSerialBusV2 (0x") > 0 Then
                     If ExSLAV = True Then SLAVNameLineFound = False
@@ -208,8 +206,7 @@ Module GenI2C
                         If InStr(Code(SLAVNameLine), "Name (SBF") > 0 And SLAVNameLineFound = False Then
                             SLAVName = Code(SLAVNameLine).Substring((InStr(Code(SLAVNameLine), "SBF") - 1), 4)
                             SLAVNameLineFound = True
-                            CheckConbLine = SLAVNameLine
-
+                            CheckCombLine = SLAVNameLine
                             CheckSLAVLocation = SLAVNameLine
                         End If
                     Next
@@ -229,11 +226,9 @@ Module GenI2C
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "If (LLess (") > 0 Then
                     IfLLess = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LLess (") + 10), 4)
-                    Console.WriteLine(IfLLess)
                 End If
                 If InStr(CRSInfo(CRSLine), "If (LEqual (") > 0 Then
                     IfLEqual = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LEqual (") + 11), 4)
-                    Console.WriteLine(IfLEqual)
                 End If
                 If InStr(CRSInfo(CRSLine), "I2CM (I2CX, BADR, SPED)") > 0 Then
                     ExI2CM = True
@@ -734,8 +729,8 @@ Module GenI2C
 
     Sub BreakCombine()
         Try
-            For CheckConbLine = (CheckConbLine + 6) To (CheckConbLine + 9)
-                Code(CheckConbLine) = ""
+            For BreakIndex = 0 To 3
+                CRSInfo(CRSInfo.Length - 1 - (total + 1 - (CheckCombLine + 7)) + BreakIndex) = ""
             Next
         Catch ex As Exception
             Console.WriteLine()
