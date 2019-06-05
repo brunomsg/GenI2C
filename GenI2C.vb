@@ -123,10 +123,10 @@ Module GenI2C
             End If
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (CL), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
-            Console.ReadLine()
-            End
+        Console.WriteLine("Unknown error (CL), please open an issue and provide your files")
+        Console.WriteLine("Exiting")
+        Console.ReadLine()
+        End
         End Try
     End Sub
 
@@ -410,10 +410,10 @@ Module GenI2C
             GenSSDT()
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (AL), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
-            Console.ReadLine()
-            End
+        Console.WriteLine("Unknown error (AL), please open an issue and provide your files")
+        Console.WriteLine("Exiting")
+        Console.ReadLine()
+        End
         End Try
     End Sub
 
@@ -595,12 +595,14 @@ Module GenI2C
                 Else
                     Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-" & TPAD & ".dsl"
                     Dim fs As FileStream = File.Create(path)
+
                     Dim RenameCRS(3) As String
                     RenameCRS(0) = "/*"
                     RenameCRS(1) = " * Find _CRS:          5F 43 52 53"
                     RenameCRS(2) = " * Replace XCRS:       58 43 52 53"
                     RenameCRS(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
-                    Dim Filehead(10) As String
+
+                    Dim Filehead(12) As String
                     Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
                     Filehead(1) = "{"
                     Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
@@ -613,17 +615,21 @@ Module GenI2C
                             Filehead(5) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & GPIONAME & ", UnknownObj)"
                         End If
                     End If
+                    If IfLLess <> "" And (IfLLess <> "Zero" Or IfLLess <> "One)") Then
+                        Filehead(6) = "    External(" & IfLLess & ", FieldUnitObj)"
+                    End If
+                    If IfLEqual <> "" And (IfLEqual <> "Zero" Or IfLEqual <> "One)") Then
+                        Filehead(7) = "    External(" & IfLEqual & ", FieldUnitObj)"
+                    End If
+                    If ExI2CM = True Then
+                        Filehead(8) = "    External(_SB.PCI0.I2C" & Scope & ".I2CX, UnknownObj)"
+                        Filehead(9) = "    External(_SB.PCI0.I2CM, MethodObj)"
+                    End If
                     If ExUSTP = True Then
-                        Filehead(6) = "    Name (USTP, One)"
+                        Filehead(10) = "    Name (USTP, One)"
                     End If
-                    If IfLLess <> "" Then
-                        Filehead(7) = "    External(" & IfLLess & ", FieldUnitObj)"
-                    End If
-                    If IfLEqual <> "" Then
-                        Filehead(8) = "    External(" & IfLEqual & ", FieldUnitObj)"
-                    End If
-                    Filehead(9) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
-                    Filehead(10) = "    {"
+                    Filehead(11) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
+                    Filehead(12) = "    {"
 
                     For Genindex = 0 To RenameCRS.Length - 1
                         fs.Write(New UTF8Encoding(True).GetBytes(RenameCRS(Genindex) & vbLf), 0, (RenameCRS(Genindex) & vbLf).Length)
