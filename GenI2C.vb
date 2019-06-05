@@ -2,9 +2,9 @@
 Imports System.Text
 Module GenI2C
 
-    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15) As String
+    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual As String
     Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1) As String
-    Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, GenGPIOSSDT As Boolean
+    Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
     Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckConbLine, CheckSLAVLocation As Integer
 
     Sub Main()
@@ -209,6 +209,7 @@ Module GenI2C
                             SLAVName = Code(SLAVNameLine).Substring((InStr(Code(SLAVNameLine), "SBF") - 1), 4)
                             SLAVNameLineFound = True
                             CheckConbLine = SLAVNameLine
+
                             CheckSLAVLocation = SLAVNameLine
                         End If
                     Next
@@ -222,6 +223,20 @@ Module GenI2C
                 If SLAVNameLineFound = True And APICNameLineFound = True And SLAVName = APICNAME And Hetero = False Then
                     Hetero = True
                     BreakCombine()
+                End If
+            Next
+
+            For CRSLine = 0 To n
+                If InStr(CRSInfo(CRSLine), "If (LLess (") > 0 Then
+                    IfLLess = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LLess (") + 10), 4)
+                    Console.WriteLine(IfLLess)
+                End If
+                If InStr(CRSInfo(CRSLine), "If (LEqual (") > 0 Then
+                    IfLEqual = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LEqual (") + 11), 4)
+                    Console.WriteLine(IfLEqual)
+                End If
+                If InStr(CRSInfo(CRSLine), "I2CM (I2CX, BADR, SPED)") > 0 Then
+                    ExI2CM = True
                 End If
             Next
 
@@ -410,17 +425,13 @@ Module GenI2C
     Sub PatchCRS2GPIO()
         Try
             For CRSLine = 0 To n
-                If InStr(CRSInfo(CRSLine), "Method (_CRS") > 0 Then ' Find _CRS
-                    For CRSReturnline = CRSLine To n ' Change All Returns in _CRS to GpioInt Name
-                        If InStr(CRSInfo(CRSReturnline), "Return (ConcatenateResTemplate") > 0 Then
-                            CRSInfo(CRSReturnline) = CRSInfo(CRSReturnline).Substring(0, InStr(CRSInfo(CRSReturnline), ", SBF") - 1) & ", " & GPIONAME & "))"
-                            CRSPatched = True
-                        ElseIf InStr(CRSInfo(CRSReturnline), "Return (SBF") > 0 Then
-                            ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add GpioInt Name                       
-                            CRSInfo(CRSReturnline) = CRSInfo(CRSReturnline).Substring(0, InStr(CRSInfo(CRSReturnline), "(") - 1) & "(ConcatenateResTemplate (" & SLAVName & ", " & GPIONAME & ")) // Usually this return won't function, please check your Windows Patch"
-                            CRSPatched = True
-                        End If
-                    Next
+                If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
+                    CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & GPIONAME & "))"
+                    CRSPatched = True
+                ElseIf InStr(CRSInfo(CRSLine), "Return (SBF") > 0 Then
+                    ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add GpioInt Name                       
+                    CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "(") - 1) & "(ConcatenateResTemplate (" & SLAVName & ", " & GPIONAME & ")) // Usually this return won't function, please check your Windows Patch"
+                    CRSPatched = True
                 End If
             Next
             If CRSPatched = False Then Console.WriteLine("Error! No _CRS Patch Applied!")
@@ -436,17 +447,13 @@ Module GenI2C
     Sub PatchCRS2APIC()
         Try
             For CRSLine = 0 To n
-                If InStr(CRSInfo(CRSLine), "Method (_CRS") > 0 Then ' Find _CRS
-                    For CRSReturnline = CRSLine To n ' Change All Returns in _CRS to APIC Name
-                        If InStr(CRSInfo(CRSReturnline), "Return (ConcatenateResTemplate") > 0 Then
-                            CRSInfo(CRSReturnline) = CRSInfo(CRSReturnline).Substring(0, InStr(CRSInfo(CRSReturnline), ", SBF") - 1) & ", " & APICNAME & "))"
-                            CRSPatched = True
-                        ElseIf InStr(CRSInfo(CRSReturnline), "Return (SBF") > 0 Then
-                            ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add APIC Name
-                            CRSInfo(CRSReturnline) = CRSInfo(CRSReturnline).Substring(0, InStr(CRSInfo(CRSReturnline), "(") - 1) & "(ConcatenateResTemplate (" & SLAVName & ", " & APICNAME & ")) // Usually this return won't function, please check your Windows Patch"
-                            CRSPatched = True
-                        End If
-                    Next
+                If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
+                    CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & APICNAME & "))"
+                    CRSPatched = True
+                ElseIf InStr(CRSInfo(CRSLine), "Return (SBF") > 0 Then
+                    ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add APIC Name
+                    CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "(") - 1) & "(ConcatenateResTemplate (" & SLAVName & ", " & APICNAME & ")) // Usually this return won't function, please check your Windows Patch"
+                    CRSPatched = True
                 End If
             Next
             If CRSPatched = False Then Console.WriteLine("Error! No _CRS Patch Applied!")
@@ -598,7 +605,7 @@ Module GenI2C
                     RenameCRS(1) = " * Find _CRS:          5F 43 52 53"
                     RenameCRS(2) = " * Replace XCRS:       58 43 52 53"
                     RenameCRS(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
-                    Dim Filehead(8) As String
+                    Dim Filehead(10) As String
                     Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
                     Filehead(1) = "{"
                     Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
@@ -614,8 +621,14 @@ Module GenI2C
                     If ExUSTP = True Then
                         Filehead(6) = "    Name (USTP, One)"
                     End If
-                    Filehead(7) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
-                    Filehead(8) = "    {"
+                    If IfLLess <> "" Then
+                        Filehead(7) = "    External(" & IfLLess & ", FieldUnitObj)"
+                    End If
+                    If IfLEqual <> "" Then
+                        Filehead(8) = "    External(" & IfLEqual & ", FieldUnitObj)"
+                    End If
+                    Filehead(9) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
+                    Filehead(10) = "    {"
 
                     For Genindex = 0 To RenameCRS.Length - 1
                         fs.Write(New UTF8Encoding(True).GetBytes(RenameCRS(Genindex) & vbLf), 0, (RenameCRS(Genindex) & vbLf).Length)
@@ -698,7 +711,7 @@ Module GenI2C
                 Console.WriteLine("Target Bridge " & BlockBus & ": " & HexBlockBus)
                 Console.WriteLine()
             End If
-            If ExUSTP = True Then
+            If ExUSTP = True And BlockI2C = False Then
                 Console.WriteLine("Find USTP:          55 53 54 50")
                 Console.WriteLine("Replace XSTP:       58 53 54 50")
                 Console.WriteLine()
