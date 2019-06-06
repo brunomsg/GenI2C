@@ -123,10 +123,10 @@ Module GenI2C
             End If
         Catch ex As Exception
             Console.WriteLine()
-        Console.WriteLine("Unknown error (CL), please open an issue and provide your files")
-        Console.WriteLine("Exiting")
-        Console.ReadLine()
-        End
+            Console.WriteLine("Unknown error (CL), please open an issue and provide your files")
+            Console.WriteLine("Exiting")
+            Console.ReadLine()
+            End
         End Try
     End Sub
 
@@ -410,10 +410,10 @@ Module GenI2C
             GenSSDT()
         Catch ex As Exception
             Console.WriteLine()
-        Console.WriteLine("Unknown error (AL), please open an issue and provide your files")
-        Console.WriteLine("Exiting")
-        Console.ReadLine()
-        End
+            Console.WriteLine("Unknown error (AL), please open an issue and provide your files")
+            Console.WriteLine("Exiting")
+            Console.ReadLine()
+            End
         End Try
     End Sub
 
@@ -602,7 +602,12 @@ Module GenI2C
                     RenameCRS(2) = " * Replace XCRS:       58 43 52 53"
                     RenameCRS(3) = " * Target Bridge " & TPAD & ": " & HexTPAD
 
-                    Dim Filehead(12) As String
+                    Dim RenameUSTP(2) As String
+                    RenameUSTP(0) = " * "
+                    RenameUSTP(1) = " * Find USTP:          55 53 54 50 08"
+                    RenameUSTP(2) = " * Replace XSTP:       58 53 54 50 08"
+
+                    Dim Filehead(14) As String
                     Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
                     Filehead(1) = "{"
                     Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
@@ -624,21 +629,21 @@ Module GenI2C
                     If ExI2CM = True Then
                         Filehead(8) = "    External(_SB.PCI0.I2C" & Scope & ".I2CX, UnknownObj)"
                         Filehead(9) = "    External(_SB.PCI0.I2CM, MethodObj)"
+                        Filehead(10) = "    External(_SB.PCI0.I2C" & Scope & ".BADR, IntObj)"
+                        Filehead(11) = "    External(_SB.PCI0.I2C" & Scope & ".SPED, IntObj)"
                     End If
                     If ExUSTP = True Then
-                        Filehead(10) = "    Name (USTP, One)"
+                        Filehead(12) = "    Name (USTP, One)"
                     End If
-                    Filehead(11) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
-                    Filehead(12) = "    {"
+                    Filehead(13) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
+                    Filehead(14) = "    {"
 
                     For Genindex = 0 To RenameCRS.Length - 1
-                        fs.Write(New UTF8Encoding(True).GetBytes(RenameCRS(Genindex) & vbLf), 0, (RenameCRS(Genindex) & vbLf).Length)
+                        If RenameCRS(Genindex) <> "" Then
+                            fs.Write(New UTF8Encoding(True).GetBytes(RenameCRS(Genindex) & vbLf), 0, (RenameCRS(Genindex) & vbLf).Length)
+                        End If
                     Next
                     If ExUSTP = True Then
-                        Dim RenameUSTP(2) As String
-                        RenameUSTP(0) = " * "
-                        RenameUSTP(1) = " * Find USTP:          55 53 54 50"
-                        RenameUSTP(2) = " * Replace XSTP:       58 53 54 50"
                         For Genindex = 0 To RenameUSTP.Length - 1
                             fs.Write(New UTF8Encoding(True).GetBytes(RenameUSTP(Genindex) & vbLf), 0, (RenameUSTP(Genindex) & vbLf).Length)
                         Next
@@ -646,8 +651,10 @@ Module GenI2C
 
                     fs.Write(New UTF8Encoding(True).GetBytes(" */" & vbLf), 0, (" */" & vbLf).Length)
 
-                    For i = 0 To Filehead.Length - 1
-                        fs.Write(New UTF8Encoding(True).GetBytes(Filehead(i) & vbLf), 0, (Filehead(i) & vbLf).Length)
+                    For GenIndex = 0 To Filehead.Length - 1
+                        If Filehead(GenIndex) <> "" Then
+                            fs.Write(New UTF8Encoding(True).GetBytes(Filehead(GenIndex) & vbLf), 0, (Filehead(GenIndex) & vbLf).Length)
+                        End If
                     Next
                     If ExUSTP = False And CPUChoice = 1 Then
                         GenSPED()
@@ -713,8 +720,8 @@ Module GenI2C
                 Console.WriteLine()
             End If
             If ExUSTP = True And BlockI2C = False Then
-                Console.WriteLine("Find USTP:          55 53 54 50")
-                Console.WriteLine("Replace XSTP:       58 53 54 50")
+                Console.WriteLine("Find USTP:          55 53 54 50 08")
+                Console.WriteLine("Replace XSTP:       58 53 54 50 08")
                 Console.WriteLine()
             End If
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
