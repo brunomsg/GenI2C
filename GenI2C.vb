@@ -5,7 +5,7 @@ Module GenI2C
     Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual As String
     Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1) As String
     Public Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
-    Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSMethodLine, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
+    Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSLocation, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
 
     Sub Main()
         Try
@@ -157,6 +157,7 @@ Module GenI2C
             For i = 0 To total
                 If InStr(Code(i), "Method (_CRS,") > 0 Then
                     n = total - i
+                    CRSLocation = i
                     ReDim CRSInfo(n)
                     n = 0
                     For CRSInfoLine = i To total - 1
@@ -219,7 +220,7 @@ Module GenI2C
                 End If
                 If SLAVNameLineFound = True And APICNameLineFound = True And SLAVName = APICNAME And Hetero = False Then
                     Hetero = True
-                    If CheckSLAVLocation < CRSMethodLine Then BreakCombine()
+                    If CheckSLAVLocation < CRSLocation Then BreakCombine()
                 End If
             Next
 
@@ -619,7 +620,7 @@ Module GenI2C
                     Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
                     Filehead(1) = "{"
                     Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
-                    If CheckSLAVLocation < CRSMethodLine Then
+                    If CheckSLAVLocation < CRSLocation Then
                         Filehead(3) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & SLAVName & ", UnknownObj)"
                         If (PollingEnabled = True And ExAPIC = True And Hetero = False) Or APICPIN < 47 And APICPIN <> 0 And ExAPIC = True And Hetero = False Then
                             Filehead(4) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & APICNAME & ", UnknownObj)"
