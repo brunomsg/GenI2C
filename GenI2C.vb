@@ -421,7 +421,11 @@ Module GenI2C
         Try
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
-                    CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & GPIONAME & "))"
+                    If ExI2CM = True Then
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED" & ", " & GPIONAME & "))"
+                    Else
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & GPIONAME & "))"
+                    End If
                     CRSPatched = True
                 ElseIf InStr(CRSInfo(CRSLine), "Return (SBF") > 0 Then
                     ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add GpioInt Name                       
@@ -443,7 +447,11 @@ Module GenI2C
         Try
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
-                    CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & APICNAME & "))"
+                    If ExI2CM = True Then
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED" & ", " & APICNAME & "))"
+                    Else
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & APICNAME & "))"
+                    End If
                     CRSPatched = True
                 ElseIf InStr(CRSInfo(CRSLine), "Return (SBF") > 0 Then
                     ' Capture “Spaces & 'Return'” inject "ConcatenateResTemplate", add original return method name, add APIC Name
@@ -681,7 +689,9 @@ Module GenI2C
                         Next
                     End If
                     For GenIndex = 0 To CRSInfo.Length - 2
-                        fs.Write(New UTF8Encoding(True).GetBytes(CRSInfo(GenIndex) & vbLf), 0, (CRSInfo(GenIndex) & vbLf).Length)
+                        If CRSInfo(GenIndex) <> "" Then
+                            fs.Write(New UTF8Encoding(True).GetBytes(CRSInfo(GenIndex) & vbLf), 0, (CRSInfo(GenIndex) & vbLf).Length)
+                        End If
                     Next
                     fs.Write(New UTF8Encoding(True).GetBytes("    }" & vbLf), 0, ("    }" & vbLf).Length)
                     fs.Write(New UTF8Encoding(True).GetBytes("}" & vbLf), 0, ("}" & vbLf).Length)
