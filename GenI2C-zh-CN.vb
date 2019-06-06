@@ -156,7 +156,7 @@ Module GenI2C_zh_CN
                         ExGPIO = False
                         GPIONameLineFound = False
                     End If
-                    Console.WriteLine("原生 Gpioint 存在于" & TPAD & "中的第 " & i + 1 & " 行")
+                    Console.WriteLine("原生 Gpioint 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
                     ExGPIO = True
                     GPIONAMELine = i
                     For GPIONAMELine = GPIONAMELine To 1 Step -1
@@ -171,7 +171,7 @@ Module GenI2C_zh_CN
                 End If
                 If InStr(Code(i), "Interrupt (ResourceConsumer") > 0 Then
                     If ExAPIC = True Then APICNameLineFound = False
-                    Console.WriteLine("原生 APIC 存在于" & TPAD & "中的第 " & i + 1 & " 行")
+                    Console.WriteLine("原生 APIC 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
                     ExAPIC = True
                     APICNameLine = i
                     For APICNameLine = APICNameLine To 1 Step -1
@@ -186,7 +186,7 @@ Module GenI2C_zh_CN
                 End If
                 If InStr(Code(i), "I2cSerialBusV2 (0x") > 0 Then
                     If ExSLAV = True Then SLAVNameLineFound = False
-                    Console.WriteLine("I2C 从地址 存在于" & TPAD & "中的第 " & i + 1 & " 行")
+                    Console.WriteLine("I2C 从地址 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
                     ExSLAV = True
                     SLAVNameLine = i
                     For SLAVNameLine = SLAVNameLine To 1 Step -1
@@ -409,7 +409,7 @@ Module GenI2C_zh_CN
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
                     If ExI2CM = True Then
-                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED" & ", " & GPIONAME & "))"
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED)" & ", " & GPIONAME & "))"
                     Else
                         CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & GPIONAME & "))"
                     End If
@@ -435,7 +435,7 @@ Module GenI2C_zh_CN
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
                     If ExI2CM = True Then
-                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED" & ", " & APICNAME & "))"
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED)" & ", " & APICNAME & "))"
                     Else
                         CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & APICNAME & "))"
                     End If

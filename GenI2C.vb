@@ -409,7 +409,7 @@ Module GenI2C
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
                     If ExI2CM = True Then
-                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED" & ", " & GPIONAME & "))"
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED)" & ", " & GPIONAME & "))"
                     Else
                         CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & GPIONAME & "))"
                     End If
@@ -435,7 +435,7 @@ Module GenI2C
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "Return (ConcatenateResTemplate") > 0 Then
                     If ExI2CM = True Then
-                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED" & ", " & APICNAME & "))"
+                        CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), "BADR, ") - 1) & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, " & "\_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED)" & ", " & APICNAME & "))"
                     Else
                         CRSInfo(CRSLine) = CRSInfo(CRSLine).Substring(0, InStr(CRSInfo(CRSLine), ", SBF") - 1) & ", " & APICNAME & "))"
                     End If
