@@ -1,39 +1,39 @@
 ﻿Imports System.IO
 Imports System.Text
-Module GenI2C
+Module GenI2C_zh_CN
 
     Private TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual As String
     Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1) As String
     Private Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
     Private line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSLocation, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
 
-    Sub English()
+    Sub Chinese()
         Try
             While True
-                Console.Write("File Path (Drag and Drop the dsl file into the Form) : ")
+                Console.Write("请输入文件路径 (将文件拖放至窗口内) : ")
                 DSDTFile = Console.ReadLine()
                 Try
                     If Dir(DSDTFile) <> "" Then
                         If InStr(Dir(DSDTFile), ".dsl") > 0 Then
                             Exit While
                         ElseIf InStr(Dir(DSDTFile), ".aml") > 0 Then
-                            Console.WriteLine("AML files aren't supported! Please input again!")
+                            Console.WriteLine("不支持 AML 文件! 请重新输入!")
                             Console.WriteLine()
                         Else
-                            Console.WriteLine("Unknown File! Please input again!")
+                            Console.WriteLine("未知文件! 请重新输入!")
                             Console.WriteLine()
                         End If
                     Else
-                        Console.WriteLine("File doesn't exist, please input again!")
+                        Console.WriteLine("文件不存在, 请重新输入!")
                         Console.WriteLine()
                     End If
                 Catch ex As Exception
-                    Console.WriteLine("Illegal Characters exists, please input again!")
+                    Console.WriteLine("路径中存在非法字符, 请重新输入!")
                     Console.WriteLine()
                 End Try
             End While
             Console.WriteLine("")
-            Console.WriteLine("Input your I2C Device's name")
+            Console.WriteLine("输入您的 I2C 设备名")
             While True
                 Console.WriteLine()
                 Console.Write("Device: ")
@@ -42,7 +42,7 @@ Module GenI2C
                     Exit While
                 Else
                     Console.WriteLine()
-                    Console.WriteLine("Please Input your device name correctly (e.g. " & Chr(34) & "TPD0" & Chr(34) & ")!")
+                    Console.WriteLine("请正确输入您的设备名 (如: " & Chr(34) & "TPD0" & Chr(34) & ")!")
                 End If
             End While
             Device = "Device (" & TPAD & ")"
@@ -52,8 +52,8 @@ Module GenI2C
             Countline()
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (main), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (main), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("即将退出")
             Console.ReadLine()
             End
         End Try
@@ -66,15 +66,15 @@ Module GenI2C
                 DSDTLine = LineInput(1)
                 line = line + 1
                 If InStr(DSDTLine, "If (USTP)") > 0 Then
-                    Console.WriteLine("Found for USTP in DSDT at line " & line + 1)
+                    Console.WriteLine("USTP 存在于 DSDT 的第 " & line + 1 & " 行")
                     ExUSTP = True
                 End If
                 If InStr(DSDTLine, "SSCN") > 0 Then
-                    Console.WriteLine("Found for SSCN in DSDT at line " & line + 1)
+                    Console.WriteLine("SSCN 存在于 DSDT 的第 " & line + 1 & " 行")
                     ExSSCN = True
                 End If
                 If InStr(DSDTLine, "FMCN") > 0 Then
-                    Console.WriteLine("Found for FMCN in DSDT at line " & line + 1)
+                    Console.WriteLine("FMCN 存在于 DSDT 的第 " & line + 1 & " 行")
                     ExFMCN = True
                 End If
                 If InStr(DSDTLine, Device) > 0 Then
@@ -99,8 +99,8 @@ Module GenI2C
             FileClose()
             If Matched = False Then
                 Console.WriteLine()
-                Console.WriteLine("This is not a Device that exists in the DSDT")
-                Console.WriteLine("Exiting")
+                Console.WriteLine("DSDT 中不存在这个设备")
+                Console.WriteLine("即将退出")
                 Console.ReadLine()
                 End
             Else
@@ -109,8 +109,8 @@ Module GenI2C
             End If
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (CL), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (CL), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -156,7 +156,7 @@ Module GenI2C
                         ExGPIO = False
                         GPIONameLineFound = False
                     End If
-                    Console.WriteLine("Native GpioInt Found in " & TPAD & " at line " & i + 1)
+                    Console.WriteLine("原生 Gpioint 存在于" & TPAD & "中的第 " & i + 1 & " 行")
                     ExGPIO = True
                     GPIONAMELine = i
                     For GPIONAMELine = GPIONAMELine To 1 Step -1
@@ -171,7 +171,7 @@ Module GenI2C
                 End If
                 If InStr(Code(i), "Interrupt (ResourceConsumer") > 0 Then
                     If ExAPIC = True Then APICNameLineFound = False
-                    Console.WriteLine("Native APIC Found in " & TPAD & " at line " & i + 1)
+                    Console.WriteLine("原生 APIC 存在于" & TPAD & "中的第 " & i + 1 & " 行")
                     ExAPIC = True
                     APICNameLine = i
                     For APICNameLine = APICNameLine To 1 Step -1
@@ -186,7 +186,7 @@ Module GenI2C
                 End If
                 If InStr(Code(i), "I2cSerialBusV2 (0x") > 0 Then
                     If ExSLAV = True Then SLAVNameLineFound = False
-                    Console.WriteLine("Slave Address Found in " & TPAD & " at line " & i + 1)
+                    Console.WriteLine("I2C 从地址 存在于" & TPAD & "中的第 " & i + 1 & " 行")
                     ExSLAV = True
                     SLAVNameLine = i
                     For SLAVNameLine = SLAVNameLine To 1 Step -1
@@ -224,32 +224,32 @@ Module GenI2C
 
             If SLAVNameLineFound = False Then
                 Console.WriteLine()
-                Console.WriteLine("This is not a I2C Device!")
-                Console.WriteLine("Exiting")
+                Console.WriteLine("这不是一个 I2C 设备!")
+                Console.WriteLine("正在退出")
                 Console.ReadLine()
                 End
             End If
 
             While CPUChoice < 1 Or CPUChoice > 3
                 Console.WriteLine()
-                Console.WriteLine("Select your CPU architecture:")
+                Console.WriteLine("选择你的 CPU 架构:")
                 Console.WriteLine()
-                Console.WriteLine("1) Sunrise Point:  SKL, KBL, KBL-R")
-                Console.WriteLine("2) Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)")
-                Console.WriteLine("3) Cannon Lake (Point)-LP: CFL-R (8565U, 8265U)")
+                Console.WriteLine("1) Sunrise Point:  SKL, KBL, KBL-R (6代至八代低压)")
+                Console.WriteLine("2) Cannon Lake (Point)-H:  CFL-H (8750H, 8300H) (八代标压)")
+                Console.WriteLine("3) Cannon Lake (Point)-LP: CFL-R (8565U, 8265U) (八代低压 Whiskey Lake)")
                 Console.WriteLine()
-                Console.Write("Your Choice: ")
+                Console.Write("您的选择: ")
                 CPUChoice = Console.ReadLine()
             End While
 
             Console.WriteLine()
-            Console.WriteLine("Choose the mode you'd like to patch")
+            Console.WriteLine("选择您需要的补丁模式")
             Console.WriteLine()
-            Console.WriteLine("1) Interrupt (APIC or GPIO)")
-            Console.WriteLine("2) Polling (Will be set back to APIC if supported)")
-            Console.WriteLine("3) * Block an I2C Bus")
+            Console.WriteLine("1) 中断 (APIC 或 GPIO)")
+            Console.WriteLine("2) 轮询 (会在可能时回到 APIC 中断)")
+            Console.WriteLine("3) * 屏蔽一条 I2C 总线")
             Console.WriteLine()
-            Console.Write("Selection: ")
+            Console.Write("您的选择: ")
             Dim Choice As Integer = Console.ReadLine()
             Select Case Choice
                 Case 1
@@ -260,14 +260,14 @@ Module GenI2C
                     Console.WriteLine()
                 Case 3
                     Console.WriteLine()
-                    Console.WriteLine("Which I2C Bus you'd like to block?")
+                    Console.WriteLine("您要屏蔽哪条 I2C 总线?")
                     Console.WriteLine()
                     Console.WriteLine("1) I2C0")
                     Console.WriteLine("2) I2C1")
                     Console.WriteLine("3) I2C2")
                     Console.WriteLine("4) I2C3")
                     Console.WriteLine()
-                    Console.Write("Selection: ")
+                    Console.Write("您的选择: ")
                     Choice = Console.ReadLine()
                     Select Case Choice
                         Case 1
@@ -283,13 +283,13 @@ Module GenI2C
                     BlockI2C = True
                 Case Else
                     Console.WriteLine()
-                    Console.WriteLine("Undefined Behaviour, Exiting")
+                    Console.WriteLine("未知操作, 正在退出")
                     Console.ReadLine()
                     End
             End Select
 
             If ExAPIC = True And 24 <= APICPIN And APICPIN <= 47 Then '<= 0x2F Group A & E
-                Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, using instead")
+                Console.WriteLine("APIC Pin 值 < 2F, 支持原生 APIC 中断")
                 If Hetero = True Then APICNAME = "SBFX"
                 PatchCRS2APIC()
             ElseIf ExAPIC = False And ExGPIO = True Then
@@ -305,32 +305,32 @@ Module GenI2C
                 If InterruptEnabled = True Then
                     If ExGPIO = False Then
                         If APICPIN = 0 Then
-                            Console.WriteLine("Failed to extract APIC Pin, filled by system start up. Please input your APIC Pin in Hex")
+                            Console.WriteLine("提取 APIC Pin 失败, Pin 值由系统启动时填充。请以十六进制输入您的 APIC Pin")
                             Console.Write("APIC Pin: ")
                             APICPIN = Convert.ToInt32(Console.ReadLine(), 16)
                             While APICPIN < 24 Or APICPIN > 119
                                 Console.WriteLine()
-                                Console.WriteLine("APIC Pin out of range!")
-                                Console.WriteLine("Select your choice:")
-                                Console.WriteLine("1) Input again")
-                                Console.WriteLine("2) Exit")
+                                Console.WriteLine("APIC Pin 超出范围!")
+                                Console.WriteLine("选择:")
+                                Console.WriteLine("1) 重新输入")
+                                Console.WriteLine("2) 退出")
                                 Console.WriteLine()
-                                Console.Write("Your Choice: ")
+                                Console.Write("您的选择: ")
                                 If Console.ReadLine() = 1 Then
                                     Console.Write("APIC Pin: ")
                                     APICPIN = Convert.ToInt32(Console.ReadLine(), 16)
                                 ElseIf Console.ReadLine() = 2 Then
-                                    Console.WriteLine("Exiting")
+                                    Console.WriteLine("正在退出")
                                     Console.ReadLine()
                                     End
                                 Else
-                                    Console.WriteLine("Unknown Behaviour, Exiting")
+                                    Console.WriteLine("未知操作, 正在退出")
                                     Console.ReadLine()
                                     End
                                 End If
                             End While
                             If APICPIN >= 24 And APICPIN <= 47 Then
-                                Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, using instead")
+                                Console.WriteLine("APIC Pin 值 < 2F, 支持原生 APIC 中断")
                                 If Hetero = True Then APICNAME = "SBFX"
                                 PatchCRS2APIC()
                             Else
@@ -339,7 +339,7 @@ Module GenI2C
                                 PatchCRS2GPIO()
                             End If
                         ElseIf APICPIN > 47 Then
-                            Console.WriteLine("No native GpioInt found, Generating instead")
+                            Console.WriteLine("原生 GpioInt 不存在, 已自动生成")
                             GPIONAME = "SBFZ"
                             APIC2GPIO()
                             PatchCRS2GPIO()
@@ -352,33 +352,33 @@ Module GenI2C
                         APICNAME = "SBFX"
                         APICPIN = 63
                     End If
-                    If APICPIN = 0 Then Console.WriteLine("APIC Pin size uncertain, could be either APIC or polling")
+                    If APICPIN = 0 Then Console.WriteLine("APIC Pin 大小未知, 可能是 APIC 中断或轮询")
                     PatchCRS2APIC()
                 End If
             ElseIf ExAPIC = False And ExGPIO = False And ExSLAV = True Then ' I don't think this situation exists
                 If InterruptEnabled = True Then
-                    Console.WriteLine("No native APIC found, failed to extract APIC Pin. Please input your APIC Pin in Hex")
+                    Console.WriteLine("原生 APIC 不存在，提取 APIC Pin 失败。请以十六进制输入您的 APIC Pin")
                     Console.Write("APIC Pin: ")
                     APICPIN = Convert.ToInt32(Console.ReadLine(), 16)
                     While APICPIN < 24 Or APICPIN > 119
                         Console.WriteLine()
-                        Console.WriteLine("APIC Pin out of range!")
-                        Console.WriteLine("Select your choice:")
-                        Console.WriteLine("1) Input again")
-                        Console.WriteLine("2) Exit")
+                        Console.WriteLine("APIC Pin 超出范围!")
+                        Console.WriteLine("选择:")
+                        Console.WriteLine("1) 重新输入")
+                        Console.WriteLine("2) 退出")
                         Console.WriteLine()
-                        Console.Write("Your Choice: ")
+                        Console.Write("您的选择: ")
                         If Console.ReadLine() = 1 Then
                             Console.Write("APIC Pin: ")
                             APICPIN = Convert.ToInt32(Console.ReadLine(), 16)
                         Else
-                            Console.WriteLine("Undefined Behaviour, Exiting")
+                            Console.WriteLine("未知操作, 正在退出")
                             Console.ReadLine()
                             End
                         End If
                     End While
                     If APICPIN >= 24 And APICPIN <= 47 Then
-                        Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, No _CRS Patch required")
+                        Console.WriteLine("APIC Pin 值 < 2F, 支持原生 APIC 中断，将不会生成 _CRS 补丁")
                     Else
                         GPIONAME = "SBFZ"
                         APIC2GPIO()
@@ -390,15 +390,15 @@ Module GenI2C
                     PatchCRS2APIC()
                 End If
             Else
-                Console.WriteLine("Undefined Situation")
+                Console.WriteLine("未知情况，请在 GitHub 上提交你的文件和问题反馈")
                 Console.ReadLine()
                 End
             End If
             GenSSDT()
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (AL), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (AL), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -420,11 +420,11 @@ Module GenI2C
                     CRSPatched = True
                 End If
             Next
-            If CRSPatched = False Then Console.WriteLine("Error! No _CRS Patch Applied!")
+            If CRSPatched = False Then Console.WriteLine("错误! 没有 _CRS 补丁被应用!")
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (P2G), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (P2G), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -446,11 +446,11 @@ Module GenI2C
                     CRSPatched = True
                 End If
             Next
-            If CRSPatched = False Then Console.WriteLine("Error! No _CRS Patch Applied!")
+            If CRSPatched = False Then Console.WriteLine("错误! 没有 _CRS 补丁被应用!")
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (P2A), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (P2A), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -459,7 +459,7 @@ Module GenI2C
     Sub APIC2GPIO()
         Try
             If APICPIN >= 24 And APICPIN <= 47 Then           '< 0x2F Group A & E (& I)
-                Console.WriteLine("APIC Pin value < 2F, Native APIC Supported, Generation Cancelled")
+                Console.WriteLine("APIC Pin 值 < 2F, 支持原生 APIC 中断, GPIO 生成已取消")
             Else
                 Select Case CPUChoice
                     Case 1
@@ -500,8 +500,8 @@ Module GenI2C
 
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (A2G), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (A2G), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -552,8 +552,8 @@ Module GenI2C
 
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (GG), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (GG), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -570,8 +570,8 @@ Module GenI2C
             ManualAPIC(6) = Spacing & "})"
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (GA), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (GA), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -695,38 +695,38 @@ Module GenI2C
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
             Console.WriteLine()
             If InterruptEnabled = True Or PollingEnabled = True Then
-                Console.WriteLine("Find _CRS:          5F 43 52 53")
-                Console.WriteLine("Replace XCRS:       58 43 52 53")
+                Console.WriteLine("查找 _CRS:          5F 43 52 53")
+                Console.WriteLine("替换 XCRS:          58 43 52 53")
                 Console.WriteLine("Target Bridge " & TPAD & ": " & HexTPAD)
                 Console.WriteLine()
                 If InterruptEnabled = True And APICPIN > 47 Then
-                    Console.WriteLine("Find _STA:          5F 53 54 41")
-                    Console.WriteLine("Replace XSTA:       58 53 54 41")
+                    Console.WriteLine("查找 _STA:          5F 53 54 41")
+                    Console.WriteLine("替换 XSTA:          58 53 54 41")
                     Console.WriteLine("Target Bridge GPI0: 47 50 49 30")
                     Console.WriteLine()
                 End If
             ElseIf BlockI2C = True Then
-                Console.WriteLine("Find _STA:          5F 53 54 41")
-                Console.WriteLine("Replace XSTA:       58 53 54 41")
+                Console.WriteLine("查找 _STA:          5F 53 54 41")
+                Console.WriteLine("替换 XSTA:          58 53 54 41")
                 Console.WriteLine("Target Bridge " & BlockBus & ": " & HexBlockBus)
                 Console.WriteLine()
             End If
             If ExUSTP = True And BlockI2C = False Then
-                Console.WriteLine("Find USTP:          55 53 54 50 08")
-                Console.WriteLine("Replace XSTP:       58 53 54 50 08")
+                Console.WriteLine("查找 USTP:          55 53 54 50 08")
+                Console.WriteLine("替换 XSTP:          58 53 54 50 08")
                 Console.WriteLine()
             End If
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
             Console.WriteLine()
-            Console.WriteLine("Enjoy!")
-            Console.WriteLine("Type in " & Chr(34) & "Exit" & Chr(34) & " to exit")
+            Console.WriteLine("生成完成!")
+            Console.WriteLine("输入 " & Chr(34) & "Exit" & Chr(34) & " 以退出")
             While True
                 If Console.ReadLine() = "Exit" Then End
             End While
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (GS), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (GS), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
@@ -739,8 +739,8 @@ Module GenI2C
             Next
         Catch ex As Exception
             Console.WriteLine()
-            Console.WriteLine("Unknown error (BC), please open an issue and provide your files")
-            Console.WriteLine("Exiting")
+            Console.WriteLine("未知错误 (BC), 请在 GitHub 上提交你的文件和问题反馈")
+            Console.WriteLine("正在退出")
             Console.ReadLine()
             End
         End Try
