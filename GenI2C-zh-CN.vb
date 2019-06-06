@@ -619,8 +619,8 @@ Module GenI2C_zh_CN
                     If ExI2CM = True Then
                         Filehead(8) = "    External(_SB.PCI0.I2C" & Scope & ".I2CX, UnknownObj)"
                         Filehead(9) = "    External(_SB.PCI0.I2CM, MethodObj)"
-                        Filehead(10) = "    External(_SB.PCI0.I2C" & Scope & ".BADR, IntObj)"
-                        Filehead(11) = "    External(_SB.PCI0.I2C" & Scope & ".SPED, IntObj)"
+                        Filehead(10) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, IntObj)"
+                        Filehead(11) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED, IntObj)"
                     End If
                     If ExUSTP = True Then
                         Filehead(12) = "    Name (USTP, One)"
