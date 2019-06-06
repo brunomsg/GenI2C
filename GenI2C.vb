@@ -219,7 +219,7 @@ Module GenI2C
                 End If
                 If SLAVNameLineFound = True And APICNameLineFound = True And SLAVName = APICNAME And Hetero = False Then
                     Hetero = True
-                    BreakCombine()
+                    If CheckSLAVLocation < CRSMethodLine Then BreakCombine()
                 End If
             Next
 
@@ -689,7 +689,7 @@ Module GenI2C
                         Next
                     End If
                     For GenIndex = 0 To CRSInfo.Length - 2
-                        If CRSInfo(GenIndex) <> "" Then
+                        If CRSInfo(GenIndex) <> "" Or Hetero = False Then
                             fs.Write(New UTF8Encoding(True).GetBytes(CRSInfo(GenIndex) & vbLf), 0, (CRSInfo(GenIndex) & vbLf).Length)
                         End If
                     Next
