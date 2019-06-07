@@ -2,7 +2,7 @@
 
     Public EnableEn, EnableCn As Boolean
     Dim LangSelect As String
-    Public LoStr(50) As String
+    Public LoStr(51) As String
 
     Sub Main()
         Console.WriteLine()
@@ -49,13 +49,13 @@
             LoStr(6) = ("请正确输入您的设备名 (如: " & Chr(34) & "TPD" & Chr(34) & ")!")
             LoStr(7) = ("未知错误, 请在 GitHub 上提交你的文件和问题反馈")
             LoStr(8) = ("即将退出")
-            LoStr(9) = '("USTP 存在于 DSDT 的第 " & line + 1 & " 行")
-            LoStr(10) = '("SSCN 存在于 DSDT 的第 " & line + 1 & " 行")
-            LoStr(11) = '("FMCN 存在于 DSDT 的第 " & line + 1 & " 行")
+            'LoStr(9) = ("USTP 存在于 DSDT 的第 " & line + 1 & " 行")
+            'LoStr(10) = ("SSCN 存在于 DSDT 的第 " & line + 1 & " 行")
+            'LoStr(11) = ("FMCN 存在于 DSDT 的第 " & line + 1 & " 行")
             LoStr(12) = ("DSDT 中不存在这个设备")
-            LoStr(13) = '("原生 Gpioint 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
-            LoStr(14) = '("原生 APIC 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
-            LoStr(15) = '("I2C 从地址 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
+            'LoStr(13) = ("原生 Gpioint 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
+            'LoStr(14) = ("原生 APIC 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
+            'LoStr(15) = ("I2C 从地址 存在于 " & TPAD & " 中的第 " & i + 1 & " 行")
             LoStr(16) = ("这不是一个 I2C 设备!")
             LoStr(17) = ("选择你的 CPU 架构:")
             LoStr(18) = ("1) Sunrise Point:  SKL, KBL, KBL-R (6代至八代低压)")
@@ -90,6 +90,8 @@
             LoStr(47) = ("替换 XSTP:          58 53 54 5 8")
             LoStr(48) = ("生成完成!")
             LoStr(49) = ("输入 " & Chr(34) & "Exit" & Chr(34) & " 以退出")
+            LoStr(50) = ("查找 SSCN:          53 53 43 4E")
+            LoStr(51) = ("替换 XSCN:          58 53 43 4E")
 
         ElseIf EnableEn = True Then
 
@@ -102,13 +104,13 @@
             LoStr(6) = ("Please Input your device name correctly (e.g. " & Chr(34) & "TPD0" & Chr(34) & ")!")
             LoStr(7) = ("Unknown error, please open an issue and provide your files")
             LoStr(8) = ("Exiting")
-            LoStr(9) = '("Found for USTP in DSDT at line " & line + 1)
-            LoStr(10) = '("Found for SSCN in DSDT at line " & line + 1)
-            LoStr(11) = '("Found for FMCN in DSDT at line " & line + 1)
+            'LoStr(9) = ("Found for USTP in DSDT at line " & line + 1)
+            'LoStr(10) = ("Found for SSCN in DSDT at line " & line + 1)
+            'LoStr(11) = ("Found for FMCN in DSDT at line " & line + 1)
             LoStr(12) = ("This is not a Device that exists in the DSDT")
-            LoStr(13) = '("Native GpioInt Found in " & TPAD & " at line " & i + 1)
-            LoStr(14) = '("Native APIC Found in " & TPAD & " at line " & i + 1)
-            LoStr(15) = '("Slave Address Found in " & TPAD & " at line " & i + 1)
+            'LoStr(13) = ("Native GpioInt Found in " & TPAD & " at line " & i + 1)
+            'LoStr(14) = ("Native APIC Found in " & TPAD & " at line " & i + 1)
+            'LoStr(15) = ("Slave Address Found in " & TPAD & " at line " & i + 1)
             LoStr(16) = ("This is not a I2C Device!")
             LoStr(17) = ("Select your CPU architecture:")
             LoStr(18) = ("1) Sunrise Point:  SKL, KBL, KBL-R")
@@ -143,6 +145,8 @@
             LoStr(47) = ("Replace XSTP:       58 53 54 50 08")
             LoStr(48) = ("Enjoy!")
             LoStr(49) = ("Type in " & Chr(34) & "Exit" & Chr(34) & " to exit")
+            LoStr(50) = ("Find SSCN:          53 53 43 4E")
+            LoStr(51) = ("Replace XSCN:       58 53 43 4E")
 
         End If
         Input()

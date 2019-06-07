@@ -3,7 +3,7 @@ Imports System.Text
 Module GenI2C
 
     Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual As String
-    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1) As String
+    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1), CNL_H_SPED(43) As String
     Private Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
     Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSLocation, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
 
@@ -445,6 +445,31 @@ Module GenI2C
                 End If
             Next
             If CRSPatched = False Then Console.WriteLine(LoStr(40)) '("Error! No _CRS Patch Applied!")
+
+            GPI0SSDT(0) = "/* "
+            GPI0SSDT(1) = " * Find _STA:          5F 53 54 41"
+            GPI0SSDT(2) = " * Replace XSTA:       58 53 54 41"
+            GPI0SSDT(3) = " * Target Bridge GPI0: 47 50 49 30"
+            GPI0SSDT(4) = " */"
+            GPI0SSDT(5) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "GPI0" & Chr(34) & ", 0)"
+            GPI0SSDT(6) = "{"
+            GPI0SSDT(7) = "    External(_SB.PCI0.GPI0, DeviceObj)"
+            GPI0SSDT(8) = "    Scope (_SB.PCI0.GPI0)"
+            GPI0SSDT(9) = "    {"
+            GPI0SSDT(10) = "        Method (_STA, 0, NotSerialized)"
+            GPI0SSDT(11) = "        {"
+            GPI0SSDT(12) = "            Return (0x0F)"
+            GPI0SSDT(13) = "        }"
+            GPI0SSDT(14) = "    }"
+            GPI0SSDT(15) = "}"
+
+            Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-GPI0.dsl"
+            Dim fs As FileStream = File.Create(path)
+            For Genindex = 0 To 15
+                fs.Write(New UTF8Encoding(True).GetBytes(GPI0SSDT(Genindex) & vbLf), 0, (GPI0SSDT(Genindex) & vbLf).Length)
+            Next
+            fs.Close()
+
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine(LoStr(7) & " *P2G") '("Unknown error (P2G), please open an issue and provide your files")
@@ -549,31 +574,6 @@ Module GenI2C
             ManualGPIO(7) = Spacing & "        }"
             ManualGPIO(8) = Spacing & "})"
 
-
-            GPI0SSDT(0) = "/* "
-            GPI0SSDT(1) = " * Find _STA:          5F 53 54 41"
-            GPI0SSDT(2) = " * Replace XSTA:       58 53 54 41"
-            GPI0SSDT(3) = " * Target Bridge GPI0: 47 50 49 30"
-            GPI0SSDT(4) = " */"
-            GPI0SSDT(5) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "GPI0" & Chr(34) & ", 0)"
-            GPI0SSDT(6) = "{"
-            GPI0SSDT(7) = "    External(_SB.PCI0.GPI0, DeviceObj)"
-            GPI0SSDT(8) = "    Scope (_SB.PCI0.GPI0)"
-            GPI0SSDT(9) = "    {"
-            GPI0SSDT(10) = "        Method (_STA, 0, NotSerialized)"
-            GPI0SSDT(11) = "        {"
-            GPI0SSDT(12) = "            Return (0x0F)"
-            GPI0SSDT(13) = "        }"
-            GPI0SSDT(14) = "    }"
-            GPI0SSDT(15) = "}"
-
-            Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-GPI0.dsl"
-            Dim fs As FileStream = File.Create(path)
-            For Genindex = 0 To 15
-                fs.Write(New UTF8Encoding(True).GetBytes(GPI0SSDT(Genindex) & vbLf), 0, (GPI0SSDT(Genindex) & vbLf).Length)
-            Next
-            fs.Close()
-
         Catch ex As Exception
             Console.WriteLine()
             Console.WriteLine(LoStr(7) & " *GG") '("Unknown error (GG), please open an issue and provide your files")
@@ -662,16 +662,18 @@ Module GenI2C
                             fs.Write(New UTF8Encoding(True).GetBytes(Filehead(GenIndex) & vbLf), 0, (Filehead(GenIndex) & vbLf).Length)
                         End If
                     Next
-                    If ExUSTP = False And CPUChoice = 1 Then
+                    If ExUSTP = False And (ExFMCN = False Or ExSSCN = False) Then
                         GenSPED()
-                        If ExSSCN = False And ExFMCN = True Then
-                            fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(0) & vbLf), 0, (ManualSPED(0) & vbLf).Length)
-                        ElseIf ExFMCN = False And ExSSCN = True Then
-                            fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(1) & vbLf), 0, (ManualSPED(1) & vbLf).Length)
-                        Else
-                            For GenIndex = 0 To 1
-                                fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
-                            Next
+                        If CPUChoice = 1 Then
+                            If ExSSCN = False And ExFMCN = True Then
+                                fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(0) & vbLf), 0, (ManualSPED(0) & vbLf).Length)
+                            ElseIf ExFMCN = False And ExSSCN = True Then
+                                fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(1) & vbLf), 0, (ManualSPED(1) & vbLf).Length)
+                            Else
+                                For GenIndex = 0 To 1
+                                    fs.Write(New UTF8Encoding(True).GetBytes(ManualSPED(GenIndex) & vbLf), 0, (ManualSPED(GenIndex) & vbLf).Length)
+                                Next
+                            End If
                         End If
                     End If
                     If InterruptEnabled = True And ExGPIO = False And APICPIN > 47 Then
@@ -715,7 +717,7 @@ Module GenI2C
                 Console.WriteLine(LoStr(43)) '("Replace XCRS:       58 43 52 53")
                 Console.WriteLine("Target Bridge " & TPAD & ": " & HexTPAD)
                 Console.WriteLine()
-                If InterruptEnabled = True And APICPIN > 47 Then
+                If InterruptEnabled = True And (APICPIN > 47 Or (APICPIN = 0 And ExGPIO = True And ExAPIC = True)) Then
                     Console.WriteLine(LoStr(44)) '("Find _STA:          5F 53 54 41")
                     Console.WriteLine(LoStr(45)) '("Replace XSTA:       58 53 54 41")
                     Console.WriteLine("Target Bridge GPI0: 47 50 49 30")
@@ -731,6 +733,9 @@ Module GenI2C
                 Console.WriteLine(LoStr(46)) '("Find USTP:          55 53 54 50 08")
                 Console.WriteLine(LoStr(47)) '("Replace XSTP:       58 53 54 50 08")
                 Console.WriteLine()
+            ElseIf ExUSTP = False And ExSSCN = True And ExFMCN = False And CPUChoice = 2 And BlockI2C = False Then
+                Console.WriteLine(LoStr(50)) '("Find SSCN:          53 53 43 4E")
+                Console.WriteLine(LoStr(51)) '("Replace XSCN:       58 53 43 4E")
             End If
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
             Console.WriteLine()
@@ -763,19 +768,82 @@ Module GenI2C
     End Sub
 
     Sub GenSPED()
-        If Scope = 0 Then
-            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-        ElseIf Scope = 1 Then
-            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 528, 640, 30 })"
-            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 128, 160, 30 })"
-        ElseIf Scope = 2 Then
-            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-        ElseIf Scope = 3 Then
-            ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
-            ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
-        End If
+        Try
+            If CPUChoice = 1 Then
+                If Scope = 0 Then
+                    ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
+                    ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
+                ElseIf Scope = 1 Then
+                    ManualSPED(0) = Spacing & "Name (SSCN, Package () { 528, 640, 30 })"
+                    ManualSPED(1) = Spacing & "Name (FMCN, Package () { 128, 160, 30 })"
+                ElseIf Scope = 2 Then
+                    ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
+                    ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
+                ElseIf Scope = 3 Then
+                    ManualSPED(0) = Spacing & "Name (SSCN, Package () { 432, 507, 30 })"
+                    ManualSPED(1) = Spacing & "Name (FMCN, Package () { 72, 160, 30 })"
+                End If
+            ElseIf CPUChoice = 2 And ExFMCN = False Then
+                If ExSSCN = True Then
+                    CNL_H_SPED(0) = "/* "
+                    CNL_H_SPED(1) = " * Find SSCN:          53 53 43 4E"
+                    CNL_H_SPED(2) = " * Replace XSCN:       58 53 43 4E"
+                    CNL_H_SPED(3) = " */"
+                End If
+                CNL_H_SPED(4) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2C-SPED" & Chr(34) & ", 0)"
+                CNL_H_SPED(5) = "{"
+                CNL_H_SPED(6) = "    External(_SB_.PCI0.I2C" & Scope & ", DeviceObj)"
+                CNL_H_SPED(7) = "    External(FMD" & Scope & ", IntObj)"
+                CNL_H_SPED(8) = "    External(FMH" & Scope & ", IntObj)"
+                CNL_H_SPED(9) = "    External(FML" & Scope & ", IntObj)"
+                CNL_H_SPED(10) = "    External(SSD" & Scope & ", IntObj)"
+                CNL_H_SPED(11) = "    External(SSH" & Scope & ", IntObj)"
+                CNL_H_SPED(12) = "    External(SSL" & Scope & ", IntObj)"
+                CNL_H_SPED(13) = "    Scope(_SB.PCI0.I2C0)"
+                CNL_H_SPED(14) = "    {"
+                CNL_H_SPED(15) = Spacing & "Method (PKGX, 3, Serialized)"
+                CNL_H_SPED(16) = Spacing & "{"
+                CNL_H_SPED(17) = Spacing & "    Name (PKG, Package (0x03)"
+                CNL_H_SPED(18) = Spacing & "    {"
+                CNL_H_SPED(19) = Spacing & "        Zero, "
+                CNL_H_SPED(20) = Spacing & "        Zero, "
+                CNL_H_SPED(21) = Spacing & "        Zero"
+                CNL_H_SPED(22) = Spacing & "    })"
+                CNL_H_SPED(23) = Spacing & "Store (Arg0, Index (PKG, Zero))"
+                CNL_H_SPED(24) = Spacing & "Store (Arg1, Index (PKG, One))"
+                CNL_H_SPED(25) = Spacing & "Store (Arg2, Index (PKG, 0x02))"
+                CNL_H_SPED(26) = Spacing & "Return (PKG)"
+                CNL_H_SPED(27) = Spacing & "}"
+                CNL_H_SPED(28) = Spacing & "Method (SSCN, 0, NotSerialized)"
+                CNL_H_SPED(29) = Spacing & "{"
+                CNL_H_SPED(30) = Spacing & "    Return (PKGX (SSH" & Scope & ", SSL" & Scope & ", SSD" & Scope & "))"
+                CNL_H_SPED(31) = Spacing & "}"
+                CNL_H_SPED(32) = Spacing & "Method (FMCN, 0, NotSerialized)"
+                CNL_H_SPED(33) = Spacing & "{"
+                CNL_H_SPED(34) = Spacing & "    Name (PKG, Package (0x03)"
+                CNL_H_SPED(35) = Spacing & "    {"
+                CNL_H_SPED(36) = Spacing & "        0x0101, "
+                CNL_H_SPED(37) = Spacing & "        0x012C, "
+                CNL_H_SPED(38) = Spacing & "        0x62"
+                CNL_H_SPED(39) = Spacing & "    })"
+                CNL_H_SPED(40) = Spacing & "    Return (PKG)"
+                CNL_H_SPED(41) = Spacing & "}"
+                CNL_H_SPED(42) = "    }"
+                CNL_H_SPED(43) = "}"
+
+                Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-I2C-SPED.dsl"
+                Dim fs As FileStream = File.Create(path)
+                For Genindex = 0 To CNL_H_SPED.Length - 1
+                    If CNL_H_SPED(Genindex) <> "" Then
+                        fs.Write(New UTF8Encoding(True).GetBytes(CNL_H_SPED(Genindex) & vbLf), 0, (CNL_H_SPED(Genindex) & vbLf).Length)
+                    End If
+                Next
+                fs.Close()
+
+            End If
+        Catch ex As Exception
+            Console.WriteLine(ex)
+        End Try
     End Sub
 
     Sub GenBlockI2C()
