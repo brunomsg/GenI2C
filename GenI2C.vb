@@ -1,8 +1,9 @@
 ﻿Imports System.IO
+Imports System.IO.Compression
 Imports System.Text
 Module GenI2C
 
-    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual As String
+    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual, FolderPath As String
     Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1), CNL_H_SPED(43) As String
     Private Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
     Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSLocation, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
@@ -46,6 +47,7 @@ Module GenI2C
                 End If
             End While
             Device = "Device (" & TPAD & ")"
+            FolderPath = My.Computer.FileSystem.SpecialDirectories.Desktop & "\I2C-" & TPAD & "-Patch"
             For GenIndex = 0 To 3
                 HexTPAD += Hex(Asc(TPAD.Substring(GenIndex, 1))) + " "
             Next GenIndex
@@ -462,8 +464,8 @@ Module GenI2C
             GPI0SSDT(13) = "        }"
             GPI0SSDT(14) = "    }"
             GPI0SSDT(15) = "}"
-
-            Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-GPI0.dsl"
+            If Dir(FolderPath) = "" Then Directory.CreateDirectory(FolderPath)
+            Dim path As String = FolderPath & "\SSDT-GPI0.dsl"
             Dim fs As FileStream = File.Create(path)
             For Genindex = 0 To 15
                 fs.Write(New UTF8Encoding(True).GetBytes(GPI0SSDT(Genindex) & vbLf), 0, (GPI0SSDT(Genindex) & vbLf).Length)
@@ -599,7 +601,8 @@ Module GenI2C
                 If ExAPIC = False And ExGPIO = False And APICPIN < 47 Then
                     'No Patch Required, No SSDT Generated
                 Else
-                    Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-" & TPAD & ".dsl"
+                    If Dir(FolderPath) = "" Then Directory.CreateDirectory(FolderPath)
+                    Dim path As String = FolderPath & "\SSDT-" & TPAD & ".dsl"
                     Dim fs As FileStream = File.Create(path)
 
                     Dim RenameCRS(3) As String
@@ -708,7 +711,7 @@ Module GenI2C
                 Next
                 fs.Close()
             End If
-
+            CompressPkg()
             Console.WriteLine()
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++")
             Console.WriteLine()
@@ -745,7 +748,7 @@ Module GenI2C
                 If Console.ReadLine() = "Exit" Then End
             End While
         Catch ex As Exception
-            Console.WriteLine()
+            Console.WriteLine(ex)
             Console.WriteLine(LoStr(7) & " *GS") '("Unknown error (GS), please open an issue and provide your files")
             Console.WriteLine(LoStr(8)) '("Exiting")
             Console.ReadLine()
@@ -801,37 +804,37 @@ Module GenI2C
                 CNL_H_SPED(12) = "    External(SSL" & Scope & ", IntObj)"
                 CNL_H_SPED(13) = "    Scope(_SB.PCI0.I2C0)"
                 CNL_H_SPED(14) = "    {"
-                CNL_H_SPED(15) = Spacing & "Method (PKGX, 3, Serialized)"
-                CNL_H_SPED(16) = Spacing & "{"
-                CNL_H_SPED(17) = Spacing & "    Name (PKG, Package (0x03)"
-                CNL_H_SPED(18) = Spacing & "    {"
-                CNL_H_SPED(19) = Spacing & "        Zero, "
-                CNL_H_SPED(20) = Spacing & "        Zero, "
-                CNL_H_SPED(21) = Spacing & "        Zero"
-                CNL_H_SPED(22) = Spacing & "    })"
-                CNL_H_SPED(23) = Spacing & "Store (Arg0, Index (PKG, Zero))"
-                CNL_H_SPED(24) = Spacing & "Store (Arg1, Index (PKG, One))"
-                CNL_H_SPED(25) = Spacing & "Store (Arg2, Index (PKG, 0x02))"
-                CNL_H_SPED(26) = Spacing & "Return (PKG)"
-                CNL_H_SPED(27) = Spacing & "}"
-                CNL_H_SPED(28) = Spacing & "Method (SSCN, 0, NotSerialized)"
-                CNL_H_SPED(29) = Spacing & "{"
-                CNL_H_SPED(30) = Spacing & "    Return (PKGX (SSH" & Scope & ", SSL" & Scope & ", SSD" & Scope & "))"
-                CNL_H_SPED(31) = Spacing & "}"
-                CNL_H_SPED(32) = Spacing & "Method (FMCN, 0, NotSerialized)"
-                CNL_H_SPED(33) = Spacing & "{"
-                CNL_H_SPED(34) = Spacing & "    Name (PKG, Package (0x03)"
-                CNL_H_SPED(35) = Spacing & "    {"
-                CNL_H_SPED(36) = Spacing & "        0x0101, "
-                CNL_H_SPED(37) = Spacing & "        0x012C, "
-                CNL_H_SPED(38) = Spacing & "        0x62"
-                CNL_H_SPED(39) = Spacing & "    })"
-                CNL_H_SPED(40) = Spacing & "    Return (PKG)"
-                CNL_H_SPED(41) = Spacing & "}"
+                CNL_H_SPED(15) = "        Method (PKGX, 3, Serialized)"
+                CNL_H_SPED(16) = "        {"
+                CNL_H_SPED(17) = "            Name (PKG, Package (0x03)"
+                CNL_H_SPED(18) = "            {"
+                CNL_H_SPED(19) = "                Zero, "
+                CNL_H_SPED(20) = "                Zero, "
+                CNL_H_SPED(21) = "                Zero"
+                CNL_H_SPED(22) = "            })"
+                CNL_H_SPED(23) = "        Store (Arg0, Index (PKG, Zero))"
+                CNL_H_SPED(24) = "        Store (Arg1, Index (PKG, One))"
+                CNL_H_SPED(25) = "        Store (Arg2, Index (PKG, 0x02))"
+                CNL_H_SPED(26) = "        Return (PKG)"
+                CNL_H_SPED(27) = "        }"
+                CNL_H_SPED(28) = "        Method (SSCN, 0, NotSerialized)"
+                CNL_H_SPED(29) = "        {"
+                CNL_H_SPED(30) = "            Return (PKGX (SSH" & Scope & ", SSL" & Scope & ", SSD" & Scope & "))"
+                CNL_H_SPED(31) = "        }"
+                CNL_H_SPED(32) = "        Method (FMCN, 0, NotSerialized)"
+                CNL_H_SPED(33) = "        {"
+                CNL_H_SPED(34) = "            Name (PKG, Package (0x03)"
+                CNL_H_SPED(35) = "            {"
+                CNL_H_SPED(36) = "                0x0101, "
+                CNL_H_SPED(37) = "                0x012C, "
+                CNL_H_SPED(38) = "                0x62"
+                CNL_H_SPED(39) = "            })"
+                CNL_H_SPED(40) = "            Return (PKG)"
+                CNL_H_SPED(41) = "        }"
                 CNL_H_SPED(42) = "    }"
                 CNL_H_SPED(43) = "}"
 
-                Dim path As String = My.Computer.FileSystem.SpecialDirectories.Desktop & "\SSDT-I2C-SPED.dsl"
+                Dim path As String = FolderPath & "\SSDT-I2C-SPED.dsl"
                 Dim fs As FileStream = File.Create(path)
                 For Genindex = 0 To CNL_H_SPED.Length - 1
                     If CNL_H_SPED(Genindex) <> "" Then
@@ -866,5 +869,9 @@ Module GenI2C
         For GenIndex = 0 To 3
             HexBlockBus += Hex(Asc(BlockBus.Substring(GenIndex, 1))) + " "
         Next GenIndex
+    End Sub
+
+    Sub CompressPkg()
+        ZipFile.CreateFromDirectory(FolderPath & "/", My.Computer.FileSystem.SpecialDirectories.Desktop & "\I2C-" & TPAD & "-Patch.zip")
     End Sub
 End Module
