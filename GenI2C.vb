@@ -3,8 +3,8 @@ Imports System.IO.Compression
 Imports System.Text
 Module GenI2C
 
-    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), IfLLess, IfLEqual, FolderPath As String
-    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1), CNL_H_SPED(43) As String
+    Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), FolderPath As String
+    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1), CNL_H_SPED(43), IfLLess, IfLEqual As String
     Private Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
     Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSLocation, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
 
@@ -156,11 +156,18 @@ Module GenI2C
 
             For i = 0 To total
                 If InStr(Code(i), "Method (_CRS,") > 0 Then
-                    n = total - i
+                    Dim CRSStart, CRSEnd, CRSRangeScan As Integer
+                    CRSRangeScan = i + 1
+                    CRSStart = InStr(Code(CRSRangeScan), "{")
+                    Do
+                        CRSEnd = InStr(Code(CRSRangeScan), "}")
+                        CRSRangeScan = CRSRangeScan + 1
+                    Loop Until CRSStart = CRSEnd
+                    n = CRSRangeScan - i
                     CRSLocation = i
                     ReDim CRSInfo(n)
                     n = 0
-                    For CRSInfoLine = i To total - 1
+                    For CRSInfoLine = i To CRSRangeScan - 1
                         CRSInfo(n) = Code(CRSInfoLine)
                         n = n + 1
                     Next
@@ -748,7 +755,7 @@ Module GenI2C
                 If Console.ReadLine() = "Exit" Then End
             End While
         Catch ex As Exception
-            Console.WriteLine(ex)
+            Console.WriteLine()
             Console.WriteLine(LoStr(7) & " *GS") '("Unknown error (GS), please open an issue and provide your files")
             Console.WriteLine(LoStr(8)) '("Exiting")
             Console.ReadLine()
