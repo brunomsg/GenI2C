@@ -2,7 +2,7 @@
 
     Public EnableEn, EnableCn As Boolean
     Dim LangSelect As String
-    Public LoStr(51) As String
+    Public LoStr(52) As String
 
     Sub Main()
         Console.WriteLine()
@@ -92,6 +92,7 @@
             LoStr(49) = ("输入 " & Chr(34) & "Exit" & Chr(34) & " 以退出")
             LoStr(50) = ("查找 SSCN:          53 53 43 4E")
             LoStr(51) = ("替换 XSCN:          58 53 43 4E")
+            LoStr(52) = ("警告!" & TPAD & "中存在多个 I2C 从地址, _CRS 修补可能出错!")
 
         ElseIf EnableEn = True Then
 
@@ -147,6 +148,7 @@
             LoStr(49) = ("Type in " & Chr(34) & "Exit" & Chr(34) & " to exit")
             LoStr(50) = ("Find SSCN:          53 53 43 4E")
             LoStr(51) = ("Replace XSCN:       58 53 43 4E")
+            LoStr(52) = ("Warning! Multiple I2C Bus Addresses exist in " & TPAD & " _CRS patching may be wrong!")
 
         End If
         Input()

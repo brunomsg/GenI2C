@@ -4,8 +4,8 @@ Imports System.Text
 Module GenI2C
 
     Public TPAD, Device, DSDTFile, Paranthesesopen, Paranthesesclose, DSDTLine, Scope, Spacing, APICNAME, SLAVName, GPIONAME, HexTPAD, CPUChoice, BlockBus, HexBlockBus, BlockSSDT(15), GPI0SSDT(15), FolderPath As String
-    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1), CNL_H_SPED(43), IfLLess, IfLEqual As String
-    Private Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM As Boolean
+    Dim Code(), CRSInfo(), ManualGPIO(8), ManualAPIC(6), ManualSPED(1), CNL_H_SPED(43), IfLLess(5), IfLEqual(5) As String
+    Private Matched, CRSPatched, ExUSTP, ExSSCN, ExFMCN, ExAPIC, ExSLAV, ExGPIO, CatchSpacing, APICNameLineFound, SLAVNameLineFound, GPIONameLineFound, InterruptEnabled, PollingEnabled, Hetero, BlockI2C, ExI2CM, LLess, LEqual As Boolean
     Public line, i, n, total, APICPinLine, GPIOPinLine, ScopeLine, APICPIN, GPIOPIN, GPIOPIN2, GPIOPIN3, APICNameLine, SLAVNameLine, GPIONAMELine, CRSLocation, CRSInfoLine, CheckCombLine, CheckSLAVLocation As Integer
 
     Sub Input()
@@ -214,7 +214,10 @@ Module GenI2C
                     Console.WriteLine("APIC Pin " & APICPIN & " (0x" & Hex(APICPIN) & ")")
                 End If
                 If InStr(Code(i), "I2cSerialBusV2 (0x") > 0 Then
-                    If ExSLAV = True Then SLAVNameLineFound = False
+                    If ExSLAV = True Then
+                        SLAVNameLineFound = False
+                        Console.WriteLine(LoStr(52)) '("Warning! Multiple I2C Bus Addresses exist in " & TPAD & " _CRS patching may be wrong!")
+                    End If
                     If EnableEn = True Then
                         Console.WriteLine("Slave Address Found in " & TPAD & " at line " & i + 1)
                     ElseIf EnableCn = True Then
@@ -242,13 +245,25 @@ Module GenI2C
                     If CheckSLAVLocation < CRSLocation Then BreakCombine()
                 End If
             Next
-
+            Dim IfString As String
+            Dim LLessCount As Integer = 0
+            Dim LEqualCount As Integer = 0
             For CRSLine = 0 To n
                 If InStr(CRSInfo(CRSLine), "If (LLess (") > 0 Then
-                    IfLLess = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LLess (") + 10), 4)
+                    If InStr(IfString, CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LLess (") + 10), 4)) = 0 Or LLess = False Then
+                        IfLLess(LLessCount) = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LLess (") + 10), 4)
+                        IfString += IfLLess(LLessCount) & " "
+                        LLessCount = LLessCount + 1
+                        LLess = True
+                    End If
                 End If
                 If InStr(CRSInfo(CRSLine), "If (LEqual (") > 0 Then
-                    IfLEqual = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LEqual (") + 11), 4)
+                    If InStr(IfString, CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LEqual (") + 11), 4)) = 0 Or LEqual = False Then
+                        IfLEqual(LEqualCount) = CRSInfo(CRSLine).Substring((InStr(CRSInfo(CRSLine), "If (LEqual (") + 11), 4)
+                        IfString += IfLEqual(LEqualCount) & " "
+                        LEqualCount = LEqualCount + 1
+                        LEqual = True
+                    End If
                 End If
                 If InStr(CRSInfo(CRSLine), "I2CM (I2CX, BADR, SPED)") > 0 Then
                     ExI2CM = True
@@ -623,7 +638,7 @@ Module GenI2C
                     RenameUSTP(1) = " * Find USTP:          55 53 54 50 08"
                     RenameUSTP(2) = " * Replace XSTP:       58 53 54 50 08"
 
-                    Dim Filehead(14) As String
+                    Dim Filehead(24) As String
                     Filehead(0) = "DefinitionBlock(" & Chr(34) & Chr(34) & ", " & Chr(34) & "SSDT" & Chr(34) & ", 2, " & Chr(34) & "hack" & Chr(34) & ", " & Chr(34) & "I2Cpatch" & Chr(34) & ", 0)"
                     Filehead(1) = "{"
                     Filehead(2) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ", DeviceObj)"
@@ -636,23 +651,32 @@ Module GenI2C
                             Filehead(5) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & "." & GPIONAME & ", UnknownObj)"
                         End If
                     End If
-                    If IfLLess <> "" And (IfLLess <> "Zero" Or IfLLess <> "One)") Then
-                        Filehead(6) = "    External(" & IfLLess & ", FieldUnitObj)"
-                    End If
-                    If IfLEqual <> "" And (IfLEqual <> "Zero" Or IfLEqual <> "One)") Then
-                        Filehead(7) = "    External(" & IfLEqual & ", FieldUnitObj)"
-                    End If
+
+                    Dim AddFhLe As Integer = 6
+                    Dim AddFhEq As Integer = 12
+
+                    For GenIndex = 0 To 5
+                        If IfLLess(GenIndex) <> "" And (IfLLess(GenIndex) <> "Zero" Or IfLLess(GenIndex) <> "One)") Then
+                            Filehead(AddFhLe) = "    External(" & IfLLess(GenIndex) & ", FieldUnitObj)"
+                            AddFhLe = AddFhLe + 1
+                        End If
+                        If IfLEqual(GenIndex) <> "" And (IfLEqual(GenIndex) <> "Zero" Or IfLEqual(GenIndex) <> "One)") Then
+                            Filehead(AddFhEq) = "    External(" & IfLEqual(GenIndex) & ", FieldUnitObj)"
+                            AddFhEq = AddFhEq + 1
+                        End If
+                    Next
+
                     If ExI2CM = True Then
-                        Filehead(8) = "    External(_SB.PCI0.I2C" & Scope & ".I2CX, UnknownObj)"
-                        Filehead(9) = "    External(_SB.PCI0.I2CM, MethodObj)"
-                        Filehead(10) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, IntObj)"
-                        Filehead(11) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED, IntObj)"
+                        Filehead(18) = "    External(_SB.PCI0.I2C" & Scope & ".I2CX, UnknownObj)"
+                        Filehead(19) = "    External(_SB.PCI0.I2CM, MethodObj)"
+                        Filehead(20) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ".BADR, IntObj)"
+                        Filehead(21) = "    External(_SB.PCI0.I2C" & Scope & "." & TPAD & ".SPED, IntObj)"
                     End If
                     If ExUSTP = True Then
-                        Filehead(12) = "    Name (USTP, One)"
+                        Filehead(22) = "    Name (USTP, One)"
                     End If
-                    Filehead(13) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
-                    Filehead(14) = "    {"
+                    Filehead(23) = "    Scope(_SB.PCI0.I2C" & Scope & "." & TPAD & ")"
+                    Filehead(24) = "    {"
 
                     For Genindex = 0 To RenameCRS.Length - 1
                         If RenameCRS(Genindex) <> "" Then
