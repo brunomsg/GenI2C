@@ -245,7 +245,7 @@ Module GenI2C
                     If CheckSLAVLocation < CRSLocation Then BreakCombine()
                 End If
             Next
-            Dim IfString As String
+            Dim IfString As String = ""
             Dim LLessCount As Integer = 0
             Dim LEqualCount As Integer = 0
             For CRSLine = 0 To n
