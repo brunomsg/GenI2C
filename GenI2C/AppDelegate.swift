@@ -56,7 +56,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             verbose(text: "\nDevice: \(TPAD)\n")
             HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
             verbose(text: "\(HexTPAD)\n")
-            Next2.isEnabled = true
             Countline()
         }
     }
@@ -193,6 +192,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         if Matched == false{
             verbose(text: "No Device Found\n")
+            let noDevice = NSAlert()
+            noDevice.messageText = "No Device Found"
+            noDevice.informativeText = "There is no \(TPAD) in your DSDT. Please confirm again or exit"
+            noDevice.alertStyle = .informational
+            noDevice.addButton(withTitle: "OK")
+            noDevice.beginSheetModal(for: self.window, completionHandler: {response -> Void in print(response)})
         }
         else{
             Next2.isEnabled = true
@@ -317,7 +322,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             if Code[i].contains("Name (") && CatchSpacing == false {
                 let index1 = Code[i].index(Code[i].startIndex, offsetBy: 0)
-                let index2 = Code[i].index(Code[i].startIndex, offsetBy: Code[i].positionOf(sub: "Name ("))
+                let index2 = Code[i].index(Code[i].startIndex, offsetBy: Code[i].positionOf(sub: "Name (") - 4)
                 Spacing = String(Code[i][index1..<index2])
                 CatchSpacing = true
             }
@@ -335,7 +340,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for i in 0..<CRSInfo.count {
             print(CRSInfo[i])
         }
-        
+        print(n)
+        print(CRSInfo.count)
         for CRSLine in 0...n {
             if CRSInfo[CRSLine].contains("If (LLess (") {
                 print("lless \(CRSLine)")
@@ -858,6 +864,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Next2.isEnabled = false
         Next3.isEnabled = false
         Next4.isEnabled = false
+        mainWindow.standardWindowButton(.zoomButton)?.isHidden = true
         mainWindow = NSApplication.shared.windows[0]
         
         /*
