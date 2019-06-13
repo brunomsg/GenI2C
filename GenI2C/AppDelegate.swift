@@ -194,10 +194,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             verbose(text: "No Device Found\n")
             let noDevice = NSAlert()
             noDevice.messageText = "No Device Found"
-            noDevice.informativeText = "There is no \(TPAD) in your DSDT. Please confirm again or exit"
+            noDevice.informativeText = "There is no \(TPAD) in your DSDT. Please input again or exit"
             noDevice.alertStyle = .informational
-            noDevice.addButton(withTitle: "OK")
-            noDevice.beginSheetModal(for: self.window, completionHandler: {response -> Void in print(response)})
+            noDevice.addButton(withTitle: "Input again")
+            noDevice.addButton(withTitle: "Exit")
+            noDevice.beginSheetModal(for: self.window, completionHandler: {response -> Void in
+                if response.rawValue == 1001 {
+                    exit(0)
+                }
+                /*print(response*/})
         }
         else{
             Next2.isEnabled = true
