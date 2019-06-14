@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B30A78522B39ABB006646A2 /* NVDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B30A78422B39ABB006646A2 /* NVDragView.m */; };
 		8B3271A9229A5E3D005FCBB7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3271A8229A5E3D005FCBB7 /* AppDelegate.swift */; };
 		8B3271AB229A5E3E005FCBB7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B3271AA229A5E3E005FCBB7 /* Assets.xcassets */; };
 		8B3271AE229A5E3E005FCBB7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B3271AC229A5E3E005FCBB7 /* MainMenu.xib */; };
@@ -33,6 +34,8 @@
 
 /* Begin PBXFileReference section */
 		50DE26ED22B3446100B87104 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/MainMenu.strings"; sourceTree = "<group>"; };
+		8B30A78322B39AB6006646A2 /* NVDragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDragView.h; sourceTree = "<group>"; };
+		8B30A78422B39ABB006646A2 /* NVDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDragView.m; sourceTree = "<group>"; };
 		8B3271A5229A5E3D005FCBB7 /* GenI2C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GenI2C.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B3271A8229A5E3D005FCBB7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B3271AA229A5E3E005FCBB7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -100,6 +103,8 @@
 				8B3271AC229A5E3E005FCBB7 /* MainMenu.xib */,
 				8B3271AF229A5E3E005FCBB7 /* Info.plist */,
 				8B3271B0229A5E3E005FCBB7 /* GenI2C.entitlements */,
+				8B30A78322B39AB6006646A2 /* NVDragView.h */,
+				8B30A78422B39ABB006646A2 /* NVDragView.m */,
 			);
 			path = GenI2C;
 			sourceTree = "<group>";
@@ -258,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B30A78522B39ABB006646A2 /* NVDragView.m in Sources */,
 				8B3271A9229A5E3D005FCBB7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,9 +9,10 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
 
     @IBOutlet weak var mainWindow: NSWindow!
+    @IBOutlet weak var VerboseWindow: NSWindow!
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var DSDTPath: NSTextField!
     @IBOutlet weak var TabView: NSTabView!
@@ -26,6 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var APICPinText: NSTextField!
     @IBOutlet weak var Warning: NSTextField!
     @IBOutlet var VerboseTextView: NSTextView!
+    @IBOutlet weak var RenameLabel: NSTextField!
     
     let queue = DispatchQueue(label: "queue", attributes: .concurrent)
     let queue1 = DispatchQueue(label: "queue", attributes: .concurrent)
@@ -92,7 +94,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     @IBAction func Next3(_ sender: Any) {
         TabView.selectNextTabViewItem(Any?.self)
-        
     }
     @IBAction func Next4(_ sender: Any) {
         TabView.selectNextTabViewItem(Any?.self)
@@ -754,29 +755,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 try! fileContent.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
             }
         }
-        verbose(text: "\n++++++++++++++++++++++++++++++++++++++\n\n")
+        RenameLabel.stringValue += "++++++++++++++++++++++++++++++++++++++\n\n"
         if InterruptEnabled || PollingEnabled {
-            verbose(text: "Find _CRS:          5F 43 52 53\n")
-            verbose(text: "Replace XCRS:       58 43 52 53\n")
-            verbose(text: "Target Bridge \(TPAD): \(HexTPAD)\n\n")
+            RenameLabel.stringValue += "Find _CRS:          5F 43 52 53\n"
+            RenameLabel.stringValue += "Replace XCRS:       58 43 52 53\n"
+            RenameLabel.stringValue += "Target Bridge \(TPAD): \(HexTPAD)\n\n"
             if InterruptEnabled && (APICPIN > 47 || (APICPIN == 0 && ExGPIO && ExAPIC)) {
-                verbose(text: "Find _STA:          5F 53 54 41\n")
-                verbose(text: "Replace XSTA:       58 53 54 41\n")
-                verbose(text: "Target Bridge GPI0: 47 50 49 30\n\n")
+                RenameLabel.stringValue += "Find _STA:          5F 53 54 41\n"
+                RenameLabel.stringValue += "Replace XSTA:       58 53 54 41\n"
+                RenameLabel.stringValue += "Target Bridge GPI0: 47 50 49 30\n\n"
             }
         } else if BlockI2C {
-            verbose(text: "Find _STA:          5F 53 54 41\n")
-            verbose(text: "Replace XSTA:       58 53 54 41\n")
-            verbose(text: "Target Bridge \(BlockBus): \(HexBlockBus)\n\n")
+            RenameLabel.stringValue += "Find _STA:          5F 53 54 41\n"
+            RenameLabel.stringValue += "Replace XSTA:       58 53 54 41\n"
+            RenameLabel.stringValue += "Target Bridge \(BlockBus): \(HexBlockBus)\n\n"
         }
         if ExUSTP && BlockI2C == false {
-            verbose(text: "Find USTP:          55 53 54 50 08\n")
-            verbose(text: "Replace XSTP:       58 53 54 50 08\n\n")
+            RenameLabel.stringValue += "Find USTP:          55 53 54 50 08\n"
+            RenameLabel.stringValue += "Replace XSTP:       58 53 54 50 08\n\n"
         } else if ExUSTP == false && ExSSCN && ExFMCN == false && CPUChoice == 1 && BlockI2C == false {
-            verbose(text: "Find SSCN:          53 53 43 4E\n")
-            verbose(text: "Replace XSCN:       58 53 43 4E\n")
+            RenameLabel.stringValue += "Find SSCN:          53 53 43 4E\n"
+            RenameLabel.stringValue += "Replace XSCN:       58 53 43 4E\n"
         }
-        verbose(text: "++++++++++++++++++++++++++++++++++++++\n\nEnjoy!\n")
+        RenameLabel.stringValue += "++++++++++++++++++++++++++++++++++++++"
     }
     
     func BreakCombine() {
@@ -907,6 +908,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func verbose(text:String) {
         VerboseTextView.string += text
+    }
+    
+    @IBAction func OpenVerbose(_ sender: Any) {
+        VerboseWindow.setIsVisible(true)
+    }
+    
+    func controlTextDidChange(_ notification: Notification) {
+        if DeviceName.stringValue.count > 4 {
+            let index = DeviceName.stringValue.index(DeviceName.stringValue.startIndex, offsetBy: 4)
+            DeviceName.stringValue = String(DeviceName.stringValue[..<index])
+        }
     }
 
 }
