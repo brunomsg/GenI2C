@@ -438,7 +438,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                             PatchCRS2GPIO()
                         }
                     } else if APICPIN > 47 {
-                        Verbose.documentView?.insertText("No native GpioInt found, Generating instead")
+                        verbose(text: "No native GpioInt found, Generating instead")
                         GPIONAME = "SBFZ"
                         APIC2GPIO()
                         PatchCRS2GPIO()
