@@ -2,6 +2,9 @@
 /* Class = "NSMenuItem"; title = "GenI2C"; ObjectID = "1Xt-HY-uBw"; */
 "1Xt-HY-uBw.title" = "GenI2C";
 
+/* Class = "NSMenu"; title = "Verbose"; ObjectID = "24A-CK-84k"; */
+"24A-CK-84k.title" = "查看日志";
+
 /* Class = "NSTextFieldCell"; title = "Device Name:"; ObjectID = "3Db-28-oZ1"; */
 "3Db-28-oZ1.title" = "设备名称:";
 
@@ -23,6 +26,12 @@
 /* Class = "NSButtonCell"; title = "Back"; ObjectID = "DQu-nz-QzX"; */
 "DQu-nz-QzX.title" = "上一步";
 
+/* Class = "NSWindow"; title = "Verbose"; ObjectID = "DXU-yX-phH"; */
+"DXU-yX-phH.title" = "查看日志";
+
+/* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "EtM-9Z-Ufx"; */
+"EtM-9Z-Ufx.title" = "查看日志";
+
 /* Class = "NSMenu"; title = "Help"; ObjectID = "F2S-fz-NVQ"; */
 "F2S-fz-NVQ.title" = "帮助";
 
@@ -31,6 +40,9 @@
 
 /* Class = "NSTextFieldCell"; title = "Choose the mode you'd like to patch"; ObjectID = "FV6-0S-izn"; */
 "FV6-0S-izn.title" = "选择补丁模式";
+
+/* Class = "NSMenuItem"; title = "Item 3"; ObjectID = "Gug-MU-563"; */
+"Gug-MU-563.title" = "Item 3";
 
 /* Class = "NSButtonCell"; title = "Interrupt (APIC or GPIO)"; ObjectID = "IW8-mf-mSA"; */
 "IW8-mf-mSA.title" = "中断 (APIC 或 GPIO)";
@@ -43,6 +55,9 @@
 
 /* Class = "NSButtonCell"; title = "Back"; ObjectID = "MQd-KJ-3tw"; */
 "MQd-KJ-3tw.title" = "上一步";
+
+/* Class = "NSMenuItem"; title = "Item 2"; ObjectID = "O5R-5K-mTb"; */
+"O5R-5K-mTb.title" = "Item 2";
 
 /* Class = "NSButtonCell"; title = "Polling"; ObjectID = "OWU-Ft-u7E"; */
 "OWU-Ft-u7E.title" = "轮询";
@@ -67,6 +82,9 @@
 
 /* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "Vdr-fp-XzO"; */
 "Vdr-fp-XzO.title" = "隐藏其他";
+
+/* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "Vp3-KO-htH"; */
+"Vp3-KO-htH.title" = "查看日志";
 
 /* Class = "NSButtonCell"; title = "Next"; ObjectID = "eJg-jF-yQq"; */
 "eJg-jF-yQq.title" = "下一步";
