@@ -194,11 +194,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         if Matched == false{
             verbose(text: "No Device Found\n")
             let noDevice = NSAlert()
-            noDevice.messageText = "No Device Found"
-            noDevice.informativeText = "There is no \(TPAD) in your DSDT. Please input again or exit"
+            noDevice.messageText = NSLocalizedString("No Device Found", comment: "")
+            noDevice.informativeText = NSLocalizedString("There is no", comment: "") + TPAD + NSLocalizedString("in your DSDT. Please input again or exit", comment: "")
             noDevice.alertStyle = .informational
-            noDevice.addButton(withTitle: "Input again")
-            noDevice.addButton(withTitle: "Exit")
+            noDevice.addButton(withTitle: NSLocalizedString("Input again", comment: ""))
+            noDevice.addButton(withTitle: NSLocalizedString("Exit", comment: ""))
             noDevice.beginSheetModal(for: self.window, completionHandler: {response -> Void in
                 if response.rawValue == 1001 {
                     exit(0)
@@ -895,13 +895,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         accessory.drawsBackground = true
         */
         alert.accessoryView = InputAPICPin
-        alert.messageText = "No native APIC found"
-        alert.informativeText = "Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\""
+        alert.messageText = NSLocalizedString("No native APIC found", comment: "")
+        alert.informativeText = NSLocalizedString("Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"", comment: "")
         alert.helpAnchor = "NSAlert"
         alert.showsHelp = true
         //alert.showsSuppressionButton = true
         alert.alertStyle = .informational
-        alert.addButton(withTitle: "OK").isEnabled = false
+        alert.addButton(withTitle: NSLocalizedString(NSLocalizedString("OK", comment: ""), comment: "")).isEnabled = false
         //alert.window.contentView?.addSubview(AlertView)
     }
 

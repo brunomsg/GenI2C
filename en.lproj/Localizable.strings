@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  GenI2C
+
+  Created by 梁怀宇 on 2019/6/15.
+  Copyright © 2019 梁怀宇. All rights reserved.
+*/
+"OK" = "OK";
+"Exit" = "Exit111";
+"There is no" = "There is no";
+"in your DSDT. Please input again or exit" = "in your DSDT. Please input again or exit";
+"Input again" = "Input again"；
+"No native APIC found" = "No native APIC found";
+"Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"" = "Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"";
