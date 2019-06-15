@@ -27,7 +27,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var APICPinText: NSTextField!
     @IBOutlet weak var Warning: NSTextField!
     @IBOutlet var VerboseTextView: NSTextView!
-    @IBOutlet weak var RenameLabel: NSTextField!
+    //@IBOutlet weak var RenameLabel: NSTextField!
+    @IBOutlet var RenameLabel: NSTextView!
     
     let queue = DispatchQueue(label: "queue", attributes: .concurrent)
     let queue1 = DispatchQueue(label: "queue", attributes: .concurrent)
@@ -756,29 +757,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 iasl(path: path)
             }
         }
-        RenameLabel.stringValue += "++++++++++++++++++++++++++++++++++++++\n\n"
+        RenameLabel.string += "++++++++++++++++++++++++++++++++++++++\n\n"
         if InterruptEnabled || PollingEnabled {
-            RenameLabel.stringValue += "Find _CRS:          5F 43 52 53\n"
-            RenameLabel.stringValue += "Replace XCRS:       58 43 52 53\n"
-            RenameLabel.stringValue += "Target Bridge \(TPAD): \(HexTPAD)\n\n"
+            RenameLabel.string += "Find _CRS:          5F 43 52 53\n"
+            RenameLabel.string += "Replace XCRS:       58 43 52 53\n"
+            RenameLabel.string += "Target Bridge \(TPAD): \(HexTPAD)\n\n"
             if InterruptEnabled && (APICPIN > 47 || (APICPIN == 0 && ExGPIO && ExAPIC)) {
-                RenameLabel.stringValue += "Find _STA:          5F 53 54 41\n"
-                RenameLabel.stringValue += "Replace XSTA:       58 53 54 41\n"
-                RenameLabel.stringValue += "Target Bridge GPI0: 47 50 49 30\n\n"
+                RenameLabel.string += "Find _STA:          5F 53 54 41\n"
+                RenameLabel.string += "Replace XSTA:       58 53 54 41\n"
+                RenameLabel.string += "Target Bridge GPI0: 47 50 49 30\n\n"
             }
         } else if BlockI2C {
-            RenameLabel.stringValue += "Find _STA:          5F 53 54 41\n"
-            RenameLabel.stringValue += "Replace XSTA:       58 53 54 41\n"
-            RenameLabel.stringValue += "Target Bridge \(BlockBus): \(HexBlockBus)\n\n"
+            RenameLabel.string += "Find _STA:          5F 53 54 41\n"
+            RenameLabel.string += "Replace XSTA:       58 53 54 41\n"
+            RenameLabel.string += "Target Bridge \(BlockBus): \(HexBlockBus)\n\n"
         }
         if ExUSTP && BlockI2C == false {
-            RenameLabel.stringValue += "Find USTP:          55 53 54 50 08\n"
-            RenameLabel.stringValue += "Replace XSTP:       58 53 54 50 08\n\n"
+            RenameLabel.string += "Find USTP:          55 53 54 50 08\n"
+            RenameLabel.string += "Replace XSTP:       58 53 54 50 08\n\n"
         } else if ExUSTP == false && ExSSCN && ExFMCN == false && CPUChoice == 1 && BlockI2C == false {
-            RenameLabel.stringValue += "Find SSCN:          53 53 43 4E\n"
-            RenameLabel.stringValue += "Replace XSCN:       58 53 43 4E\n"
+            RenameLabel.string += "Find SSCN:          53 53 43 4E\n"
+            RenameLabel.string += "Replace XSCN:       58 53 43 4E\n"
         }
-        RenameLabel.stringValue += "++++++++++++++++++++++++++++++++++++++"
+        RenameLabel.string += "++++++++++++++++++++++++++++++++++++++"
     }
     
     func BreakCombine() {
