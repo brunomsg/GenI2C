@@ -73,9 +73,9 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Verbose" id="EtM-9Z-Ufx" userLabel="Verbose">
+                <menuItem title="Debug" id="EtM-9Z-Ufx" userLabel="Debug">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Verbose" showsStateColumn="NO" id="24A-CK-84k">
+                    <menu key="submenu" title="Debug" showsStateColumn="NO" id="24A-CK-84k" userLabel="Debug">
                         <items>
                             <menuItem title="Verbose" id="Vp3-KO-htH">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -83,8 +83,11 @@
                                     <action selector="OpenVerbose:" target="Voe-Tx-rLC" id="6c6-2z-F3w"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Item 2" hidden="YES" id="O5R-5K-mTb">
+                            <menuItem title="Maclog" id="O5R-5K-mTb">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="OpenMacLog:" target="Voe-Tx-rLC" id="tY0-F1-uPW"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Item 3" hidden="YES" id="Gug-MU-563">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -110,7 +113,7 @@
         <window title="GenI2C" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="300" y="400" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="360"/>
             <value key="maxSize" type="size" width="480" height="360"/>
             <view key="contentView" id="EiT-Mj-1SZ">
@@ -393,7 +396,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>

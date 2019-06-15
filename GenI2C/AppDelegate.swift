@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     let queue = DispatchQueue(label: "queue", attributes: .concurrent)
     let queue1 = DispatchQueue(label: "queue", attributes: .concurrent)
     var alert = NSAlert()
-    var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16)
+    var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16)
     var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6)
     var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false
     var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1
@@ -54,7 +54,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         } else {
             TPAD = DeviceName.stringValue
             Device = "Device (\(TPAD))"
-            FolderPath = "\(NSHomeDirectory())/desktop/I2C-PATCH"
             verbose(text: "\nDevice: \(TPAD)\n")
             HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
             verbose(text: "\(HexTPAD)\n")
@@ -526,6 +525,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             SSDT += GPI0SSDT[Genindex] + "\n"
         }
         try! SSDT.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+        iasl(path: path)
     }
     
     func PatchCRS2APIC() {
@@ -753,6 +753,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
                 fileContent += "    }\n}"
                 try! fileContent.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+                iasl(path: path)
             }
         }
         RenameLabel.stringValue += "++++++++++++++++++++++++++++++++++++++\n\n"
@@ -858,6 +859,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
             }
             try! fileContent.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+            iasl(path: path)
         }
     }
     
@@ -914,11 +916,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         VerboseWindow.setIsVisible(true)
     }
     
+    @IBAction func OpenMacLog(_ sender: Any) {
+        let t = Process()
+        t.launchPath = Bundle.main.path(forResource: "maclog", ofType: nil)
+        t.launch()
+    }
+    
     func controlTextDidChange(_ notification: Notification) {
         if DeviceName.stringValue.count > 4 {
             let index = DeviceName.stringValue.index(DeviceName.stringValue.startIndex, offsetBy: 4)
             DeviceName.stringValue = String(DeviceName.stringValue[..<index])
         }
+    }
+    
+    func iasl(path:String) {
+        let t = Process()
+        t.launchPath = Bundle.main.path(forResource: "iasl", ofType: nil)
+        t.arguments = [path]
+        t.launch()
     }
 
 }
