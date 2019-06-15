@@ -3,7 +3,7 @@
 "1Xt-HY-uBw.title" = "GenI2C";
 
 /* Class = "NSMenu"; title = "Verbose"; ObjectID = "24A-CK-84k"; */
-"24A-CK-84k.title" = "查看日志";
+"24A-CK-84k.title" = "调试";
 
 /* Class = "NSTextFieldCell"; title = "Device Name:"; ObjectID = "3Db-28-oZ1"; */
 "3Db-28-oZ1.title" = "设备名称:";
@@ -30,7 +30,7 @@
 "DXU-yX-phH.title" = "查看日志";
 
 /* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "EtM-9Z-Ufx"; */
-"EtM-9Z-Ufx.title" = "查看日志";
+"EtM-9Z-Ufx.title" = "调试";
 
 /* Class = "NSMenu"; title = "Help"; ObjectID = "F2S-fz-NVQ"; */
 "F2S-fz-NVQ.title" = "帮助";
@@ -57,7 +57,7 @@
 "MQd-KJ-3tw.title" = "上一步";
 
 /* Class = "NSMenuItem"; title = "Item 2"; ObjectID = "O5R-5K-mTb"; */
-"O5R-5K-mTb.title" = "Item 2";
+"O5R-5K-mTb.title" = "Maclog";
 
 /* Class = "NSButtonCell"; title = "Polling"; ObjectID = "OWU-Ft-u7E"; */
 "OWU-Ft-u7E.title" = "轮询";
