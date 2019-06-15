@@ -12,6 +12,8 @@
 		8B3271AE229A5E3E005FCBB7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B3271AC229A5E3E005FCBB7 /* MainMenu.xib */; };
 		8B3271BA229A5E3E005FCBB7 /* GenI2CTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3271B9229A5E3E005FCBB7 /* GenI2CTests.swift */; };
 		8B3271C5229A5E3E005FCBB7 /* GenI2CUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3271C4229A5E3E005FCBB7 /* GenI2CUITests.swift */; };
+		8B355DAC22B4D26800BB042B /* iasl in Resources */ = {isa = PBXBuildFile; fileRef = 8B355DAB22B4D26700BB042B /* iasl */; };
+		8B355DAE22B4E4EA00BB042B /* maclog in Resources */ = {isa = PBXBuildFile; fileRef = 8B355DAD22B4E4EA00BB042B /* maclog */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +47,8 @@
 		8B3271C0229A5E3E005FCBB7 /* GenI2CUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GenI2CUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B3271C4229A5E3E005FCBB7 /* GenI2CUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenI2CUITests.swift; sourceTree = "<group>"; };
 		8B3271C6229A5E3E005FCBB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B355DAB22B4D26700BB042B /* iasl */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = iasl; sourceTree = "<group>"; };
+		8B355DAD22B4E4EA00BB042B /* maclog */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = maclog; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,8 @@
 				8B3271AC229A5E3E005FCBB7 /* MainMenu.xib */,
 				8B3271AF229A5E3E005FCBB7 /* Info.plist */,
 				8B3271B0229A5E3E005FCBB7 /* GenI2C.entitlements */,
+				8B355DAB22B4D26700BB042B /* iasl */,
+				8B355DAD22B4E4EA00BB042B /* maclog */,
 			);
 			path = GenI2C;
 			sourceTree = "<group>";
@@ -233,6 +239,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B3271AB229A5E3E005FCBB7 /* Assets.xcassets in Resources */,
+				8B355DAE22B4E4EA00BB042B /* maclog in Resources */,
+				8B355DAC22B4D26800BB042B /* iasl in Resources */,
 				8B3271AE229A5E3E005FCBB7 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
