@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  GenI2C
+
+  Created by 梁怀宇 on 2019/6/15.
+  Copyright © 2019 梁怀宇. All rights reserved.
+*/
+"OK" = "好的";
+"Exit" = "退出";
+"No Device Found" = "找不到设备";
+"There is no" = "您提供的DSDT中没有设备";
+"in your DSDT. Please input again or exit" = "，请重新输入或退出";
+"Input again" = "重新输入";
+"No native APIC found" = "未找到原生APIC";
+"Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"" = "提取 APIC Pin 失败, Pin 值由系统启动时填充。请以十六进制输入您的 APIC Pin";
