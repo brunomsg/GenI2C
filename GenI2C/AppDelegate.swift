@@ -920,6 +920,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBAction func OpenMacLog(_ sender: Any) {
         let t = Process()
         t.launchPath = Bundle.main.path(forResource: "maclog", ofType: nil)
+        t.arguments = ["-b", "-F", "voodooi2c"]
         t.launch()
     }
     
@@ -936,7 +937,81 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         t.arguments = [path]
         t.launch()
     }
-
+    
+    @IBAction func SaveLog(_ sender: Any) {
+        LogToFile()
+    }
+    
+    func LogToFile () {
+        let a = Process()
+        let pipe = Pipe()
+        a.standardOutput = pipe
+        a.launchPath = "/usr/bin/who"
+        a.launch()
+        a.waitUntilExit()
+        var outdata = pipe.fileHandleForReading.availableData
+        var outputString = String(data: outdata, encoding: String.Encoding.utf8)!
+        let timeline = outputString.components(separatedBy: "\n")[0]
+        let index1 = timeline.index(timeline.startIndex, offsetBy: 18)
+        let index2 = timeline.index(timeline.startIndex, offsetBy: timeline.count)
+        let time = timeline[index1..<index2]
+        let month = time.components(separatedBy: " ")[0]
+        let date = Date()
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = "yyyy"
+        let year = dateFormat.string(from: date)
+        var month_num:String = ""
+        switch month {
+        case "Jan":
+            month_num = "1"
+        case "Feb":
+            month_num = "2"
+        case "Mar":
+            month_num = "3"
+        case "Apr":
+            month_num = "4"
+        case "May":
+            month_num = "5"
+        case "Jun":
+            month_num = "6"
+        case "Jul":
+            month_num = "7"
+        case "Aug":
+            month_num = "8"
+        case "Sept":
+            month_num = "9"
+        case "Oct":
+            month_num = "10"
+        case "Nov":
+            month_num = "11"
+        case "Dec":
+            month_num = "12"
+        default:
+            print("default")
+        }
+        var curDate:String = ""
+        curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ")[1]) \(time.components(separatedBy: " ")[2]):00"
+        let b = Process()
+        let pipe1 = Pipe()
+        b.standardOutput = pipe1
+        b.launchPath = "/usr/bin/log"
+        b.arguments = ["show", "--predicate", "(eventMessage CONTAINS[c] \"VoodooI2C\") || (eventMessage CONTAINS[c] \"VoodooGPIO\")", "--start", "\(curDate)"]
+        b.launch()
+        b.waitUntilExit()
+        var data:Data
+        data = pipe1.fileHandleForReading.readDataToEndOfFile()
+        var Log = String(data: data, encoding: String.Encoding.utf8)!
+        
+        let path = FolderPath + "/GenI2C.log"
+        try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
+        if FileManager.default.fileExists(atPath: path) {
+            try! FileManager.default.removeItem(atPath: path)
+            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+        } else {
+            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+        }
+        try! Log.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+    }
 }
 
 extension String {
