@@ -91,8 +91,11 @@
                                     <action selector="OpenMacLog:" target="Voe-Tx-rLC" id="tY0-F1-uPW"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Item 3" hidden="YES" id="Gug-MU-563">
+                            <menuItem title="Save Log" id="Gug-MU-563">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="SaveLog:" target="Voe-Tx-rLC" id="7TP-HM-zzf"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>
@@ -219,7 +222,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Item 3" identifier="" id="rc1-dI-cPS" userLabel="3">
-                                <view key="view" id="3Dw-vN-00k">
+                                <view key="view" ambiguous="YES" id="3Dw-vN-00k">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -291,7 +294,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="3" identifier="" id="pDx-2o-UMt" userLabel="4">
-                                <view key="view" ambiguous="YES" id="SFQ-Po-2Bd">
+                                <view key="view" id="SFQ-Po-2Bd">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -350,7 +353,7 @@
                                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="minSize" width="438" height="188"/>
-                                                        <size key="maxSize" width="438" height="10000000"/>
+                                                        <size key="maxSize" width="440" height="10000000"/>
                                                         <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     </textView>
                                                 </subviews>
