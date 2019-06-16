@@ -27,7 +27,7 @@
 "DQu-nz-QzX.title" = "上一步";
 
 /* Class = "NSWindow"; title = "Verbose"; ObjectID = "DXU-yX-phH"; */
-"DXU-yX-phH.title" = "查看日志";
+"DXU-yX-phH.title" = "GenI2C 日志";
 
 /* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "EtM-9Z-Ufx"; */
 "EtM-9Z-Ufx.title" = "调试";
@@ -42,7 +42,7 @@
 "FV6-0S-izn.title" = "选择补丁模式";
 
 /* Class = "NSMenuItem"; title = "Item 3"; ObjectID = "Gug-MU-563"; */
-"Gug-MU-563.title" = "Item 3";
+"Gug-MU-563.title" = "保存 VoodooI2C 日志";
 
 /* Class = "NSButtonCell"; title = "Interrupt (APIC or GPIO)"; ObjectID = "IW8-mf-mSA"; */
 "IW8-mf-mSA.title" = "中断 (APIC 或 GPIO)";
@@ -57,7 +57,7 @@
 "MQd-KJ-3tw.title" = "上一步";
 
 /* Class = "NSMenuItem"; title = "Item 2"; ObjectID = "O5R-5K-mTb"; */
-"O5R-5K-mTb.title" = "Maclog";
+"O5R-5K-mTb.title" = "VoodooI2C 日志";
 
 /* Class = "NSButtonCell"; title = "Polling"; ObjectID = "OWU-Ft-u7E"; */
 "OWU-Ft-u7E.title" = "轮询";
@@ -84,7 +84,7 @@
 "Vdr-fp-XzO.title" = "隐藏其他";
 
 /* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "Vp3-KO-htH"; */
-"Vp3-KO-htH.title" = "查看日志";
+"Vp3-KO-htH.title" = "GenI2C 日志";
 
 /* Class = "NSButtonCell"; title = "Next"; ObjectID = "eJg-jF-yQq"; */
 "eJg-jF-yQq.title" = "下一步";
@@ -108,7 +108,7 @@
 "w7H-QX-65W.title" = "0x";
 
 /* Class = "NSButtonCell"; title = "Next"; ObjectID = "w98-1P-6b3"; */
-"w98-1P-6b3.title" = "下一步";
+"w98-1P-6b3.title" = "生成";
 
 /* Class = "NSMenuItem"; title = "Help"; ObjectID = "wpr-3q-Mcd"; */
 "wpr-3q-Mcd.title" = "帮助";

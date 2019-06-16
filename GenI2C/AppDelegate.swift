@@ -34,8 +34,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     let queue1 = DispatchQueue(label: "queue", attributes: .concurrent)
     var alert = NSAlert()
     var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16)
-    var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6)
-    var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false
+    var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6)
+    var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false
     var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1
     
     @IBAction func SelectMode(_ sender: Any) {
@@ -344,6 +344,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         var IfString:String = ""
         var LLessCount:Int = 0
         var LEqualCount:Int = 0
+        var If2BracketsCount:Int = 0
         print(n)
         for i in 0..<CRSInfo.count {
             print(CRSInfo[i])
@@ -368,6 +369,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     IfString += IfLEqual[LEqualCount] + " "
                     LEqualCount += 1
                     LEqual = true
+                }
+            }
+            if CRSInfo[CRSLine].contains("If ((") && (CRSInfo[CRSLine].contains("<") || CRSInfo[CRSLine].contains("==")) {
+                print("If (( \(CRSLine)")
+                let index1 = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "If ((")+5)
+                let index2 = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "If ((")+9)
+                if !(IfString.contains(String(CRSInfo[CRSLine][index1..<index2]))) || If2BracketsBool == false {
+                    If2Brackets[If2BracketsCount] = String(CRSInfo[CRSLine][index1..<index2])
+                    IfString += If2Brackets[If2BracketsCount] + " "
+                    If2BracketsCount += 1
+                    If2BracketsBool = true
                 }
             }
             if CRSInfo[CRSLine].contains("I2CM (I2CX, BADR, SPED)") {
@@ -657,7 +669,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 RenameUSTP[1] = " * Find USTP:          55 53 54 50 08"
                 RenameUSTP[2] = " * Replace XSTP:       58 53 54 50 08"
                 
-                var Filehead = [String](repeating: "", count: 27)
+                var Filehead = [String](repeating: "", count: 33)
                 Filehead[0] = #"DefinitionBlock("", "SSDT", 2, "hack", "I2Cpatch", 0)"#
                 Filehead[1] = "{"
                 Filehead[2] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ", DeviceObj)"
@@ -673,6 +685,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 
                 var AddFhLe:Int = 6
                 var AddFhEq:Int = 12
+                var AddFhIf2B:Int = 18
                 
                 for Genindex in 0...5 {
                     if IfLLess[Genindex] != "" && (IfLLess[Genindex] != "Zero" || IfLLess[Genindex] != "One)") {
@@ -683,24 +696,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                         Filehead[AddFhEq] = "    External(" + IfLEqual[Genindex] + ", FieldUnitObj)"
                         AddFhEq += 1
                     }
+                    if If2Brackets[Genindex] != "" && (If2Brackets[Genindex] != "Zero" || If2Brackets[Genindex] != "One)") {
+                        Filehead[AddFhIf2B] = "    External(" + If2Brackets[Genindex] + ", FieldUnitObj)"
+                        AddFhIf2B += 1
+                    }
                 }
                 if ExI2CM {
-                    Filehead[18] = "    External(_SB.PCI0.I2C" + scope + ".I2CX, UnknownObj)"
-                    Filehead[19] = "    External(_SB.PCI0.I2CM, MethodObj)"
-                    Filehead[20] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, IntObj)"
-                    Filehead[21] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".SPED, IntObj)"
+                    Filehead[24] = "    External(_SB.PCI0.I2C" + scope + ".I2CX, UnknownObj)"
+                    Filehead[25] = "    External(_SB.PCI0.I2CM, MethodObj)"
+                    Filehead[26] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, IntObj)"
+                    Filehead[27] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".SPED, IntObj)"
                 }
                 if ExBADR && ExI2CM == false {
-                    Filehead[22] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, IntObj)"
+                    Filehead[28] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, IntObj)"
                 }
                 if ExHID2 {
-                    Filehead[23] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".HID2, UnknownObj)"
+                    Filehead[29] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".HID2, UnknownObj)"
                 }
                 if ExUSTP {
-                    Filehead[24] = "    Name (USTP, One)"
+                    Filehead[30] = "    Name (USTP, One)"
                 }
-                Filehead[25] = "    Scope(_SB.PCI0.I2C" + scope + "." + TPAD + ")"
-                Filehead[26] = "    {"
+                Filehead[31] = "    Scope(_SB.PCI0.I2C" + scope + "." + TPAD + ")"
+                Filehead[32] = "    {"
                 for i in 0..<Filehead.count {
                     print(Filehead[i])
                 }
