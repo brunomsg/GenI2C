@@ -18,15 +18,21 @@
                 <outlet property="APICPinText" destination="iYC-de-U4q" id="gBk-pb-14O"/>
                 <outlet property="DSDTPath" destination="kRr-hl-DHU" id="iLV-IF-aZh"/>
                 <outlet property="DeviceName" destination="b5P-D1-bnM" id="pIJ-sd-uqT"/>
+                <outlet property="DeviceNameLabel" destination="V8c-79-DsL" id="cDG-yt-DAc"/>
+                <outlet property="IONameLabel" destination="jlh-jV-O4e" id="Igf-jh-eiu"/>
                 <outlet property="InputAPICPin" destination="6pp-Al-9XI" id="CyC-yZ-fKt"/>
+                <outlet property="ModeLabel" destination="Bn3-SP-vYy" id="ych-be-G6v"/>
                 <outlet property="Next1" destination="5CX-x3-MYO" id="rJ4-I8-S99"/>
                 <outlet property="Next2" destination="YBE-Z7-fHr" id="npG-Ey-8pz"/>
                 <outlet property="Next3" destination="HnQ-cX-7gd" id="BgB-Xh-08d"/>
                 <outlet property="Next4" destination="Cez-Eg-fUF" id="Ds6-cR-pRD"/>
+                <outlet property="PinLabel" destination="pZe-dB-UnE" id="3tl-Ig-kBK"/>
                 <outlet property="RenameLabel" destination="MRg-3M-lAe" id="cPY-Ge-WVR"/>
+                <outlet property="StateLabel" destination="QBC-Y3-9T4" id="YfV-eA-V1x"/>
                 <outlet property="TabView" destination="FFA-If-dZJ" id="i9M-Kd-QR6"/>
                 <outlet property="VerboseTextView" destination="axz-RV-WcV" id="Fks-DL-Vu3"/>
                 <outlet property="VerboseWindow" destination="DXU-yX-phH" id="92r-rB-2MS"/>
+                <outlet property="VersionLabel" destination="omV-Z0-nk7" id="Skb-sJ-ofd"/>
                 <outlet property="Warning" destination="K6P-36-7Hx" id="NtG-Wf-13M"/>
                 <outlet property="mainWindow" destination="QvC-M9-y7g" id="Fj9-mi-wX8"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
@@ -118,7 +124,7 @@
         <window title="GenI2C" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="300" y="400" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="360"/>
             <value key="maxSize" type="size" width="480" height="360"/>
             <view key="contentView" id="EiT-Mj-1SZ">
@@ -131,7 +137,7 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="1" identifier="" id="Ltf-1y-wwP">
-                                <view key="view" ambiguous="YES" id="uJQ-2U-CmX">
+                                <view key="view" id="uJQ-2U-CmX">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -166,6 +172,70 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <box fixedFrame="YES" title="VoodooI2C Information" translatesAutoresizingMaskIntoConstraints="NO" id="YzL-xq-EYQ">
+                                            <rect key="frame" x="17" y="57" width="446" height="224"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <view key="contentView" id="i3t-iY-T41">
+                                                <rect key="frame" x="3" y="3" width="440" height="206"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="omV-Z0-nk7">
+                                                        <rect key="frame" x="18" y="144" width="404" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="VoodooI2C Version : " id="CDj-j9-PJU">
+                                                            <font key="font" usesAppearanceFont="YES"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QBC-Y3-9T4">
+                                                        <rect key="frame" x="18" y="169" width="404" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="VoodooI2C State : " id="esc-Pi-Nfi">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jlh-jV-O4e">
+                                                        <rect key="frame" x="18" y="94" width="404" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="IOName : " id="V4f-Qe-gWm">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bn3-SP-vYy">
+                                                        <rect key="frame" x="18" y="69" width="404" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Mode : " id="c3K-he-8WT">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V8c-79-DsL">
+                                                        <rect key="frame" x="18" y="119" width="404" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="DeviceName : " id="Mlh-cb-Dhv">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pZe-dB-UnE">
+                                                        <rect key="frame" x="18" y="44" width="404" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" id="GBw-pf-gq3">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                </subviews>
+                                            </view>
+                                        </box>
                                     </subviews>
                                 </view>
                             </tabViewItem>
@@ -294,7 +364,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="3" identifier="" id="pDx-2o-UMt" userLabel="4">
-                                <view key="view" id="SFQ-Po-2Bd">
+                                <view key="view" ambiguous="YES" id="SFQ-Po-2Bd">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -345,7 +415,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="eKD-Yu-s0V">
                                                 <rect key="frame" x="1" y="1" width="438" height="188"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="MRg-3M-lAe">
                                                         <rect key="frame" x="0.0" y="0.0" width="438" height="188"/>
@@ -419,7 +489,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>

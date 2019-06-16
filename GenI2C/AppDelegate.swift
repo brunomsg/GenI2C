@@ -27,12 +27,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var APICPinText: NSTextField!
     @IBOutlet weak var Warning: NSTextField!
     @IBOutlet var VerboseTextView: NSTextView!
-    //@IBOutlet weak var RenameLabel: NSTextField!
     @IBOutlet var RenameLabel: NSTextView!
+    @IBOutlet weak var StateLabel: NSTextField!
+    @IBOutlet weak var VersionLabel: NSTextField!
+    @IBOutlet weak var IONameLabel: NSTextField!
+    @IBOutlet weak var ModeLabel: NSTextField!
+    @IBOutlet weak var PinLabel: NSTextField!
+    @IBOutlet weak var DeviceNameLabel: NSTextField!
     
-    let queue = DispatchQueue(label: "queue", attributes: .concurrent)
-    let queue1 = DispatchQueue(label: "queue", attributes: .concurrent)
     var alert = NSAlert()
+    var NativeDeviceName:String = ""
+    var NativePin = ""
     var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16)
     var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6)
     var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false
@@ -73,7 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     APICPIN = Int(strtoul(APICPin, nil, 16))
                     verbose(text: "APIC Pin you input is \(APICPin)\n")
                 } else {
-                    Warning.stringValue = "APIC Pin should be between 0x2F and 0x77"
+                    Warning.stringValue = "APIC Pin should be between 0x18 and 0x77"
                 }
             } else {
                 alert.buttons[0].isEnabled = false
@@ -904,6 +909,114 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         mainWindow.standardWindowButton(.zoomButton)?.isHidden = true
         mainWindow = NSApplication.shared.windows[0]
         
+        let kextstat = Process()
+        let pipe1 = Pipe()
+        kextstat.standardOutput = pipe1
+        kextstat.launchPath = "/usr/sbin/kextstat"
+        kextstat.arguments = ["-b", "com.alexandred.VoodooI2C"]
+        kextstat.launch()
+        let kextdata = pipe1.fileHandleForReading.readDataToEndOfFile()
+        let kextStrings = String(data: kextdata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
+        if kextStrings.count == 1 {
+            StateLabel.stringValue += "Not Loaded"
+            VersionLabel.stringValue += "nil"
+            DeviceNameLabel.stringValue += "nil"
+            IONameLabel.stringValue +=  "nil"
+            ModeLabel.stringValue += "nil"
+            PinLabel.stringValue += "nil"
+        } else {
+            StateLabel.stringValue += "Loaded"
+            
+            let ioregPCI = Process()
+            let pipePCI = Pipe()
+            ioregPCI.standardOutput = pipePCI
+            ioregPCI.launchPath = "/usr/sbin/ioreg"
+            ioregPCI.arguments = ["-x", "-n", "PCI0", "-r", "-d", "3"]
+            ioregPCI.launch()
+            let PCIdata = pipePCI.fileHandleForReading.readDataToEndOfFile()
+            let PCIStrings = String(data: PCIdata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
+            var I2CCount:Int = 0
+            for line in 0..<PCIStrings.count {
+                if PCIStrings[line].contains("I2C") {
+                    I2CCount += 1
+                }
+            }
+            var index:Int = 0
+            var I2CName = [String](repeating: "", count: I2CCount)
+            for line in 0..<PCIStrings.count {
+                if PCIStrings[line].contains("I2C") {
+                    I2CName[index] = String(PCIStrings[line][PCIStrings[line].index(PCIStrings[line].startIndex, offsetBy: 8)..<PCIStrings[line].index(PCIStrings[line].startIndex, offsetBy: 12)])
+                    index += 1
+                }
+            }
+            
+            for i in 0..<I2CCount {
+                let ioregI2C = Process()
+                let pipeI2C = Pipe()
+                ioregI2C.standardOutput = pipeI2C
+                ioregI2C.launchPath = "/usr/sbin/ioreg"
+                ioregI2C.arguments = ["-x", "-n", I2CName[i], "-r", "-d", "5"]
+                ioregI2C.launch()
+                let I2Cdata = pipeI2C.fileHandleForReading.readDataToEndOfFile()
+                let I2CStrings = String(data: I2Cdata, encoding: String.Encoding.utf8)!
+                if I2CStrings.contains("<class VoodooI2CDeviceNub") {
+                    NativeDeviceName = String(I2CStrings[I2CStrings.index(I2CStrings.startIndex, offsetBy: I2CStrings.positionOf(sub: "<class VoodooI2CDeviceNub")-6)..<I2CStrings.index(I2CStrings.startIndex, offsetBy: I2CStrings.positionOf(sub: "<class VoodooI2CDeviceNub")-2)])
+                }
+            }
+            DeviceNameLabel.stringValue += NativeDeviceName
+            let VoodooI2CInfo = kextStrings[1][kextStrings[1].index(kextStrings[1].startIndex, offsetBy: 52)..<kextStrings[1].endIndex].components(separatedBy: " ")
+            let VoodooI2CVersion = VoodooI2CInfo[1].replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
+            VersionLabel.stringValue += VoodooI2CVersion
+            let ioreg = Process()
+            let pipe = Pipe()
+            ioreg.standardOutput = pipe
+            ioreg.launchPath = "/usr/sbin/ioreg"
+            ioreg.arguments = ["-x", "-n", NativeDeviceName, "-r"]
+            ioreg.launch()
+            let ioregdata = pipe.fileHandleForReading.readDataToEndOfFile()
+            let ioregStrings = String(data: ioregdata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
+            var openline:Int = 0
+            var closeline:Int = 0
+            for line in 0..<ioregStrings.count {
+                if ioregStrings[line].contains("<class VoodooI2CDeviceNub") {
+                    openline = line + 2
+                }
+                if ioregStrings[line] == "  | }" {
+                    closeline = line - 1
+                }
+            }
+            var ioregVoodooI2C = [String](repeating: "", count: closeline - openline + 1)
+            for line in openline...closeline {
+                ioregVoodooI2C[line - openline] = ioregStrings[line]
+            }
+            for line in 0..<ioregVoodooI2C.count {
+                if ioregVoodooI2C[line].contains("IOName") {
+                    IONameLabel.stringValue += ioregVoodooI2C[line][ioregVoodooI2C[line].index(ioregVoodooI2C[line].startIndex, offsetBy: 18)..<ioregVoodooI2C[line].index(ioregVoodooI2C[line].startIndex, offsetBy: ioregVoodooI2C[line].count - 1)]
+                }
+                if ioregVoodooI2C[line].contains("IOInterruptControllers") {
+                    
+                }
+                if ioregVoodooI2C[line].contains("IOInterruptSpecifiers") {
+                    NativePin = String(ioregVoodooI2C[line][ioregVoodooI2C[line].index(ioregVoodooI2C[line].startIndex, offsetBy: 34)..<ioregVoodooI2C[line].index(ioregVoodooI2C[line].startIndex, offsetBy: 36)])
+                    PinLabel.stringValue += "Pin : 0x" + NativePin
+                }
+                if ioregVoodooI2C[line].contains("IOInterruptControllers") {
+                    if ioregVoodooI2C[line].contains("io-apic") {
+                        PinLabel.stringValue = "APIC " + PinLabel.stringValue
+                        print(1)
+                        if NativePin == "" || Int(strtoul(NativePin, nil, 16)) > 47 {
+                            ModeLabel.stringValue += "Polling"
+                        } else {
+                            ModeLabel.stringValue += "Interrupt(APIC)"
+                        }
+                    } else {
+                        ModeLabel.stringValue += "Interrupt(GPIO)"
+                        PinLabel.stringValue = "GPIO " + PinLabel.stringValue
+                    }
+                    
+                }
+            }
+        }
         /*
         let accessory = NSTextField(frame: NSRect(x: 0, y: 0, width: 50, height: 20))
         let font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
@@ -966,8 +1079,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         a.launchPath = "/usr/bin/who"
         a.launch()
         a.waitUntilExit()
-        var outdata = pipe.fileHandleForReading.availableData
-        var outputString = String(data: outdata, encoding: String.Encoding.utf8)!
+        let outdata = pipe.fileHandleForReading.availableData
+        let outputString = String(data: outdata, encoding: String.Encoding.utf8)!
         let timeline = outputString.components(separatedBy: "\n")[0]
         let index1 = timeline.index(timeline.startIndex, offsetBy: 18)
         let index2 = timeline.index(timeline.startIndex, offsetBy: timeline.count)
@@ -1017,7 +1130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         b.waitUntilExit()
         var data:Data
         data = pipe1.fileHandleForReading.readDataToEndOfFile()
-        var Log = String(data: data, encoding: String.Encoding.utf8)!
+        let Log = String(data: data, encoding: String.Encoding.utf8)!
         
         let path = FolderPath + "/GenI2C.log"
         try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
