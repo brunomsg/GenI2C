@@ -28,6 +28,11 @@
                 <outlet property="Next4" destination="Cez-Eg-fUF" id="Ds6-cR-pRD"/>
                 <outlet property="PinLabel" destination="pZe-dB-UnE" id="3tl-Ig-kBK"/>
                 <outlet property="RenameLabel" destination="MRg-3M-lAe" id="cPY-Ge-WVR"/>
+                <outlet property="ScopeRadio0" destination="Hpj-3e-gsU" id="fEL-kA-Oxg"/>
+                <outlet property="ScopeRadio1" destination="8OW-zW-mDL" id="Kic-ho-ZYG"/>
+                <outlet property="ScopeRadio2" destination="jci-Nv-Lrp" id="IsA-GB-GiX"/>
+                <outlet property="ScopeRadio3" destination="7Ii-Am-d8H" id="GIL-3R-Pul"/>
+                <outlet property="SelectDeviceView" destination="D4j-O5-do9" id="uac-5S-Leh"/>
                 <outlet property="StateLabel" destination="QBC-Y3-9T4" id="YfV-eA-V1x"/>
                 <outlet property="TabView" destination="FFA-If-dZJ" id="i9M-Kd-QR6"/>
                 <outlet property="VerboseTextView" destination="axz-RV-WcV" id="Fks-DL-Vu3"/>
@@ -240,7 +245,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="2" identifier="" id="PEA-LU-tIc">
-                                <view key="view" id="9U2-N1-s5z">
+                                <view key="view" ambiguous="YES" id="9U2-N1-s5z">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -262,7 +267,6 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
-                                                <action selector="InputDeviceName:" target="Voe-Tx-rLC" id="Fl9-hX-G3S"/>
                                                 <outlet property="delegate" destination="Voe-Tx-rLC" id="hxd-sN-6Ow"/>
                                             </connections>
                                         </textField>
@@ -364,7 +368,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="3" identifier="" id="pDx-2o-UMt" userLabel="4">
-                                <view key="view" ambiguous="YES" id="SFQ-Po-2Bd">
+                                <view key="view" id="SFQ-Po-2Bd">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -415,7 +419,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="eKD-Yu-s0V">
                                                 <rect key="frame" x="1" y="1" width="438" height="188"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="MRg-3M-lAe">
                                                         <rect key="frame" x="0.0" y="0.0" width="438" height="188"/>
@@ -455,7 +459,7 @@
                     </tabView>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="863" y="323"/>
+            <point key="canvasLocation" x="1139" y="330"/>
         </window>
         <customView id="6pp-Al-9XI">
             <rect key="frame" x="0.0" y="0.0" width="270" height="44"/>
@@ -483,13 +487,13 @@
                     </textFieldCell>
                 </textField>
             </subviews>
-            <point key="canvasLocation" x="-349" y="803"/>
+            <point key="canvasLocation" x="412" y="379"/>
         </customView>
         <window title="Verbose" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="DXU-yX-phH">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1080"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
@@ -1332,7 +1336,58 @@
                     </scrollView>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="330" y="252"/>
+            <point key="canvasLocation" x="335" y="119"/>
         </window>
+        <customView id="D4j-O5-do9">
+            <rect key="frame" x="0.0" y="0.0" width="214" height="16"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hpj-3e-gsU">
+                    <rect key="frame" x="-1" y="-1" width="51" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="radio" title="I2C0" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="5L9-db-XXH">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="SelectDevice:" target="Voe-Tx-rLC" id="SKc-az-aiw"/>
+                    </connections>
+                </button>
+                <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="8OW-zW-mDL">
+                    <rect key="frame" x="55" y="-1" width="49" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="radio" title="I2C1" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="sGW-YM-o1h">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="SelectDevice:" target="Voe-Tx-rLC" id="az3-15-63X"/>
+                    </connections>
+                </button>
+                <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="jci-Nv-Lrp">
+                    <rect key="frame" x="109" y="-1" width="51" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="radio" title="I2C2" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="yhy-fN-UYo">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="SelectDevice:" target="Voe-Tx-rLC" id="k4O-Cm-fE6"/>
+                    </connections>
+                </button>
+                <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="7Ii-Am-d8H">
+                    <rect key="frame" x="165" y="-1" width="51" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="radio" title="I2C3" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="5eN-bm-OEh">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="SelectDevice:" target="Voe-Tx-rLC" id="jNw-j9-PRU"/>
+                    </connections>
+                </button>
+            </subviews>
+            <point key="canvasLocation" x="378" y="517"/>
+        </customView>
     </objects>
 </document>

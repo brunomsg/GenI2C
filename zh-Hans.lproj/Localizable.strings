@@ -13,3 +13,12 @@
 "Input again" = "重新输入";
 "No native APIC found" = "未找到原生APIC";
 "Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"" = "提取 APIC Pin 失败, Pin 值由系统启动时填充。请以十六进制输入您的 APIC Pin";
+"Failed to extract I2C Device Path, please select your I2C Device Path:" = "获取 I2C 设备地址失败， 请选择你的 I2C 设备地址：";
+"Multiple " = "有多个 ";
+" found in the DSDT\nWhich Path is the Correct one?" = " 设备在您的DSDT中\n哪个是正确的";
+"Polling" = "轮询";
+"Interrupt(APIC)" = "APIC 中断";
+"Interrupt(GPIO)" = "GPIO 中断";
+"Loaded" = "已加载";
+"Not Loaded" = "未加载";
+"nil" = "未知";
