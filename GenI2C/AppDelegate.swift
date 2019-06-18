@@ -20,7 +20,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var Next2: NSButton!
     @IBOutlet weak var Next3: NSButton!
     @IBOutlet weak var Next4: NSButton!
-    @IBOutlet weak var SelectDevice: NSPopUpButton!
     @IBOutlet weak var DeviceName: NSTextField!
     @IBOutlet weak var Verbose: NSScrollView!
     @IBOutlet weak var InputAPICPin: NSView!
@@ -34,37 +33,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var ModeLabel: NSTextField!
     @IBOutlet weak var PinLabel: NSTextField!
     @IBOutlet weak var DeviceNameLabel: NSTextField!
+    @IBOutlet weak var SelectDeviceView: NSView!
+    @IBOutlet weak var ScopeRadio0: NSButton!
+    @IBOutlet weak var ScopeRadio1: NSButton!
+    @IBOutlet weak var ScopeRadio2: NSButton!
+    @IBOutlet weak var ScopeRadio3: NSButton!
     
+    
+    let SelectDevice = NSAlert()
     var alert = NSAlert()
     var NativeDeviceName:String = ""
     var NativePin = ""
-    var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16)
-    var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6)
-    var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false
-    var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1
+    var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16), ScopeSelect:String = ""
+    var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6)
+    var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false, MultiTPAD:Bool = false, MultiScopeBool:Bool = false
+    var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1, MultiScopeCount:Int = 0, MultiTPADLineCount = [Int](repeating: 0, count: 6), MultiTPADLineCountIndex:Int = 0, MultiTPADUSRSelect:Int = 0, TargetTPAD:Int = 0
     
     @IBAction func SelectMode(_ sender: Any) {
         Choice = (sender as! NSButton).tag
         Next4.isEnabled = true
     }
 
+    @IBAction func SelectDevice(_ sender: Any) {
+        MultiTPADUSRSelect = (sender as! NSButton).tag
+        scope = MultiScope[MultiTPADUSRSelect]
+        SelectDevice.buttons[0].isEnabled = true
+        
+    }
     @IBAction func SelectCPU(_ sender: Any) {
         CPUChoice = (sender as! NSButton).tag
         Next3.isEnabled = true
-    }
-    
-    @IBAction func InputDeviceName(_ sender: Any) {
-        if DeviceName.stringValue.count == 0 {
-            Next2.isEnabled = false
-        } else if DeviceName.stringValue == TPAD {
-        } else {
-            TPAD = DeviceName.stringValue
-            Device = "Device (\(TPAD))"
-            verbose(text: "\nDevice: \(TPAD)\n")
-            HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
-            verbose(text: "\(HexTPAD)\n")
-            Countline()
-        }
     }
     
     @IBAction func InputAPICPin(_ sender: Any) {
@@ -95,7 +93,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         TabView.selectNextTabViewItem(Any?.self)
     }
     @IBAction func Next2(_ sender: Any) {
-        TabView.selectNextTabViewItem(Any?.self)
+        verbose(text: "\nDevice: \(TPAD)\n")
+        HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
+        verbose(text: "\(HexTPAD)\n")
+        Countline()
     }
     @IBAction func Next3(_ sender: Any) {
         TabView.selectNextTabViewItem(Any?.self)
@@ -145,6 +146,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     func Countline() {
+        print("Countline()")
         let readHandler =  FileHandle(forReadingAtPath: DSDTFile)
         let data = readHandler?.readDataToEndOfFile()
         let readString = String(data: data!, encoding: String.Encoding.utf8)
@@ -174,9 +176,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 verbose(text: "Found for FMCN in DSDT at line \(line)\n")
                 ExFMCN = true
             }
+            var spaceopen, spaceclose, startline:Int
             if DSDTLine.contains(Device){
+                if Matched {
+                    MultiTPAD = true
+                    MultiScopeBool = false
+                    total = 0
+                }
                 verbose(text: "Found for \(Device) in DSDT at line \(line)\n")
-                var spaceopen, spaceclose, startline:Int
                 startline = line
                 Paranthesesopen = lines[line]
                 line += 1
@@ -185,6 +192,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     Paranthesesclose = lines[line]
                     line += 1
                     spaceclose = Paranthesesclose.positionOf(sub: "}")
+                    if Paranthesesclose.contains("_SB.PCI0.I2C") {
+                        if MultiScopeBool {
+                            if MultiScope[MultiScopeCount - 1] != String(Paranthesesclose[Paranthesesclose.index(Paranthesesclose.startIndex ,offsetBy: Paranthesesclose.positionOf(sub: "_SB.PCI0.I2C") + 12)]) {
+                                MultiScope[MultiScopeCount] = String(Paranthesesclose[Paranthesesclose.index(Paranthesesclose.startIndex ,offsetBy: Paranthesesclose.positionOf(sub: "_SB.PCI0.I2C") + 12)])
+                                MultiScopeCount += 1
+                            }
+                        } else {
+                            MultiScope[MultiScopeCount] = String(Paranthesesclose[Paranthesesclose.index(Paranthesesclose.startIndex ,offsetBy: Paranthesesclose.positionOf(sub: "_SB.PCI0.I2C") + 12)])
+                            MultiScopeCount += 1
+                            MultiScopeBool = true
+                        }
+                    }
                 } while spaceclose != spaceopen
                 if total == 0 {
                     total += (line - startline)
@@ -193,7 +212,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     total += (line - startline) + 1
                 }
                 Matched = true
-                total += 1
+                MultiTPADLineCount[MultiTPADLineCountIndex] = total
+                MultiTPADLineCountIndex += 1
             }
         }
         if Matched == false{
@@ -208,44 +228,78 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 if response.rawValue == 1001 {
                     exit(0)
                 }
-                /*print(response*/})
+            })
         }
         else{
-            Next2.isEnabled = true
+            TabView.selectTabViewItem(at: 1)
+            preAnalysis()
+        }
+    }
+    
+    func preAnalysis() {
+        if MultiTPAD {
+            var count:Int = 0
+            for index in 0..<MultiScope.count {
+                if MultiScope[count] != "" {
+                    if count == 0 {
+                        ScopeRadio0.isHidden = false
+                    } else if count == 1 {
+                        ScopeRadio1.isHidden = false
+                    } else if count == 2 {
+                        ScopeRadio2.isHidden = false
+                    } else if count == 3 {
+                        ScopeRadio3.isHidden = false
+                    }
+                    count += 1
+                }
+            }
+            SelectDevice.accessoryView = SelectDeviceView
+            SelectDevice.informativeText = NSLocalizedString("Multiple ", comment: "") + TPAD + NSLocalizedString(" found in the DSDT\nWhich Path is the Correct one?", comment: "")
+            SelectDevice.alertStyle = .informational
+            SelectDevice.addButton(withTitle: NSLocalizedString("OK", comment: ""))
+            SelectDevice.beginSheetModal(for: self.window, completionHandler: {respose -> Void in self.Analysis()})
+        } else {
             Analysis()
         }
     }
     
     func Analysis() {
-        Code = [String](repeating: "", count: total)
+        print("Analysis()")
+        if MultiTPAD {
+            Code = [String](repeating: "", count: MultiTPADLineCount[MultiTPADUSRSelect] + 1)
+        } else {
+            Code = [String](repeating: "", count: total + 1)
+        }
         line = 0
         DSDTLine = ""
         Paranthesesopen = ""
         Paranthesesclose = ""
         i = 0
-        while line < count-1 {
+        while line < count - 1 {
             DSDTLine = lines[line]
             line += 1
             if DSDTLine.contains(Device){
-                var spaceopen, spaceclose:Int
-                Code[i] = DSDTLine
-                i += 1
-                Paranthesesopen = lines[line]
-                line += 1
-                Code[i] = Paranthesesopen
-                i += 1
-                spaceopen = Paranthesesopen.positionOf(sub: "{")
-                repeat{
-                    Paranthesesclose = lines[line]
-                    line += 1
-                    spaceclose = Paranthesesclose.positionOf(sub: "}")
-                    Code[i] = Paranthesesclose
+                if (MultiTPAD && TargetTPAD == MultiTPADUSRSelect) || MultiTPAD == false {
+                    var spaceopen, spaceclose:Int
+                    Code[i] = DSDTLine
                     i += 1
-                } while spaceopen != spaceclose
-                Matched = true
+                    Paranthesesopen = lines[line]
+                    line += 1
+                    Code[i] = Paranthesesopen
+                    i += 1
+                    spaceopen = Paranthesesopen.positionOf(sub: "{")
+                    repeat{
+                        Paranthesesclose = lines[line]
+                        line += 1
+                        spaceclose = Paranthesesclose.positionOf(sub: "}")
+                        Code[i] = Paranthesesclose
+                        i += 1
+                    } while spaceopen != spaceclose
+                }
+                TargetTPAD = TargetTPAD + 1
             }
         }
-        for i in 0..<total {
+        for i in 0...total {
             if Code[i].contains("Method (_CRS,") {
                 var CRSStart, CRSEnd, CRSRangeScan:Int
                 CRSRangeScan = i + 1
@@ -309,7 +363,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 APICPIN = Int(strtoul(String(Code[APICPinLine][index1..<index2]), nil, 16))
                 verbose(text: "APIC Pin \(APICPIN)\n")
             }
-            if Code[i].contains("I2cSerialBusV2 (0x") {
+            if Code[i].contains("I2cSerialBusV2 (0x") || Code[i].contains("I2cSerialBus (0x"){
                 if ExSLAV == true {
                     SLAVNameLineFound = false
                     verbose(text: "Warning! Multiple I2C Bus Addresses exist in " + TPAD + " _CRS patching may be wrong!")
@@ -329,9 +383,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
                 ScopeLine = i + 1
                 verbose(text: Code[ScopeLine] + "\n")
+                scope = String(Code[ScopeLine][Code[ScopeLine].index(Code[ScopeLine].startIndex,offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)..<Code[ScopeLine].index(Code[ScopeLine].startIndex,offsetBy: Code[ScopeLine].positionOf(sub: "\","))])
+                /*
                 let index1 = Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)
                 let index2 = Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\","))
                 scope = String(Code[ScopeLine][index1..<index2])
+ */
             }
             if Code[i].contains("Name (") && CatchSpacing == false {
                 let index1 = Code[i].index(Code[i].startIndex, offsetBy: 0)
@@ -341,7 +398,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             }
             if SLAVNameLineFound == true && APICNameLineFound == true && SLAVName == APICNAME && Hetero == false {
                 Hetero = true
-                if CheckSLAVLocation < CRSLocation {
+                if CheckSLAVLocation > CRSLocation {
                     BreakCombine()
                 }
             }
@@ -350,10 +407,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         var LLessCount:Int = 0
         var LEqualCount:Int = 0
         var If2BracketsCount:Int = 0
-        print(n)
-        for i in 0..<CRSInfo.count {
-            print(CRSInfo[i])
-        }
         for CRSLine in 0...n {
             if CRSInfo[CRSLine].contains("If (LLess (") {
                 let index1 = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "If (LLess (") + 11)
@@ -366,7 +419,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
             }
             if CRSInfo[CRSLine].contains("If (LEqual (") {
-                print("lequal \(CRSLine)")
                 let index1 = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "If (LEqual (")+12)
                 let index2 = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "If (LEqual (")+16)
                 if !(IfString.contains(String(CRSInfo[CRSLine][index1..<index2]))) || LEqual == false {
@@ -377,7 +429,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
             }
             if CRSInfo[CRSLine].contains("If ((") && (CRSInfo[CRSLine].contains("<") || CRSInfo[CRSLine].contains("==")) {
-                print("If (( \(CRSLine)")
                 let index1 = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "If ((")+5)
                 let index2 = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "If ((")+9)
                 if !(IfString.contains(String(CRSInfo[CRSLine][index1..<index2]))) || If2BracketsBool == false {
@@ -510,7 +561,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 CRSPatched = true
             }
         }
-        print(CRSPatched)
         if CRSPatched == false {
             verbose(text: "Error! No _CRS Patch Applied!")
         }
@@ -723,9 +773,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
                 Filehead[31] = "    Scope(_SB.PCI0.I2C" + scope + "." + TPAD + ")"
                 Filehead[32] = "    {"
-                for i in 0..<Filehead.count {
-                    print(Filehead[i])
-                }
                 
                 var fileContent:String = ""
                 for Genindex in 0..<RenameCRS.count {
@@ -738,7 +785,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                         fileContent += RenameUSTP[Genindex] + "\n"
                     }
                 }
-                print(Filehead)
                 fileContent += " */\n"
                 for Genindex in 0..<Filehead.count {
                     if Filehead[Genindex] != "" && Filehead[Genindex] != "\n" {
@@ -805,12 +851,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     func BreakCombine() {
+        print("BreakCombine()")
         for BreakIndex in 0...3 {
-            CRSInfo[CRSInfo.count - 1 - (total - (CheckConbLine + 7)) + BreakIndex] = ""
+            CRSInfo[CRSInfo.count - 1 - (total + 1 - (CheckConbLine + 7)) + BreakIndex] = ""
         }
     }
     
     func GenSPED() {
+        print("GenSPED()")
         if CPUChoice == 0 {
             if scope == "0" || scope == "2" || scope == "3" {
                 ManualSPED[0] = Spacing + "Name (SSCN, Package () { 432, 507, 30 })"
@@ -906,6 +954,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         Next2.isEnabled = false
         Next3.isEnabled = false
         Next4.isEnabled = false
+        
         mainWindow.standardWindowButton(.zoomButton)?.isHidden = true
         mainWindow = NSApplication.shared.windows[0]
         
@@ -918,14 +967,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         let kextdata = pipe1.fileHandleForReading.readDataToEndOfFile()
         let kextStrings = String(data: kextdata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
         if kextStrings.count == 1 {
-            StateLabel.stringValue += "Not Loaded"
-            VersionLabel.stringValue += "nil"
-            DeviceNameLabel.stringValue += "nil"
-            IONameLabel.stringValue +=  "nil"
-            ModeLabel.stringValue += "nil"
-            PinLabel.stringValue += "nil"
+            StateLabel.stringValue += NSLocalizedString("Not Loaded", comment: "")
+            VersionLabel.stringValue += NSLocalizedString("nil", comment: "")
+            DeviceNameLabel.stringValue += NSLocalizedString("nil", comment: "")
+            IONameLabel.stringValue +=  NSLocalizedString("nil", comment: "")
+            ModeLabel.stringValue += NSLocalizedString("nil", comment: "")
+            PinLabel.stringValue += NSLocalizedString("nil", comment: "")
         } else {
-            StateLabel.stringValue += "Loaded"
+            StateLabel.stringValue += NSLocalizedString("Loaded", comment: "")
             
             let ioregPCI = Process()
             let pipePCI = Pipe()
@@ -1003,17 +1052,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 if ioregVoodooI2C[line].contains("IOInterruptControllers") {
                     if ioregVoodooI2C[line].contains("io-apic") {
                         PinLabel.stringValue = "APIC " + PinLabel.stringValue
-                        print(1)
                         if NativePin == "" || Int(strtoul(NativePin, nil, 16)) > 47 {
-                            ModeLabel.stringValue += "Polling"
+                            ModeLabel.stringValue += NSLocalizedString("Polling", comment: "")
                         } else {
-                            ModeLabel.stringValue += "Interrupt(APIC)"
+                            ModeLabel.stringValue += NSLocalizedString("Interrupt(APIC)", comment: "")
                         }
                     } else {
-                        ModeLabel.stringValue += "Interrupt(GPIO)"
+                        ModeLabel.stringValue += NSLocalizedString("Interrupt(GPIO)", comment: "")
                         PinLabel.stringValue = "GPIO " + PinLabel.stringValue
                     }
-                    
+                }
+                if ioregVoodooI2C[line].contains("gpioPin") {
+                    NativePin = String(ioregVoodooI2C[line][ioregVoodooI2C[line].index(ioregVoodooI2C[line].startIndex, offsetBy: 18)..<ioregVoodooI2C[line].endIndex])
+                    PinLabel.stringValue = "GPIO Pin : " + NativePin
+                    ModeLabel.stringValue += NSLocalizedString("Interrupt(GPIO)", comment: "")
                 }
             }
         }
@@ -1055,6 +1107,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     func controlTextDidChange(_ notification: Notification) {
+        if DeviceName.stringValue.count < 4 {
+            Next2.isEnabled = false
+        } else if DeviceName.stringValue.count == 4 {
+            TPAD = DeviceName.stringValue
+            Device = "Device (\(TPAD))"
+            Next2.isEnabled = true
+        }
         if DeviceName.stringValue.count > 4 {
             let index = DeviceName.stringValue.index(DeviceName.stringValue.startIndex, offsetBy: 4)
             DeviceName.stringValue = String(DeviceName.stringValue[..<index])
