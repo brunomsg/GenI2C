@@ -16,6 +16,7 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="GenI2C" customModuleProvider="target">
             <connections>
                 <outlet property="APICPinText" destination="iYC-de-U4q" id="gBk-pb-14O"/>
+                <outlet property="CPUModelLabel" destination="XZ7-Jk-fRV" id="xVC-CF-QwE"/>
                 <outlet property="DSDTPath" destination="kRr-hl-DHU" id="iLV-IF-aZh"/>
                 <outlet property="DeviceName" destination="b5P-D1-bnM" id="pIJ-sd-uqT"/>
                 <outlet property="DeviceNameLabel" destination="V8c-79-DsL" id="cDG-yt-DAc"/>
@@ -160,7 +161,7 @@
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5CX-x3-MYO">
                                             <rect key="frame" x="397" y="13" width="69" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="Next" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eJg-jF-yQq">
+                                            <buttonCell key="cell" type="push" title="Next" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eJg-jF-yQq">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -203,7 +204,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jlh-jV-O4e">
-                                                        <rect key="frame" x="18" y="94" width="404" height="17"/>
+                                                        <rect key="frame" x="18" y="69" width="404" height="17"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="IOName : " id="V4f-Qe-gWm">
                                                             <font key="font" metaFont="system"/>
@@ -212,7 +213,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bn3-SP-vYy">
-                                                        <rect key="frame" x="18" y="69" width="404" height="17"/>
+                                                        <rect key="frame" x="18" y="44" width="404" height="17"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Mode : " id="c3K-he-8WT">
                                                             <font key="font" metaFont="system"/>
@@ -221,7 +222,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V8c-79-DsL">
-                                                        <rect key="frame" x="18" y="119" width="404" height="17"/>
+                                                        <rect key="frame" x="18" y="94" width="404" height="17"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="DeviceName : " id="Mlh-cb-Dhv">
                                                             <font key="font" metaFont="system"/>
@@ -229,8 +230,17 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XZ7-Jk-fRV">
+                                                        <rect key="frame" x="18" y="119" width="404" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="CPU Model : " id="IUm-ef-E7f">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pZe-dB-UnE">
-                                                        <rect key="frame" x="18" y="44" width="404" height="17"/>
+                                                        <rect key="frame" x="18" y="19" width="404" height="17"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" id="GBw-pf-gq3">
                                                             <font key="font" metaFont="system"/>
@@ -245,7 +255,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="2" identifier="" id="PEA-LU-tIc">
-                                <view key="view" ambiguous="YES" id="9U2-N1-s5z">
+                                <view key="view" id="9U2-N1-s5z">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -273,7 +283,7 @@
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YBE-Z7-fHr">
                                             <rect key="frame" x="397" y="13" width="69" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="Next" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iLL-Mu-9X1">
+                                            <buttonCell key="cell" type="push" title="Next" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iLL-Mu-9X1">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -345,7 +355,7 @@
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HnQ-cX-7gd">
                                             <rect key="frame" x="397" y="13" width="69" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="Next" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zO3-Jt-7ZL">
+                                            <buttonCell key="cell" type="push" title="Next" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zO3-Jt-7ZL">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -368,7 +378,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="3" identifier="" id="pDx-2o-UMt" userLabel="4">
-                                <view key="view" id="SFQ-Po-2Bd">
+                                <view key="view" ambiguous="YES" id="SFQ-Po-2Bd">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -419,7 +429,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="eKD-Yu-s0V">
                                                 <rect key="frame" x="1" y="1" width="438" height="188"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="MRg-3M-lAe">
                                                         <rect key="frame" x="0.0" y="0.0" width="438" height="188"/>
@@ -444,7 +454,7 @@
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cez-Eg-fUF" userLabel="Next4">
                                             <rect key="frame" x="370" y="13" width="96" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="Generate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="w98-1P-6b3">
+                                            <buttonCell key="cell" type="push" title="Generate" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="w98-1P-6b3">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>

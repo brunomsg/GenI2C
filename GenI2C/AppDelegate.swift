@@ -33,6 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var ModeLabel: NSTextField!
     @IBOutlet weak var PinLabel: NSTextField!
     @IBOutlet weak var DeviceNameLabel: NSTextField!
+    @IBOutlet weak var CPUModelLabel: NSTextField!
     @IBOutlet weak var SelectDeviceView: NSView!
     @IBOutlet weak var ScopeRadio0: NSButton!
     @IBOutlet weak var ScopeRadio1: NSButton!
@@ -44,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     var alert = NSAlert()
     var NativeDeviceName:String = ""
     var NativePin = ""
-    var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16), ScopeSelect:String = ""
+    var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16), ScopeSelect:String = "", RenameFile:String = ""
     var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6)
     var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false, MultiTPAD:Bool = false, MultiScopeBool:Bool = false
     var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1, MultiScopeCount:Int = 0, MultiTPADLineCount = [Int](repeating: 0, count: 6), MultiTPADLineCountIndex:Int = 0, MultiTPADUSRSelect:Int = 0, TargetTPAD:Int = 0
@@ -87,43 +88,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     @IBAction func SelectDSDTButtom(_ sender: Any) {
-        selectDSDT()
-    }
-    @IBAction func Next1(_ sender: Any) {
-        TabView.selectNextTabViewItem(Any?.self)
-    }
-    @IBAction func Next2(_ sender: Any) {
-        verbose(text: "\nDevice: \(TPAD)\n")
-        HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
-        verbose(text: "\(HexTPAD)\n")
-        Countline()
-    }
-    @IBAction func Next3(_ sender: Any) {
-        TabView.selectNextTabViewItem(Any?.self)
-    }
-    @IBAction func Next4(_ sender: Any) {
-        TabView.selectNextTabViewItem(Any?.self)
-        if Choice != preChoice {
-            if Choice == 0 {
-                verbose(text: "Selection: Interrupt (APIC or GPIO)\n")
-            } else {
-                verbose(text: "Selection: Polling (Will be set back to APIC if supported)\n")
-            }
-            preChoice = Choice
-            Analysis2()
-        }
-    }
-    @IBAction func Back2(_ sender: Any) {
-        TabView.selectPreviousTabViewItem(Any?.self)
-    }
-    @IBAction func Back3(_ sender: Any) {
-        TabView.selectPreviousTabViewItem(Any?.self)
-    }
-    @IBAction func Back4(_ sender: Any) {
-        TabView.selectPreviousTabViewItem(Any?.self)
-    }
-    
-    func selectDSDT() {
         let openPanel:NSOpenPanel = NSOpenPanel()
         openPanel.canChooseDirectories = false
         openPanel.canChooseFiles = true
@@ -143,6 +107,44 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 self.Next1.isEnabled = true
             }
         })
+    }
+    
+    @IBAction func Next1(_ sender: Any) {
+        TabView.selectNextTabViewItem(Any?.self)
+    }
+    
+    @IBAction func Next2(_ sender: Any) {
+        verbose(text: "\nDevice: \(TPAD)\n")
+        HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
+        verbose(text: "\(HexTPAD)\n")
+        Countline()
+    }
+    
+    @IBAction func Next3(_ sender: Any) {
+        TabView.selectNextTabViewItem(Any?.self)
+    }
+    
+    @IBAction func Next4(_ sender: Any) {
+        TabView.selectNextTabViewItem(Any?.self)
+        if Choice != preChoice {
+            if Choice == 0 {
+                verbose(text: "Selection: Interrupt (APIC or GPIO)\n")
+            } else {
+                verbose(text: "Selection: Polling (Will be set back to APIC if supported)\n")
+            }
+            preChoice = Choice
+            Analysis2()
+            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: FolderPath)
+        }
+    }
+    @IBAction func Back2(_ sender: Any) {
+        TabView.selectPreviousTabViewItem(Any?.self)
+    }
+    @IBAction func Back3(_ sender: Any) {
+        TabView.selectPreviousTabViewItem(Any?.self)
+    }
+    @IBAction func Back4(_ sender: Any) {
+        TabView.selectPreviousTabViewItem(Any?.self)
     }
     
     func Countline() {
@@ -938,26 +940,134 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         
     }
     
-    //Handle for the dock icon click
-    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if flag {
-            return false
-        } else {
-            window.makeKeyAndOrderFront(self)
-            return true
+    func verbose(text:String) {
+        VerboseTextView.string += text
+    }
+    
+    @IBAction func OpenVerbose(_ sender: Any) {
+        VerboseWindow.setIsVisible(true)
+    }
+    
+    @IBAction func OpenMacLog(_ sender: Any) {
+        let t = Process()
+        t.launchPath = Bundle.main.path(forResource: "maclog", ofType: nil)
+        t.arguments = ["-b", "-F", "voodoo"]
+        t.launch()
+    }
+    
+    func controlTextDidChange(_ notification: Notification) {
+        if DeviceName.stringValue.count < 4 {
+            Next2.isEnabled = false
+        } else if DeviceName.stringValue.count == 4 {
+            TPAD = DeviceName.stringValue
+            Device = "Device (\(TPAD))"
+            Next2.isEnabled = true
         }
+        if DeviceName.stringValue.count > 4 {
+            let index = DeviceName.stringValue.index(DeviceName.stringValue.startIndex, offsetBy: 4)
+            DeviceName.stringValue = String(DeviceName.stringValue[..<index])
+        }
+    }
+    
+    func iasl(path:String) {
+        let t = Process()
+        t.launchPath = Bundle.main.path(forResource: "iasl", ofType: nil)
+        t.arguments = [path]
+        t.launch()
+    }
+    
+    @IBAction func SaveLog(_ sender: Any) {
+        let a = Process()
+        let pipe = Pipe()
+        a.standardOutput = pipe
+        a.launchPath = "/usr/bin/who"
+        a.launch()
+        a.waitUntilExit()
+        let outdata = pipe.fileHandleForReading.availableData
+        let outputString = String(data: outdata, encoding: String.Encoding.utf8)!
+        let timeline = outputString.components(separatedBy: "\n")[0]
+        let index1 = timeline.index(timeline.startIndex, offsetBy: 18)
+        let index2 = timeline.index(timeline.startIndex, offsetBy: timeline.count)
+        let time = timeline[index1..<index2]
+        let month = time.components(separatedBy: " ")[0]
+        let date = Date()
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = "yyyy"
+        let year = dateFormat.string(from: date)
+        var month_num:String = ""
+        switch month {
+        case "Jan":
+            month_num = "1"
+        case "Feb":
+            month_num = "2"
+        case "Mar":
+            month_num = "3"
+        case "Apr":
+            month_num = "4"
+        case "May":
+            month_num = "5"
+        case "Jun":
+            month_num = "6"
+        case "Jul":
+            month_num = "7"
+        case "Aug":
+            month_num = "8"
+        case "Sept":
+            month_num = "9"
+        case "Oct":
+            month_num = "10"
+        case "Nov":
+            month_num = "11"
+        case "Dec":
+            month_num = "12"
+        default:
+            print("default")
+        }
+        var curDate:String = ""
+        curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ")[1]) \(time.components(separatedBy: " ")[2]):00"
+        let dateFormatter = DateFormatter.init()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        var dateDate = dateFormatter.date(from: curDate)!
+        dateDate = dateDate - 60
+        curDate = dateFormatter.string(from: dateDate)
+        let b = Process()
+        let pipe1 = Pipe()
+        b.standardOutput = pipe1
+        b.launchPath = "/usr/bin/log"
+        b.arguments = ["show", "--predicate", "(eventMessage CONTAINS[c] \"VoodooI2C\") || (eventMessage CONTAINS[c] \"VoodooGPIO\")", "--start", "\(curDate)"]
+        b.launch()
+        b.waitUntilExit()
+        var data:Data
+        data = pipe1.fileHandleForReading.readDataToEndOfFile()
+        let Log = String(data: data, encoding: String.Encoding.utf8)!
+        
+        let path = FolderPath + "/GenI2C.log"
+        try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
+        if FileManager.default.fileExists(atPath: path) {
+            try! FileManager.default.removeItem(atPath: path)
+            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+        } else {
+            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+        }
+        try! Log.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+        NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: FolderPath)
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
-        Next1.isEnabled = false
-        Next2.isEnabled = false
-        Next3.isEnabled = false
-        Next4.isEnabled = false
         
         mainWindow.standardWindowButton(.zoomButton)?.isHidden = true
         mainWindow = NSApplication.shared.windows[0]
         
+        let CPUModel = Process()
+        let pipeCPU = Pipe()
+        CPUModel.standardOutput = pipeCPU
+        CPUModel.launchPath = "/usr/sbin/sysctl"
+        CPUModel.arguments = ["machdep.cpu.brand_string"]
+        CPUModel.launch()
+        let CPUdata = pipeCPU.fileHandleForReading.readDataToEndOfFile()
+        let CPUString = String(data: CPUdata, encoding: String.Encoding.utf8)!
+        CPUModelLabel.stringValue += String(CPUString[CPUString.index(CPUString.startIndex, offsetBy: 26)..<CPUString.endIndex])
         let kextstat = Process()
         let pipe1 = Pipe()
         kextstat.standardOutput = pipe1
@@ -1070,12 +1180,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             }
         }
         /*
-        let accessory = NSTextField(frame: NSRect(x: 0, y: 0, width: 50, height: 20))
-        let font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
-        accessory.stringValue = "0x"
-        accessory.isEditable = true
-        accessory.drawsBackground = true
-        */
+         let accessory = NSTextField(frame: NSRect(x: 0, y: 0, width: 50, height: 20))
+         let font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
+         accessory.stringValue = "0x"
+         accessory.isEditable = true
+         accessory.drawsBackground = true
+         */
         alert.accessoryView = InputAPICPin
         alert.messageText = NSLocalizedString("No native APIC found", comment: "")
         alert.informativeText = NSLocalizedString("Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"", comment: "")
@@ -1086,120 +1196,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         alert.addButton(withTitle: NSLocalizedString(NSLocalizedString("OK", comment: ""), comment: "")).isEnabled = false
         //alert.window.contentView?.addSubview(AlertView)
     }
-
+    
+    func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+        DSDTFile = filename
+        DSDTPath.stringValue = DSDTFile
+        verbose(text: "\(self.DSDTFile)\n")
+        Next1.isEnabled = true
+        return true
+    }
+    
+    
+    //Handle for the dock icon click
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if flag {
+            return false
+        } else {
+            window.makeKeyAndOrderFront(self)
+            return true
+        }
+    }
+    
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
-    }
-    
-    func verbose(text:String) {
-        VerboseTextView.string += text
-    }
-    
-    @IBAction func OpenVerbose(_ sender: Any) {
-        VerboseWindow.setIsVisible(true)
-    }
-    
-    @IBAction func OpenMacLog(_ sender: Any) {
-        let t = Process()
-        t.launchPath = Bundle.main.path(forResource: "maclog", ofType: nil)
-        t.arguments = ["-b", "-F", "voodooi2c"]
-        t.launch()
-    }
-    
-    func controlTextDidChange(_ notification: Notification) {
-        if DeviceName.stringValue.count < 4 {
-            Next2.isEnabled = false
-        } else if DeviceName.stringValue.count == 4 {
-            TPAD = DeviceName.stringValue
-            Device = "Device (\(TPAD))"
-            Next2.isEnabled = true
-        }
-        if DeviceName.stringValue.count > 4 {
-            let index = DeviceName.stringValue.index(DeviceName.stringValue.startIndex, offsetBy: 4)
-            DeviceName.stringValue = String(DeviceName.stringValue[..<index])
-        }
-    }
-    
-    func iasl(path:String) {
-        let t = Process()
-        t.launchPath = Bundle.main.path(forResource: "iasl", ofType: nil)
-        t.arguments = [path]
-        t.launch()
-    }
-    
-    @IBAction func SaveLog(_ sender: Any) {
-        LogToFile()
-    }
-    
-    func LogToFile () {
-        let a = Process()
-        let pipe = Pipe()
-        a.standardOutput = pipe
-        a.launchPath = "/usr/bin/who"
-        a.launch()
-        a.waitUntilExit()
-        let outdata = pipe.fileHandleForReading.availableData
-        let outputString = String(data: outdata, encoding: String.Encoding.utf8)!
-        let timeline = outputString.components(separatedBy: "\n")[0]
-        let index1 = timeline.index(timeline.startIndex, offsetBy: 18)
-        let index2 = timeline.index(timeline.startIndex, offsetBy: timeline.count)
-        let time = timeline[index1..<index2]
-        let month = time.components(separatedBy: " ")[0]
-        let date = Date()
-        let dateFormat = DateFormatter()
-        dateFormat.dateFormat = "yyyy"
-        let year = dateFormat.string(from: date)
-        var month_num:String = ""
-        switch month {
-        case "Jan":
-            month_num = "1"
-        case "Feb":
-            month_num = "2"
-        case "Mar":
-            month_num = "3"
-        case "Apr":
-            month_num = "4"
-        case "May":
-            month_num = "5"
-        case "Jun":
-            month_num = "6"
-        case "Jul":
-            month_num = "7"
-        case "Aug":
-            month_num = "8"
-        case "Sept":
-            month_num = "9"
-        case "Oct":
-            month_num = "10"
-        case "Nov":
-            month_num = "11"
-        case "Dec":
-            month_num = "12"
-        default:
-            print("default")
-        }
-        var curDate:String = ""
-        curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ")[1]) \(time.components(separatedBy: " ")[2]):00"
-        let b = Process()
-        let pipe1 = Pipe()
-        b.standardOutput = pipe1
-        b.launchPath = "/usr/bin/log"
-        b.arguments = ["show", "--predicate", "(eventMessage CONTAINS[c] \"VoodooI2C\") || (eventMessage CONTAINS[c] \"VoodooGPIO\")", "--start", "\(curDate)"]
-        b.launch()
-        b.waitUntilExit()
-        var data:Data
-        data = pipe1.fileHandleForReading.readDataToEndOfFile()
-        let Log = String(data: data, encoding: String.Encoding.utf8)!
-        
-        let path = FolderPath + "/GenI2C.log"
-        try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
-        if FileManager.default.fileExists(atPath: path) {
-            try! FileManager.default.removeItem(atPath: path)
-            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
-        } else {
-            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
-        }
-        try! Log.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
     }
 }
 
