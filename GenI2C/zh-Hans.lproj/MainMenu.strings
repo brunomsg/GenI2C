@@ -11,6 +11,12 @@
 /* Class = "NSMenuItem"; title = "Quit GenI2C"; ObjectID = "4sb-4s-VLi"; */
 "4sb-4s-VLi.title" = "退出 GenI2C";
 
+/* Class = "NSButtonCell"; title = "I2C0"; ObjectID = "5L9-db-XXH"; */
+"5L9-db-XXH.title" = "I2C0";
+
+/* Class = "NSButtonCell"; title = "I2C3"; ObjectID = "5eN-bm-OEh"; */
+"5eN-bm-OEh.title" = "I2C3";
+
 /* Class = "NSMenuItem"; title = "About GenI2C"; ObjectID = "5kV-Vb-QxS"; */
 "5kV-Vb-QxS.title" = "关于 GenI2C";
 
@@ -20,6 +26,9 @@
 /* Class = "NSMenuItem"; title = "Preferences…"; ObjectID = "BOF-NM-1cW"; */
 "BOF-NM-1cW.title" = "偏好设置…";
 
+/* Class = "NSTextFieldCell"; title = "VoodooI2C Version : "; ObjectID = "CDj-j9-PJU"; */
+"CDj-j9-PJU.title" = "VoodooI2C 版本: ";
+
 /* Class = "NSTextFieldCell"; title = "Select your CPU architecture:"; ObjectID = "Csj-k8-FtT"; */
 "Csj-k8-FtT.title" = "选择你的 CPU 架构:";
 
@@ -28,6 +37,12 @@
 
 /* Class = "NSWindow"; title = "Verbose"; ObjectID = "DXU-yX-phH"; */
 "DXU-yX-phH.title" = "GenI2C 日志";
+
+/* Class = "NSButtonCell"; title = "Disassemble"; ObjectID = "Dwi-ee-FXN"; */
+"Dwi-ee-FXN.title" = "反编译";
+
+/* Class = "NSMenuItem"; title = "Item 3"; ObjectID = "EiS-Vq-Ocs"; */
+"EiS-Vq-Ocs.title" = "Item 3";
 
 /* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "EtM-9Z-Ufx"; */
 "EtM-9Z-Ufx.title" = "调试";
@@ -44,6 +59,12 @@
 /* Class = "NSMenuItem"; title = "Item 3"; ObjectID = "Gug-MU-563"; */
 "Gug-MU-563.title" = "保存 VoodooI2C 日志";
 
+/* Class = "NSMenuItem"; title = "Feedback"; ObjectID = "ILF-f2-fBf"; */
+"ILF-f2-fBf.title" = "反馈问题";
+
+/* Class = "NSTextFieldCell"; title = "CPU Model : "; ObjectID = "IUm-ef-E7f"; */
+"IUm-ef-E7f.title" = "CPU 型号: ";
+
 /* Class = "NSButtonCell"; title = "Interrupt (APIC or GPIO)"; ObjectID = "IW8-mf-mSA"; */
 "IW8-mf-mSA.title" = "中断 (APIC 或 GPIO)";
 
@@ -55,6 +76,9 @@
 
 /* Class = "NSButtonCell"; title = "Back"; ObjectID = "MQd-KJ-3tw"; */
 "MQd-KJ-3tw.title" = "上一步";
+
+/* Class = "NSTextFieldCell"; title = "DeviceName : "; ObjectID = "Mlh-cb-Dhv"; */
+"Mlh-cb-Dhv.title" = "设备名称: ";
 
 /* Class = "NSMenuItem"; title = "Item 2"; ObjectID = "O5R-5K-mTb"; */
 "O5R-5K-mTb.title" = "VoodooI2C 日志";
@@ -68,6 +92,9 @@
 /* Class = "NSButtonCell"; title = "Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)"; ObjectID = "Oww-2F-PAh"; */
 "Oww-2F-PAh.title" = "Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)";
 
+/* Class = "NSWindow"; title = "DSDT Disassembler"; ObjectID = "P53-ou-lqq"; */
+"P53-ou-lqq.title" = "DSDT 反编译器";
+
 /* Class = "NSTabViewItem"; label = "2"; ObjectID = "PEA-LU-tIc"; */
 "PEA-LU-tIc.label" = "2";
 
@@ -80,14 +107,38 @@
 /* Class = "NSButtonCell"; title = "Sunrise Point:  SKL, KBL, KBL-R"; ObjectID = "RDf-U8-Mrd"; */
 "RDf-U8-Mrd.title" = "Sunrise Point:  SKL, KBL, KBL-R";
 
+/* Class = "NSMenuItem"; title = "Tools"; ObjectID = "Ta2-P4-2G2"; */
+"Ta2-P4-2G2.title" = "工具";
+
+/* Class = "NSTextFieldCell"; title = "IOName : "; ObjectID = "V4f-Qe-gWm"; */
+"V4f-Qe-gWm.title" = "IOName : ";
+
 /* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "Vdr-fp-XzO"; */
 "Vdr-fp-XzO.title" = "隐藏其他";
 
 /* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "Vp3-KO-htH"; */
 "Vp3-KO-htH.title" = "GenI2C 日志";
 
+/* Class = "NSMenuItem"; title = "DSDT Disassembler"; ObjectID = "Yty-mB-8oW"; */
+"Yty-mB-8oW.title" = "DSDT 反编译器";
+
+/* Class = "NSBox"; title = "VoodooI2C Information"; ObjectID = "YzL-xq-EYQ"; */
+"YzL-xq-EYQ.title" = "VoodooI2C 信息";
+
+/* Class = "NSTextFieldCell"; title = "Mode : "; ObjectID = "c3K-he-8WT"; */
+"c3K-he-8WT.title" = "工作模式: ";
+
+/* Class = "NSMenuItem"; title = "Item 2"; ObjectID = "cDv-mN-c3X"; */
+"cDv-mN-c3X.title" = "Item 2";
+
 /* Class = "NSButtonCell"; title = "Next"; ObjectID = "eJg-jF-yQq"; */
 "eJg-jF-yQq.title" = "下一步";
+
+/* Class = "NSTextFieldCell"; title = "VoodooI2C State : "; ObjectID = "esc-Pi-Nfi"; */
+"esc-Pi-Nfi.title" = "VoodooI2C 状态: ";
+
+/* Class = "NSMenu"; title = "Tools"; ObjectID = "fqe-0C-oQd"; */
+"fqe-0C-oQd.title" = "工具";
 
 /* Class = "NSButtonCell"; title = "Choose your DSDT file..."; ObjectID = "gtS-qK-5m4"; */
 "gtS-qK-5m4.title" = "导入 DSDT 文件...";
@@ -101,6 +152,9 @@
 /* Class = "NSTabViewItem"; label = "Item 3"; ObjectID = "rc1-dI-cPS"; */
 "rc1-dI-cPS.label" = "Item 3";
 
+/* Class = "NSButtonCell"; title = "I2C1"; ObjectID = "sGW-YM-o1h"; */
+"sGW-YM-o1h.title" = "I2C1";
+
 /* Class = "NSMenu"; title = "GenI2C"; ObjectID = "uQy-DD-JDr"; */
 "uQy-DD-JDr.title" = "GenI2C";
 
@@ -112,6 +166,12 @@
 
 /* Class = "NSMenuItem"; title = "Help"; ObjectID = "wpr-3q-Mcd"; */
 "wpr-3q-Mcd.title" = "帮助";
+
+/* Class = "NSButtonCell"; title = "Select ACPI table path"; ObjectID = "xHM-jo-bPF"; */
+"xHM-jo-bPF.title" = "选择 ACPI 表集";
+
+/* Class = "NSButtonCell"; title = "I2C2"; ObjectID = "yhy-fN-UYo"; */
+"yhy-fN-UYo.title" = "I2C2";
 
 /* Class = "NSButtonCell"; title = "Back"; ObjectID = "ykk-Jd-XTI"; */
 "ykk-Jd-XTI.title" = "上一步";
