@@ -15,11 +15,15 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="GenI2C" customModuleProvider="target">
             <connections>
+                <outlet property="AMLDecomplier" destination="P53-ou-lqq" id="rxj-wg-9ZJ"/>
+                <outlet property="AMLPath" destination="LZn-sL-AWv" id="YkG-kZ-Jqj"/>
                 <outlet property="APICPinText" destination="iYC-de-U4q" id="gBk-pb-14O"/>
                 <outlet property="CPUModelLabel" destination="XZ7-Jk-fRV" id="xVC-CF-QwE"/>
                 <outlet property="DSDTPath" destination="kRr-hl-DHU" id="iLV-IF-aZh"/>
+                <outlet property="Decomplie" destination="Pt5-yv-gr8" id="jE7-gg-kdZ"/>
                 <outlet property="DeviceName" destination="b5P-D1-bnM" id="pIJ-sd-uqT"/>
                 <outlet property="DeviceNameLabel" destination="V8c-79-DsL" id="cDG-yt-DAc"/>
+                <outlet property="DisassemblerVerbose" destination="aZX-d5-EDk" id="pOl-Ct-u9V"/>
                 <outlet property="IONameLabel" destination="jlh-jV-O4e" id="Igf-jh-eiu"/>
                 <outlet property="InputAPICPin" destination="6pp-Al-9XI" id="CyC-yZ-fKt"/>
                 <outlet property="ModeLabel" destination="Bn3-SP-vYy" id="ych-be-G6v"/>
@@ -86,6 +90,25 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Tools" id="Ta2-P4-2G2">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Tools" id="fqe-0C-oQd">
+                        <items>
+                            <menuItem title="DSDT Disassembler" id="Yty-mB-8oW">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="OpenDisassembler:" target="Voe-Tx-rLC" id="rH3-WV-O9v"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Item 2" hidden="YES" enabled="NO" id="cDv-mN-c3X">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Item 3" hidden="YES" enabled="NO" id="EiS-Vq-Ocs">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Debug" id="EtM-9Z-Ufx" userLabel="Debug">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Debug" showsStateColumn="NO" id="24A-CK-84k" userLabel="Debug">
@@ -121,6 +144,12 @@
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Feedback" id="ILF-f2-fBf">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="Feedback:" target="Voe-Tx-rLC" id="kVw-U0-3UM"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -128,7 +157,7 @@
             <point key="canvasLocation" x="127" y="429"/>
         </menu>
         <window title="GenI2C" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="300" y="400" width="480" height="360"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="360"/>
@@ -503,7 +532,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1080"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
@@ -1399,5 +1428,78 @@
             </subviews>
             <point key="canvasLocation" x="378" y="517"/>
         </customView>
+        <window title="DSDT Disassembler" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="P53-ou-lqq">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="207" width="480" height="270"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <value key="minSize" type="size" width="480" height="270"/>
+            <value key="maxSize" type="size" width="480" height="270"/>
+            <view key="contentView" id="OCZ-lJ-c1r">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yu1-0u-Jz7">
+                        <rect key="frame" x="14" y="222" width="176" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Select ACPI table path" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="xHM-jo-bPF">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="SelectAMLPath:" target="Voe-Tx-rLC" id="MUV-Xz-KEU"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LZn-sL-AWv">
+                        <rect key="frame" x="18" y="200" width="442" height="21"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" borderStyle="border" drawsBackground="YES" id="uiC-d5-gmW">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <scrollView fixedFrame="YES" borderType="line" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PYw-aA-xTx">
+                        <rect key="frame" x="18" y="61" width="442" height="131"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="rDD-eP-mmo">
+                            <rect key="frame" x="1" y="1" width="425" height="129"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="aZX-d5-EDk">
+                                    <rect key="frame" x="0.0" y="0.0" width="425" height="129"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <size key="minSize" width="425" height="129"/>
+                                    <size key="maxSize" width="434" height="10000000"/>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                </textView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="4ge-cE-Jsh">
+                            <rect key="frame" x="-100" y="-100" width="225" height="15"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="h8C-7h-5oh">
+                            <rect key="frame" x="426" y="1" width="15" height="129"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pt5-yv-gr8">
+                        <rect key="frame" x="349" y="13" width="117" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Disassemble" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Dwi-ee-FXN">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="Disassemble:" target="Voe-Tx-rLC" id="tTZ-xC-UsD"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <point key="canvasLocation" x="928" y="-136"/>
+        </window>
     </objects>
 </document>

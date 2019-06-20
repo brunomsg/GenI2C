@@ -39,6 +39,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var ScopeRadio1: NSButton!
     @IBOutlet weak var ScopeRadio2: NSButton!
     @IBOutlet weak var ScopeRadio3: NSButton!
+    @IBOutlet weak var AMLPath: NSTextField!
+    @IBOutlet weak var Decomplie: NSButton!
+    @IBOutlet weak var AMLDecomplier: NSWindow!
+    @IBOutlet var DisassemblerVerbose: NSTextView!
     
     
     let SelectDevice = NSAlert()
@@ -59,7 +63,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         MultiTPADUSRSelect = (sender as! NSButton).tag
         scope = MultiScope[MultiTPADUSRSelect]
         SelectDevice.buttons[0].isEnabled = true
-        
+        verbose(text: "Choice : \((sender as! NSButton).tag)")
     }
     @IBAction func SelectCPU(_ sender: Any) {
         CPUChoice = (sender as! NSButton).tag
@@ -130,7 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             if Choice == 0 {
                 verbose(text: "Selection: Interrupt (APIC or GPIO)\n")
             } else {
-                verbose(text: "Selection: Polling (Will be set back to APIC if supported)\n")
+                verbose(text: "Selection: Polling\n")
             }
             preChoice = Choice
             Analysis2()
@@ -149,6 +153,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func Countline() {
         print("Countline()")
+        verbose(text: "Start func : Countline()")
         let readHandler =  FileHandle(forReadingAtPath: DSDTFile)
         let data = readHandler?.readDataToEndOfFile()
         let readString = String(data: data!, encoding: String.Encoding.utf8)
@@ -226,8 +231,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             noDevice.alertStyle = .informational
             noDevice.addButton(withTitle: NSLocalizedString("Input again", comment: ""))
             noDevice.addButton(withTitle: NSLocalizedString("Exit", comment: ""))
+            verbose(text: "Pop-up to ask if input again")
             noDevice.beginSheetModal(for: self.window, completionHandler: {response -> Void in
                 if response.rawValue == 1001 {
+                    self.verbose(text: "Exit")
                     exit(0)
                 }
             })
@@ -239,6 +246,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     func preAnalysis() {
+        verbose(text: "Start func : preAnalysis()")
         if MultiTPAD {
             var count:Int = 0
             for index in 0..<MultiScope.count {
@@ -259,6 +267,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             SelectDevice.informativeText = NSLocalizedString("Multiple ", comment: "") + TPAD + NSLocalizedString(" found in the DSDT\nWhich Path is the Correct one?", comment: "")
             SelectDevice.alertStyle = .informational
             SelectDevice.addButton(withTitle: NSLocalizedString("OK", comment: ""))
+            verbose(text: "Pop-up to ask which is the correct device path")
             SelectDevice.beginSheetModal(for: self.window, completionHandler: {respose -> Void in self.Analysis()})
         } else {
             Analysis()
@@ -267,6 +276,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func Analysis() {
         print("Analysis()")
+        verbose(text: "Start func : Analysis()")
         if MultiTPAD {
             Code = [String](repeating: "", count: MultiTPADLineCount[MultiTPADUSRSelect] + 1)
         } else {
@@ -320,6 +330,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
             } else if Code[i].contains("Method (XCRS,") {
                 verbose(text: "\nRenamed _CRS detected!\nPlease use an error-corrected vanilla DSDT instead!\n")
+                Pop_up(messageText: "Renamed _CRS detected!", informativeText: "Please use an error-corrected vanilla DSDT instead!")
+                exit(0)
             }
             if Code[i].contains("GpioInt"){
                 if ExGPIO == true {
@@ -452,6 +464,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         }
         if SLAVNameLineFound == false {
             verbose(text: "\nThis is not a I2C Trackpad!\n")
+            Pop_up(messageText: "Warning", informativeText: "This is not a I2C Trackpad!")
+            exit(0)
         } else {
             
         }
@@ -460,6 +474,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func Analysis2() {
         print("Analysis2()")
+        verbose(text: "Start func : Analysis2()")
         if Choice == 0 {
             InterruptEnabled = true
         } else if Choice == 1 {
@@ -492,6 +507,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func analysis3() {
         print("analysis3()")
+        verbose(text: "Start func : Analysis3()")
         if ExAPIC == true && (APICPIN > 47 || APICPIN == 0) {
             if InterruptEnabled == true {
                 if ExGPIO == false {
@@ -547,6 +563,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func PatchCRS2GPIO() {
         print("PatchCRS2GPIO()")
+        verbose(text: "Start func : PatchCRS2GPIO")
         for CRSLine in 0...n {
             if CRSInfo[CRSLine].contains("Return (ConcatenateResTemplate") {
                 if ExI2CM {
@@ -600,6 +617,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func PatchCRS2APIC() {
         print("PatchCRS2APIC()")
+        verbose(text: "Start func : PatchCRS2APIC()")
         for CRSLine in 0...n {
             if CRSInfo[CRSLine].contains("Return (ConcatenateResTemplate") {
                 if ExI2CM {
@@ -623,6 +641,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func APIC2GPIO() {
         print("APIC2GPIO()")
+        verbose(text: "Start func : APIC2GPIO()")
         if APICPIN >= 24 && APICPIN <= 47 {
             verbose(text: "APIC Pin value < 2F, Native APIC Supported, Generation Cancelled")
         } else {
@@ -672,6 +691,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func GenGPIO() {
         print("GenGPIO()")
+        verbose(text: "Start func : GenGPIO()")
         ManualGPIO[0] = Spacing + "Name (SBFZ, ResourceTemplate ()"
         ManualGPIO[1] = Spacing + "{"
         ManualGPIO[2] = Spacing + "    GpioInt (Level, ActiveLow, Exclusive, PullUp, 0x0000,"
@@ -691,6 +711,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func GenAPIC() {
         print("GenAPIC()")
+        verbose(text: "Start func : GenAPIC()")
         ManualAPIC[0] = Spacing + "Name (SBFX, ResourceTemplate ()"
         ManualAPIC[1] = Spacing + "{"
         ManualAPIC[2] = Spacing + "    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,,)"
@@ -702,6 +723,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func GenSSDT() {
         print("GenSSDT()")
+        verbose(text: "Start func : GenSSDT")
         if InterruptEnabled || PollingEnabled {
             if ExAPIC == false && ExGPIO == false && APICPIN < 47 {
                 
@@ -854,6 +876,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func BreakCombine() {
         print("BreakCombine()")
+        verbose(text: "Start func : BreakCombine()")
         for BreakIndex in 0...3 {
             CRSInfo[CRSInfo.count - 1 - (total + 1 - (CheckConbLine + 7)) + BreakIndex] = ""
         }
@@ -861,6 +884,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func GenSPED() {
         print("GenSPED()")
+        verbose(text: "Start func : GenSPED()")
         if CPUChoice == 0 {
             if scope == "0" || scope == "2" || scope == "3" {
                 ManualSPED[0] = Spacing + "Name (SSCN, Package () { 432, 507, 30 })"
@@ -969,6 +993,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         }
     }
     
+    func Pop_up(messageText:String, informativeText:String) {
+        let Pop_up = NSAlert()
+        Pop_up.messageText = messageText
+        Pop_up.informativeText = informativeText
+        Pop_up.alertStyle = .informational
+        Pop_up.addButton(withTitle: NSLocalizedString("OK", comment: ""))
+        //Pop_up.beginSheetModal(for: AMLDecomplier, completionHandler: {respose -> Void in})
+        Pop_up.runModal()
+    }
+    
     func iasl(path:String) {
         let t = Process()
         t.launchPath = Bundle.main.path(forResource: "iasl", ofType: nil)
@@ -1053,6 +1087,70 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: FolderPath)
     }
     
+    @IBAction func SelectAMLPath(_ sender: Any) {
+        let openPanel:NSOpenPanel = NSOpenPanel()
+        openPanel.canChooseDirectories = true
+        openPanel.canChooseFiles = false
+        openPanel.allowsMultipleSelection = false
+        openPanel.beginSheetModal(for: mainWindow, completionHandler: {result in
+            if (result == NSApplication.ModalResponse.OK)
+            {
+                let path:NSURL = openPanel.urls[0] as NSURL
+                openPanel.close()
+                let pathStr = path.absoluteString!.removingPercentEncoding!
+                let index1 = pathStr.index(pathStr.startIndex, offsetBy: 7)
+                let index2 = pathStr.index(pathStr.startIndex, offsetBy: pathStr.count)
+                self.DSDTFile = String(pathStr[index1..<index2])
+                self.AMLPath.stringValue = self.DSDTFile
+                self.Decomplie.isEnabled = true
+            }
+        })
+    }
+    
+    @IBAction func Disassemble(_ sender: Any) {
+        let Disassemble = Process()
+        let DisassemblePipe = Pipe()
+        Disassemble.standardOutput = DisassemblePipe
+        Disassemble.launchPath = Bundle.main.path(forResource: "iasl", ofType: nil)
+        Disassemble.arguments = ["-dl"]
+        for file in try! FileManager.default.contentsOfDirectory(atPath: AMLPath.stringValue) {
+            if file == "DSDT.aml" || (file.contains("SSDT-") && file.contains(".aml")) {
+                Disassemble.arguments?.append(AMLPath.stringValue + file)
+            }
+        }
+        Disassemble.launch()
+        Disassemble.waitUntilExit()
+        if FileManager.default.fileExists(atPath: AMLPath.stringValue + "DSDT.dsl") && (Int((try! FileManager.default.attributesOfItem(atPath: AMLPath.stringValue + "DSDT.aml") as NSDictionary).fileSize()) > 128){
+            
+        } else {
+            Disassemble.arguments = ["-dl", "-da"]
+            for file in try! FileManager.default.contentsOfDirectory(atPath: AMLPath.stringValue) {
+                if file == "DSDT.aml" || (file.contains("SSDT-") && file.contains(".aml")) {
+                    Disassemble.arguments?.append(AMLPath.stringValue + file)
+                }
+            }
+            Disassemble.launch()
+        }
+        if FileManager.default.fileExists(atPath: AMLPath.stringValue + "DSDT.dsl") && (Int((try! FileManager.default.attributesOfItem(atPath: AMLPath.stringValue + "DSDT.aml") as NSDictionary).fileSize()) > 128) {
+            Pop_up(messageText: "Success!", informativeText: "")
+        } else {
+            Pop_up(messageText: "Failed!", informativeText: "")
+        }
+        let DisassembleData = DisassemblePipe.fileHandleForReading.readDataToEndOfFile()
+        let DisassembleString = String(data: DisassembleData, encoding: String.Encoding.utf8)!
+        DisassemblerVerbose.string = DisassembleString
+        NSWorkspace.shared.selectFile(AMLPath.stringValue + "DSDT.dsl", inFileViewerRootedAtPath: AMLPath.stringValue)
+    }
+    
+    @IBAction func OpenDisassembler(_ sender: Any) {
+        AMLDecomplier.setIsVisible(true)
+    }
+    
+    @IBAction func Feedback(_ sender: Any) {
+        Pop_up(messageText: "Report your bug", informativeText: "Please open a new issue on Github")
+        NSWorkspace.shared.open(URL(string: "https://github.com/williambj1/GenI2C/issues")!)
+    }
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
@@ -1076,7 +1174,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         kextstat.launch()
         let kextdata = pipe1.fileHandleForReading.readDataToEndOfFile()
         let kextStrings = String(data: kextdata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
-        if kextStrings.count == 1 {
+        if kextStrings.count <= 2 {
             StateLabel.stringValue += NSLocalizedString("Not Loaded", comment: "")
             VersionLabel.stringValue += NSLocalizedString("nil", comment: "")
             DeviceNameLabel.stringValue += NSLocalizedString("nil", comment: "")
@@ -1193,7 +1291,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         alert.showsHelp = true
         //alert.showsSuppressionButton = true
         alert.alertStyle = .informational
-        alert.addButton(withTitle: NSLocalizedString(NSLocalizedString("OK", comment: ""), comment: "")).isEnabled = false
+        alert.addButton(withTitle: NSLocalizedString("OK", comment: "")).isEnabled = false
         //alert.window.contentView?.addSubview(AlertView)
     }
     
