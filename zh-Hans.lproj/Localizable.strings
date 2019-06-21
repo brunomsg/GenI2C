@@ -22,3 +22,10 @@
 "Loaded" = "已加载";
 "Not Loaded" = "未加载";
 "nil" = "未知";
+"APIC Pin should be between 0x18 and 0x77" = "APIC PIN值应该在 0x18 和 0x77之间";
+"Renamed _CRS detected!" = "侦测到已重命名的 _CRS!";
+"Please use an error-corrected vanilla DSDT instead!" = "请使用已除错的原始 DSDT!";
+"Warning" = "警告;
+"This is not a I2C Trackpad!" = "这不是一个 I2C 设备!";
+"Report your bug" = "反馈你的问题";
+"Please open a new issue on Github" = "请在Github上提交你的问题";

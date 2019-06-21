@@ -81,7 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     APICPIN = Int(strtoul(APICPin, nil, 16))
                     verbose(text: "APIC Pin you input is \(APICPin)\n")
                 } else {
-                    Warning.stringValue = "APIC Pin should be between 0x18 and 0x77"
+                    Warning.stringValue = NSLocalizedString("APIC Pin should be between 0x18 and 0x77", comment: "")
                 }
             } else {
                 alert.buttons[0].isEnabled = false
@@ -330,7 +330,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
             } else if Code[i].contains("Method (XCRS,") {
                 verbose(text: "\nRenamed _CRS detected!\nPlease use an error-corrected vanilla DSDT instead!\n")
-                Pop_up(messageText: "Renamed _CRS detected!", informativeText: "Please use an error-corrected vanilla DSDT instead!")
+                Pop_up(messageText: NSLocalizedString("Renamed _CRS detected!", comment: ""), informativeText: NSLocalizedString("Please use an error-corrected vanilla DSDT instead!", comment: ""))
                 exit(0)
             }
             if Code[i].contains("GpioInt"){
@@ -396,6 +396,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     }
                 }
                 ScopeLine = i + 1
+                if Code[ScopeLine].contains("NULL") && scope == "" && MultiTPAD == false {
+                    scope = MultiScope[0]
+                } else {
+                    scope = String(Code[ScopeLine][Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\","))])
+                }
                 verbose(text: Code[ScopeLine] + "\n")
                 scope = String(Code[ScopeLine][Code[ScopeLine].index(Code[ScopeLine].startIndex,offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)..<Code[ScopeLine].index(Code[ScopeLine].startIndex,offsetBy: Code[ScopeLine].positionOf(sub: "\","))])
                 /*
@@ -464,7 +469,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         }
         if SLAVNameLineFound == false {
             verbose(text: "\nThis is not a I2C Trackpad!\n")
-            Pop_up(messageText: "Warning", informativeText: "This is not a I2C Trackpad!")
+            Pop_up(messageText: NSLocalizedString("Warning", comment: ""), informativeText: NSLocalizedString("This is not a I2C Trackpad!", comment: ""))
             exit(0)
         } else {
             
@@ -1147,7 +1152,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     @IBAction func Feedback(_ sender: Any) {
-        Pop_up(messageText: "Report your bug", informativeText: "Please open a new issue on Github")
+        Pop_up(messageText: NSLocalizedString("Report your bug", comment: ""), informativeText: NSLocalizedString("Please open a new issue on Github", comment: ""))
         NSWorkspace.shared.open(URL(string: "https://github.com/williambj1/GenI2C/issues")!)
     }
     

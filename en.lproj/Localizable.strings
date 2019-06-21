@@ -21,3 +21,10 @@
 "Loaded" = "Loaded";
 "Not Loaded" = "Not Loaded";
 "nil" = "nil";
+"APIC Pin should be between 0x18 and 0x77" = "APIC Pin should be between 0x18 and 0x77";
+"Renamed _CRS detected!" = "Renamed _CRS detected!";
+"Please use an error-corrected vanilla DSDT instead!" = "Please use an error-corrected vanilla DSDT instead!";
+"Warning" = "Warning";
+"This is not a I2C Trackpad!" = "This is not a I2C Trackpad!";
+"Report your bug" = "Report your bug";
+"Please open a new issue on Github" = "Please open a new issue on Github";
