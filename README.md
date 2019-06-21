@@ -45,6 +45,6 @@ An Automatic tool to get your DSDT ready for VoodooI2C
 
 <details>
 <summary>WeChat Pay & Alipay</summary>
-<img src="/Donation/DAPWP.png" align=center>
-<img src="/Donation/DAPAP.png" align=center>
+<img src="/Donation/DAPWP.jpg" align=center>
+<img src="/Donation/DAPAP.jpg" align=center>
 </details>
