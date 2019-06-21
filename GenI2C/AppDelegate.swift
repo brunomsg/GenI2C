@@ -34,6 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var PinLabel: NSTextField!
     @IBOutlet weak var DeviceNameLabel: NSTextField!
     @IBOutlet weak var CPUModelLabel: NSTextField!
+    @IBOutlet weak var SatelliteLabel: NSTextField!
     @IBOutlet weak var SelectDeviceView: NSView!
     @IBOutlet weak var ScopeRadio0: NSButton!
     @IBOutlet weak var ScopeRadio1: NSButton!
@@ -41,8 +42,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var ScopeRadio3: NSButton!
     @IBOutlet weak var AMLPath: NSTextField!
     @IBOutlet weak var Decomplie: NSButton!
-    @IBOutlet weak var AMLDecomplier: NSWindow!
     @IBOutlet var DisassemblerVerbose: NSTextView!
+    @IBOutlet weak var MainTab: NSTabView!
+    @IBOutlet weak var Information: NSTabViewItem!
+    @IBOutlet weak var GenSSDTTab: NSTabViewItem!
+    @IBOutlet weak var Disassembler: NSTabViewItem!
     
     
     let SelectDevice = NSAlert()
@@ -53,6 +57,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6)
     var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false, MultiTPAD:Bool = false, MultiScopeBool:Bool = false
     var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1, MultiScopeCount:Int = 0, MultiTPADLineCount = [Int](repeating: 0, count: 6), MultiTPADLineCountIndex:Int = 0, MultiTPADUSRSelect:Int = 0, TargetTPAD:Int = 0
+    
+    @IBAction func InformationClick(_ sender: Any) {
+        MainTab.selectTabViewItem(Information)
+    }
+    
+    @IBAction func GenSSDTClick(_ sender: Any) {
+        MainTab.selectTabViewItem(GenSSDTTab)
+    }
+    
+    @IBAction func DisassemblerClick(_ sender: Any) {
+        MainTab.selectTabViewItem(Disassembler)
+    }
     
     @IBAction func SelectMode(_ sender: Any) {
         Choice = (sender as! NSButton).tag
@@ -1147,10 +1163,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         NSWorkspace.shared.selectFile(AMLPath.stringValue + "DSDT.dsl", inFileViewerRootedAtPath: AMLPath.stringValue)
     }
     
-    @IBAction func OpenDisassembler(_ sender: Any) {
-        AMLDecomplier.setIsVisible(true)
-    }
-    
     @IBAction func Feedback(_ sender: Any) {
         Pop_up(messageText: NSLocalizedString("Report your bug", comment: ""), informativeText: NSLocalizedString("Please open a new issue on Github", comment: ""))
         NSWorkspace.shared.open(URL(string: "https://github.com/williambj1/GenI2C/issues")!)
@@ -1185,10 +1197,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             DeviceNameLabel.stringValue += NSLocalizedString("nil", comment: "")
             IONameLabel.stringValue +=  NSLocalizedString("nil", comment: "")
             ModeLabel.stringValue += NSLocalizedString("nil", comment: "")
-            PinLabel.stringValue += NSLocalizedString("nil", comment: "")
+            PinLabel.stringValue +=  "Pin : " + NSLocalizedString("nil", comment: "")
+            SatelliteLabel.stringValue += NSLocalizedString("nil", comment: "")
         } else {
             StateLabel.stringValue += NSLocalizedString("Loaded", comment: "")
-            
+            let Satellites = ["HID", "ELAN", "Synaptics", "CFTE", "AtmelMXT", "UPDDEngine"]
+            for i in Satellites {
+                let Satellite = Process()
+                let SatellitePipe = Pipe()
+                Satellite.standardOutput = SatellitePipe
+                Satellite.launchPath = "/usr/sbin/kextstat"
+                Satellite.arguments = ["-b", "com.alexandred.VoodooI2C" + i]
+                Satellite.launch()
+                let Satellitedata = SatellitePipe.fileHandleForReading.readDataToEndOfFile()
+                let SatelliteStrings = String(data: Satellitedata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
+                if SatelliteStrings.count > 2 {
+                    SatelliteLabel.stringValue += "VoodooI2C" + i + " "
+                }
+            }
             let ioregPCI = Process()
             let pipePCI = Pipe()
             ioregPCI.standardOutput = pipePCI
