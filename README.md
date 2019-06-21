@@ -9,7 +9,7 @@ An Automatic tool to get your DSDT ready for VoodooI2C
 
 ## Download
 
-👉 ![Release](https://img.shields.io/github/release/williambj1/GenI2C.svg)
+👉 [![Release](https://img.shields.io/github/release/williambj1/GenI2C.svg)](https://github.com/williambj1/GenI2C/releases)
 
 ## Features
 
@@ -38,3 +38,13 @@ An Automatic tool to get your DSDT ready for VoodooI2C
 - Startpenghubingzhou [(@penghubingzhou)](https://github.com/penghubingzhou) for providing theoretical support and his fancy DSDT
 - Steve Zheng [(@stevezhengshiqi)](https://github.com/stevezhengshiqi) for testing and bug reporting
 - http://patorjk.com for the amazing ASCII Art font `Impossible`
+
+## Donation
+
+**Writing Code and Debugging are not easy, if you appreciate my work, please buy me a coffee. It's not required but will be highly appreciated.**
+
+<details>
+<summary>WeChat Pay & Alipay</summary>
+<img src="/Donation/DAPWP.png" align=center>
+<img src="/Donation/DAPAP.png" align=center>
+</details>
