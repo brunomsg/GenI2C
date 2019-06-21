@@ -3,7 +3,7 @@
 ![Release](https://img.shields.io/github/release/williambj1/GenI2C.svg)
 ![Testers](https://img.shields.io/badge/Testers-Welcome-brightgreen.svg)
 
-An Automatic tool to get your DSDT ready for VoodooI2C
+Generate a SSDT for your Trackpad and get ready for VoodooI2C! 😜
 
 **[简体中文](https://github.com/williambj1/GenI2C/wiki/Readme-CN)**
 
@@ -15,7 +15,7 @@ An Automatic tool to get your DSDT ready for VoodooI2C
 
 - VoodooI2C Information
   - Loaded States
-  - ~~Attatched Submodule~~ (In development)
+  - ~~Attatched Submodule~~ (In development🚧)
   - Log Extracting
   - Working Mode (APIC, GPIO, Polling)
   - APIC/GPIO Pin showing
@@ -23,7 +23,7 @@ An Automatic tool to get your DSDT ready for VoodooI2C
 - SSDT Generation
   - Using **External** to maintain APIC Pin / GPIO Pin Bios injection
   - Generate I2C Bus Speed Patch
-  - ~~Generate Skylake I2C Controller Patch~~ (In development)
+  - ~~Generate Skylake I2C Controller Patch~~ (In development🚧)
   - Generate GPIO Pin when manually pinning is required
   - Polling mode patch supported (VoodooI2CHID only)
 
@@ -41,7 +41,7 @@ An Automatic tool to get your DSDT ready for VoodooI2C
 
 ## Donation
 
-**Writing Code and Debugging are not easy, if you appreciate my work, please buy me a coffee. It's not required but will be highly appreciated.**
+**Writing Code and Debugging are not easy, if you appreciate my work, please buy me a coffee. It's not required but will be highly appreciated.😋😋😋**
 
 <details>
 <summary>WeChat Pay & Alipay</summary>
