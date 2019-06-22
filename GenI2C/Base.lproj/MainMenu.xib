@@ -151,7 +151,7 @@
             <value key="maxSize" type="size" width="480" height="360"/>
             <view key="contentView" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tabView fixedFrame="YES" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="2zk-3Y-aNv" userLabel="TabView">
                         <rect key="frame" x="-1" y="0.0" width="482" height="362"/>
@@ -159,7 +159,7 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Tab" identifier="" id="PHJ-AI-Dzw" userLabel="Information">
-                                <view key="view" ambiguous="YES" id="6h2-he-Jk2">
+                                <view key="view" id="6h2-he-Jk2">
                                     <rect key="frame" x="0.0" y="0.0" width="482" height="362"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -249,7 +249,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="View" identifier="" id="bbV-03-1OX" userLabel="GenSSDT">
-                                <view key="view" id="XCH-jh-Tg0">
+                                <view key="view" ambiguous="YES" id="XCH-jh-Tg0">
                                     <rect key="frame" x="0.0" y="0.0" width="482" height="362"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -298,7 +298,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="2" identifier="" id="PEA-LU-tIc">
-                                                    <view key="view" id="9U2-N1-s5z">
+                                                    <view key="view" ambiguous="YES" id="9U2-N1-s5z">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -349,7 +349,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="Item 3" identifier="" id="rc1-dI-cPS" userLabel="3">
-                                                    <view key="view" ambiguous="YES" id="3Dw-vN-00k">
+                                                    <view key="view" id="3Dw-vN-00k">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -542,15 +542,15 @@
                                             <rect key="frame" x="20" y="55" width="442" height="229"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="rDD-eP-mmo">
-                                                <rect key="frame" x="1" y="1" width="425" height="227"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <rect key="frame" x="1" y="1" width="440" height="227"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="aZX-d5-EDk">
-                                                        <rect key="frame" x="0.0" y="0.0" width="425" height="227"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="440" height="227"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="minSize" width="425" height="227"/>
+                                                        <size key="minSize" width="440" height="227"/>
                                                         <size key="maxSize" width="442" height="10000000"/>
                                                         <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     </textView>
@@ -560,7 +560,7 @@
                                                 <rect key="frame" x="-100" y="-100" width="225" height="15"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="h8C-7h-5oh">
+                                            <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="h8C-7h-5oh">
                                                 <rect key="frame" x="426" y="1" width="15" height="227"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -632,6 +632,7 @@
                     </textFieldCell>
                     <connections>
                         <action selector="InputAPICPin:" target="Voe-Tx-rLC" id="7C6-2P-AkE"/>
+                        <outlet property="delegate" destination="Voe-Tx-rLC" id="oyn-M1-tff"/>
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K6P-36-7Hx">

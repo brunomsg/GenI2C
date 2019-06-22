@@ -154,7 +154,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             }
             preChoice = Choice
             Analysis2()
-            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: FolderPath)
         }
     }
     @IBAction func Back2(_ sender: Any) {
@@ -265,16 +264,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         verbose(text: "Start func : preAnalysis()")
         if MultiTPAD {
             var count:Int = 0
-            for index in 0..<MultiScope.count {
+            for _ in 0..<MultiScope.count {
                 if MultiScope[count] != "" {
                     if count == 0 {
                         ScopeRadio0.isHidden = false
+                        ScopeRadio0.title = "I2C" + MultiScope[count]
                     } else if count == 1 {
                         ScopeRadio1.isHidden = false
+                        ScopeRadio1.title = "I2C" + MultiScope[count]
                     } else if count == 2 {
                         ScopeRadio2.isHidden = false
+                        ScopeRadio2.title = "I2C" + MultiScope[count]
                     } else if count == 3 {
                         ScopeRadio3.isHidden = false
+                        ScopeRadio3.title = "I2C" + MultiScope[count]
                     }
                     count += 1
                 }
@@ -329,6 +332,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         }
         for i in 0...total {
             if Code[i].contains("Method (_CRS,") {
+                print("CRS")
                 var CRSStart, CRSEnd, CRSRangeScan:Int
                 CRSRangeScan = i + 1
                 CRSStart = Code[CRSRangeScan].positionOf(sub: "{") - 1
@@ -412,13 +416,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     }
                 }
                 ScopeLine = i + 1
-                if Code[ScopeLine].contains("NULL") && scope == "" && MultiTPAD == false {
-                    scope = MultiScope[0]
-                } else {
-                    scope = String(Code[ScopeLine][Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\","))])
+                print(Code[ScopeLine])
+                print(scope)
+                print(MultiTPAD)
+                if scope == "" {
+                    if Code[ScopeLine].contains("NULL") && MultiTPAD == false {
+                        scope = MultiScope[0]
+                    } else {
+                        scope = String(Code[ScopeLine][Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)])
+                    }
                 }
+                print(scope)
                 verbose(text: Code[ScopeLine] + "\n")
-                scope = String(Code[ScopeLine][Code[ScopeLine].index(Code[ScopeLine].startIndex,offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)..<Code[ScopeLine].index(Code[ScopeLine].startIndex,offsetBy: Code[ScopeLine].positionOf(sub: "\","))])
                 /*
                 let index1 = Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)
                 let index2 = Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\","))
@@ -431,11 +440,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 Spacing = String(Code[i][index1..<index2])
                 CatchSpacing = true
             }
-            if SLAVNameLineFound == true && APICNameLineFound == true && SLAVName == APICNAME && Hetero == false {
-                Hetero = true
-                if CheckSLAVLocation > CRSLocation {
-                    BreakCombine()
-                }
+        }
+        if SLAVNameLineFound == true && APICNameLineFound == true && SLAVName == APICNAME && Hetero == false {
+            Hetero = true
+            if CheckSLAVLocation > CRSLocation {
+                BreakCombine()
             }
         }
         var IfString:String = ""
@@ -509,6 +518,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 APICNAME = "SBFX"
             }
             PatchCRS2APIC()
+            analysis3()
         } else if ExAPIC == false && ExGPIO == true {
             if InterruptEnabled == true {
                 PatchCRS2GPIO()
@@ -518,12 +528,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 APICNAME = "SBFX"
                 PatchCRS2APIC()
             }
+            analysis3()
         } else if (ExAPIC && (APICPIN > 47 || APICPIN == 0) && InterruptEnabled && ExGPIO == false && APICPIN == 0) || (ExAPIC == false && ExGPIO == false && ExSLAV && InterruptEnabled) {
-            alert.beginSheetModal(for: self.window, completionHandler: {response -> Void in self.analysis3()})
+            alert.beginSheetModal(for: self.window, completionHandler: {response -> Void in
+                self.analysis3()
+            })
         } else {
             analysis3()
         }
-        GenSSDT()
     }
     
     func analysis3() {
@@ -580,6 +592,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         } else {
             verbose(text: "Undefined Situation")
         }
+        GenSSDT()
+        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: FolderPath)
     }
     
     func PatchCRS2GPIO() {
@@ -898,7 +912,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     func BreakCombine() {
         print("BreakCombine()")
         verbose(text: "Start func : BreakCombine()")
+        print(CRSInfo.count)
+        print(total)
+        print(CheckConbLine)
         for BreakIndex in 0...3 {
+            print(BreakIndex)
             CRSInfo[CRSInfo.count - 1 - (total + 1 - (CheckConbLine + 7)) + BreakIndex] = ""
         }
     }
@@ -1011,6 +1029,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         if DeviceName.stringValue.count > 4 {
             let index = DeviceName.stringValue.index(DeviceName.stringValue.startIndex, offsetBy: 4)
             DeviceName.stringValue = String(DeviceName.stringValue[..<index])
+        }
+        if APICPinText.stringValue.count < 4 {
+            alert.buttons[0].isEnabled = false
+        } else if APICPinText.stringValue.count == 4 {
+            let index = APICPinText.stringValue.index(APICPinText.stringValue.startIndex, offsetBy: 2)
+            if String(APICPinText.stringValue[..<index]) == "0x" && APICPinText.stringValue.count == 4  {
+                if Int(strtoul(APICPinText.stringValue, nil, 16)) >= 24 && Int(strtoul(APICPinText.stringValue, nil, 16)) <= 119 {
+                    alert.buttons[0].isEnabled = true
+                    Warning.stringValue = ""
+                    APICPin = APICPinText.stringValue
+                    APICPIN = Int(strtoul(APICPin, nil, 16))
+                    verbose(text: "APIC Pin you input is \(APICPin)\n")
+                } else {
+                    Warning.stringValue = NSLocalizedString("APIC Pin should be between 0x18 and 0x77", comment: "")
+                }
+            }
+        } else if APICPinText.stringValue.count > 4 {
+            APICPinText.stringValue = String(APICPinText.stringValue[..<APICPinText.stringValue.index(APICPinText.stringValue.startIndex, offsetBy: 4)])
+        }
+        if APICPinText.stringValue.count >= 2 {
+            if String(APICPinText.stringValue[..<APICPinText.stringValue.index(APICPinText.stringValue.startIndex,offsetBy: 2)]) != "0x" {
+                APICPinText.stringValue = "0x"
+            }
+        } else {
+            APICPinText.stringValue = "0x"
         }
     }
     
