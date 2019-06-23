@@ -1373,6 +1373,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         DSDTFile = filename
         DSDTPath.stringValue = DSDTFile
         verbose(text: "\(self.DSDTFile)\n")
+        MainTab.selectTabViewItem(GenSSDTTab)
         Next1.isEnabled = true
         return true
     }
