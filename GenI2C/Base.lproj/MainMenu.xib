@@ -27,8 +27,6 @@
                 <outlet property="GenSSDT" destination="bbV-03-1OX" id="zLB-Gk-MCM"/>
                 <outlet property="GenSSDTTab" destination="bbV-03-1OX" id="arK-cf-ih7"/>
                 <outlet property="IONameLabel" destination="jlh-jV-O4e" id="Igf-jh-eiu"/>
-                <outlet property="Information" destination="PHJ-AI-Dzw" id="KFG-YE-I7y"/>
-                <outlet property="InformationClick" destination="W46-dW-pAS" id="QqI-WP-HQb"/>
                 <outlet property="InputAPICPin" destination="6pp-Al-9XI" id="CyC-yZ-fKt"/>
                 <outlet property="MainTab" destination="2zk-3Y-aNv" id="dHY-JD-FSp"/>
                 <outlet property="ModeLabel" destination="Bn3-SP-vYy" id="ych-be-G6v"/>
@@ -50,6 +48,7 @@
                 <outlet property="VerboseWindow" destination="DXU-yX-phH" id="92r-rB-2MS"/>
                 <outlet property="VersionLabel" destination="omV-Z0-nk7" id="Skb-sJ-ofd"/>
                 <outlet property="Warning" destination="K6P-36-7Hx" id="NtG-Wf-13M"/>
+                <outlet property="isSkylake" destination="fmm-CG-4Tt" id="lcn-SS-Uil"/>
                 <outlet property="mainWindow" destination="QvC-M9-y7g" id="Fj9-mi-wX8"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
@@ -298,7 +297,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="2" identifier="" id="PEA-LU-tIc">
-                                                    <view key="view" ambiguous="YES" id="9U2-N1-s5z">
+                                                    <view key="view" id="9U2-N1-s5z">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -349,7 +348,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="Item 3" identifier="" id="rc1-dI-cPS" userLabel="3">
-                                                    <view key="view" id="3Dw-vN-00k">
+                                                    <view key="view" ambiguous="YES" id="3Dw-vN-00k">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -374,7 +373,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="wxs-w2-FpE">
-                                                                <rect key="frame" x="17" y="254" width="313" height="18"/>
+                                                                <rect key="frame" x="16" y="230" width="313" height="18"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <buttonCell key="cell" type="radio" title="Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Oww-2F-PAh">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -382,17 +381,6 @@
                                                                 </buttonCell>
                                                                 <connections>
                                                                     <action selector="SelectCPU:" target="Voe-Tx-rLC" id="nk9-KZ-DxB"/>
-                                                                </connections>
-                                                            </button>
-                                                            <button verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="vJF-6p-nym">
-                                                                <rect key="frame" x="17" y="232" width="314" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="radio" title="Cannon Lake (Point)-LP: CFL-R (8565U, 8265U)" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Pjh-4X-YRV">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <action selector="SelectCPU:" target="Voe-Tx-rLC" id="7ql-JN-3OW"/>
                                                                 </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HnQ-cX-7gd">
@@ -415,6 +403,28 @@
                                                                 </buttonCell>
                                                                 <connections>
                                                                     <action selector="Back3:" target="Voe-Tx-rLC" id="fdy-5E-FVl"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fmm-CG-4Tt">
+                                                                <rect key="frame" x="29" y="253" width="69" height="18"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="check" title="Skylake" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="mA8-iE-ict">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="Skylake:" target="Voe-Tx-rLC" id="AS5-o7-qqB"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="vJF-6p-nym">
+                                                                <rect key="frame" x="16" y="208" width="314" height="18"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="radio" title="Cannon Lake (Point)-LP: CFL-R (8565U, 8265U)" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Pjh-4X-YRV">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="SelectCPU:" target="Voe-Tx-rLC" id="7ql-JN-3OW"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -542,15 +552,15 @@
                                             <rect key="frame" x="20" y="55" width="442" height="229"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="rDD-eP-mmo">
-                                                <rect key="frame" x="1" y="1" width="440" height="227"/>
+                                                <rect key="frame" x="1" y="1" width="425" height="227"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="aZX-d5-EDk">
-                                                        <rect key="frame" x="0.0" y="0.0" width="440" height="227"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="425" height="227"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="minSize" width="440" height="227"/>
+                                                        <size key="minSize" width="425" height="227"/>
                                                         <size key="maxSize" width="442" height="10000000"/>
                                                         <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     </textView>
