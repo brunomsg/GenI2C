@@ -24,10 +24,14 @@
                 <outlet property="DeviceNameLabel" destination="V8c-79-DsL" id="cDG-yt-DAc"/>
                 <outlet property="Disassembler" destination="h9o-BY-Bje" id="3dj-z7-qNc"/>
                 <outlet property="DisassemblerVerbose" destination="aZX-d5-EDk" id="pOl-Ct-u9V"/>
+                <outlet property="Gen4ThisComputer" destination="yt7-la-tCu" id="eMD-b7-S5S"/>
                 <outlet property="GenSSDT" destination="bbV-03-1OX" id="zLB-Gk-MCM"/>
                 <outlet property="GenSSDTTab" destination="bbV-03-1OX" id="arK-cf-ih7"/>
+                <outlet property="GenStep2" destination="PEA-LU-tIc" id="3Qk-e3-iqZ"/>
+                <outlet property="GenStep4" destination="pDx-2o-UMt" id="Y1k-nr-pQj"/>
                 <outlet property="IONameLabel" destination="jlh-jV-O4e" id="Igf-jh-eiu"/>
                 <outlet property="InputAPICPin" destination="6pp-Al-9XI" id="CyC-yZ-fKt"/>
+                <outlet property="IssueLabel" destination="9EO-Vm-nST" id="M7P-Qu-WjJ"/>
                 <outlet property="MainTab" destination="2zk-3Y-aNv" id="dHY-JD-FSp"/>
                 <outlet property="ModeLabel" destination="Bn3-SP-vYy" id="ych-be-G6v"/>
                 <outlet property="Next1" destination="5CX-x3-MYO" id="rJ4-I8-S99"/>
@@ -258,7 +262,7 @@
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
                                                 <tabViewItem label="1" identifier="" id="Ltf-1y-wwP">
-                                                    <view key="view" id="uJQ-2U-CmX">
+                                                    <view key="view" ambiguous="YES" id="uJQ-2U-CmX">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -290,6 +294,23 @@
                                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="PkE-qj-qPv">
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                            </textField>
+                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yt7-la-tCu">
+                                                                <rect key="frame" x="18" y="265" width="238" height="18"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="check" title="Generate patches for this computer" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="gud-Qp-KhU">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                            </button>
+                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ndn-6D-f7e">
+                                                                <rect key="frame" x="20" y="49" width="442" height="210"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <textFieldCell key="cell" lineBreakMode="clipping" id="9EO-Vm-nST">
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
                                                             </textField>
@@ -348,7 +369,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="Item 3" identifier="" id="rc1-dI-cPS" userLabel="3">
-                                                    <view key="view" ambiguous="YES" id="3Dw-vN-00k">
+                                                    <view key="view" id="3Dw-vN-00k">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -482,7 +503,7 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="eKD-Yu-s0V">
                                                                     <rect key="frame" x="1" y="1" width="438" height="188"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="MRg-3M-lAe">
                                                                             <rect key="frame" x="0.0" y="0.0" width="438" height="188"/>
@@ -672,7 +693,7 @@
                         <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="R5C-z3-a9M">
                             <rect key="frame" x="0.0" y="0.0" width="440" height="250"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="axz-RV-WcV">
                                     <rect key="frame" x="0.0" y="0.0" width="440" height="250"/>
