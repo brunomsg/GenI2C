@@ -47,11 +47,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var Information: NSTabViewItem!
     @IBOutlet weak var GenSSDTTab: NSTabViewItem!
     @IBOutlet weak var Disassembler: NSTabViewItem!
+    @IBOutlet weak var Gen4ThisComputer: NSButton!
+    @IBOutlet weak var IssueLabel: NSTextFieldCell!
+    @IBOutlet weak var GenStep2: NSTabViewItem!
+    @IBOutlet weak var GenStep4: NSTabViewItem!
     
+    var CPUInfo:String = "", NativeDeviceName:String = "", NativePin = "", isVooLoaded:Bool = false, isNameFound:Bool = false, isPinFound:Bool = false
     let SelectDevice = NSAlert()
     var alert = NSAlert()
-    var NativeDeviceName:String = ""
-    var NativePin = ""
     var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16), ScopeSelect:String = "", RenameFile:String = "", HexI2C:String = "", HexI2X:String = ""
     var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6), SKL_CTRL = [String](repeating: "", count: 65)
     var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false, MultiTPAD:Bool = false, MultiScopeBool:Bool = false
@@ -94,7 +97,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var isSkylake: NSButton!
     @IBAction func Skylake(_ sender: Any) {
         isSKL = isSkylake.state.rawValue
-        print(isSKL)
     }
     
     @IBAction func InputAPICPin(_ sender: Any) {
@@ -141,7 +143,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     @IBAction func Next1(_ sender: Any) {
-        TabView.selectNextTabViewItem(Any?.self)
+        if Gen4ThisComputer.state.rawValue == 0 {
+            TabView.selectNextTabViewItem(Any?.self)
+        } else {
+            TPAD = NativeDeviceName
+            Device = "Device (\(TPAD))"
+            HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
+            let CPUModel = CPUInfo.components(separatedBy: " ")[2].components(separatedBy: "-")[1]
+            if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)] == "6" {
+                CPUChoice = 0
+                isSKL = 1
+            } else if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)] == "7" {
+                CPUChoice = 1
+                isSKL = 0
+            } else if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)] == "8" {
+                if CPUModel.count == 5 {
+                    if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 4)] == "H" {
+                        CPUChoice = 1
+                    } else if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 4)] == "U" {
+                        CPUChoice = 2
+                    } else {
+                        IssueLabel.stringValue += "This CPU Model (\(CPUInfo)) is not supported\n"
+                    }
+                } else {
+                    IssueLabel.stringValue += "This CPU Model (\(CPUInfo)) is not supported\n"
+                }
+            } else {
+                IssueLabel.stringValue += "This CPU Model (\(CPUInfo)) is not supported\n"
+            }
+            Countline()
+            TabView.selectTabViewItem(GenStep4)
+        }
     }
     
     @IBAction func Next2(_ sender: Any) {
@@ -153,7 +185,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     @IBAction func Next3(_ sender: Any) {
         TabView.selectNextTabViewItem(Any?.self)
-        GenSKL()
+        if isSKL == 1 {
+            GenSKL()
+        }
     }
     
     @IBAction func Next4(_ sender: Any) {
@@ -251,6 +285,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             }
         }
         if Matched == false{
+            TabView.selectTabViewItem(at: 0)
             verbose(text: "No Device Found\n")
             let noDevice = NSAlert()
             noDevice.messageText = NSLocalizedString("No Device Found", comment: "")
@@ -428,9 +463,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     }
                 }
                 ScopeLine = i + 1
-                print(Code[ScopeLine])
-                print(scope)
-                print(MultiTPAD)
                 if scope == "" {
                     if Code[ScopeLine].contains("NULL") && MultiTPAD == false {
                         scope = MultiScope[0]
@@ -438,7 +470,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                         scope = String(Code[ScopeLine][Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)])
                     }
                 }
-                print(scope)
                 verbose(text: Code[ScopeLine] + "\n")
                 /*
                 let index1 = Code[ScopeLine].index(Code[ScopeLine].startIndex, offsetBy: Code[ScopeLine].positionOf(sub: "\",") - 1)
@@ -932,11 +963,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     func BreakCombine() {
         print("BreakCombine()")
         verbose(text: "Start func : BreakCombine()")
-        print(CRSInfo.count)
-        print(total)
-        print(CheckConbLine)
         for BreakIndex in 0...3 {
-            print(BreakIndex)
             CRSInfo[CRSInfo.count - 1 - (total + 1 - (CheckConbLine + 7)) + BreakIndex] = ""
         }
     }
@@ -1334,7 +1361,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         CPUModel.launch()
         let CPUdata = pipeCPU.fileHandleForReading.readDataToEndOfFile()
         let CPUString = String(data: CPUdata, encoding: String.Encoding.utf8)!
-        CPUModelLabel.stringValue += String(CPUString[CPUString.index(CPUString.startIndex, offsetBy: 26)..<CPUString.endIndex])
+        CPUInfo = String(CPUString[CPUString.index(CPUString.startIndex, offsetBy: 26)..<CPUString.endIndex])
+        CPUModelLabel.stringValue += CPUInfo
         let kextstat = Process()
         let pipe1 = Pipe()
         kextstat.standardOutput = pipe1
@@ -1344,6 +1372,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         let kextdata = pipe1.fileHandleForReading.readDataToEndOfFile()
         let kextStrings = String(data: kextdata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
         if kextStrings.count <= 2 {
+            Gen4ThisComputer.isEnabled = false
+            IssueLabel.stringValue += "VoodooI2C is not loaded\n"
+            isVooLoaded = false
             StateLabel.stringValue += NSLocalizedString("Not Loaded", comment: "")
             VersionLabel.stringValue += NSLocalizedString("nil", comment: "")
             DeviceNameLabel.stringValue += NSLocalizedString("nil", comment: "")
@@ -1352,6 +1383,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             PinLabel.stringValue +=  "Pin : " + NSLocalizedString("nil", comment: "")
             SatelliteLabel.stringValue += NSLocalizedString("nil", comment: "")
         } else {
+            isVooLoaded = true
             StateLabel.stringValue += NSLocalizedString("Loaded", comment: "")
             let Satellites = ["HID", "ELAN", "Synaptics", "CFTE", "AtmelMXT", "UPDDEngine"]
             for i in Satellites {
@@ -1400,7 +1432,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 let I2Cdata = pipeI2C.fileHandleForReading.readDataToEndOfFile()
                 let I2CStrings = String(data: I2Cdata, encoding: String.Encoding.utf8)!
                 if I2CStrings.contains("<class VoodooI2CDeviceNub") {
+                    isNameFound = true
+                    Gen4ThisComputer.isEnabled = true
                     NativeDeviceName = String(I2CStrings[I2CStrings.index(I2CStrings.startIndex, offsetBy: I2CStrings.positionOf(sub: "<class VoodooI2CDeviceNub")-6)..<I2CStrings.index(I2CStrings.startIndex, offsetBy: I2CStrings.positionOf(sub: "<class VoodooI2CDeviceNub")-2)])
+                } else {
+                    Gen4ThisComputer.isEnabled = false
+                    IssueLabel.stringValue += "Native device name not found\n"
                 }
             }
             DeviceNameLabel.stringValue += NativeDeviceName
