@@ -199,7 +199,11 @@ func DiagnosisLog() -> (Bool, [String]) {
             i += 1
         }
         if line.contains("Could not get interrupt event source") {
-            errors[i] = "Could not find either APIC or GPIO interrupts in your device's DSDT entry."
+            if line.contains("using polling instead") {
+                errors[i] = "Device works in polling mode"
+            }else{
+                errors[i] = "Could not find either APIC or GPIO interrupts in your device's DSDT entry."
+            }
             i += 1
         }
         if line.contains("Unknown Synopsys component type: 0xffffffff") {
