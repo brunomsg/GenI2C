@@ -7,9 +7,9 @@
 */
 "OK" = "OK";
 "Exit" = "Exit";
-"There is no" = "There is no ";
-"in your DSDT. Please input again or exit" = " in your DSDT. Please input again or exit";
-"Input again" = "Input again"；
+"There is no " = "There is no ";
+" in your DSDT. Please input again or exit" = " in your DSDT. Please input again or exit";
+"Input again" = "Input again";
 "No native APIC found" = "No native APIC found";
 "Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"" = "Failed to extract APIC Pin. Please input your APIC Pin in Hex, and start with \"0x\"";
 "Failed to extract I2C Device Path, please select your I2C Device Path:" = "Failed to extract I2C Device Path, please select your I2C Device Path:";
@@ -25,6 +25,6 @@
 "Renamed _CRS detected!" = "Renamed _CRS detected!";
 "Please use an error-corrected vanilla DSDT instead!" = "Please use an error-corrected vanilla DSDT instead!";
 "Warning" = "Warning";
-"This is not a I2C Trackpad!" = "This is not a I2C Trackpad!";
+"This is not a I2C Device!" = "This is not a I2C Device!";
 "Report your bug" = "Report your bug";
 "Please open a new issue on Github" = "Please open a new issue on Github";
