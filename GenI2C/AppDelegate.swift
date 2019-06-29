@@ -51,6 +51,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var IssueLabel: NSTextFieldCell!
     @IBOutlet weak var GenStep2: NSTabViewItem!
     @IBOutlet weak var GenStep4: NSTabViewItem!
+    @IBOutlet weak var Diagnosis: NSTabViewItem!
+    @IBOutlet weak var Indicator1: NSProgressIndicator!
+    @IBOutlet weak var Indicator2: NSProgressIndicator!
+    @IBOutlet weak var Indicator3: NSProgressIndicator!
+    @IBOutlet weak var Indicator4: NSProgressIndicator!
+    @IBOutlet weak var Indicator5: NSProgressIndicator!
+    @IBOutlet weak var Indicator6: NSProgressIndicator!
+    @IBOutlet weak var State1: NSImageView!
+    @IBOutlet weak var State2: NSImageView!
+    @IBOutlet weak var State3: NSImageView!
+    @IBOutlet weak var State4: NSImageView!
+    @IBOutlet weak var State5: NSImageView!
+    @IBOutlet weak var State6: NSImageView!
+    @IBOutlet var ErrorLabel: NSTextView!
     
     var CPUInfo:String = "", NativeDeviceName:String = "", NativePin = "", isVooLoaded:Bool = false, isNameFound:Bool = false, isPinFound:Bool = false
     let SelectDevice = NSAlert()
@@ -68,6 +82,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         MainTab.selectTabViewItem(GenSSDTTab)
     }
     
+    @IBAction func DiagnosisClick(_ sender: Any) {
+        MainTab.selectTabViewItem(Diagnosis)
+    }
+    
     @IBAction func DisassemblerClick(_ sender: Any) {
         MainTab.selectTabViewItem(Disassembler)
     }
@@ -76,7 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         Choice = (sender as! NSButton).tag
         Next4.isEnabled = true
     }
-
+    
     @IBAction func SelectDevice(_ sender: Any) {
         MultiTPADUSRSelect = (sender as! NSButton).tag
         scope = MultiScope[MultiTPADUSRSelect]
@@ -1216,7 +1234,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         a.standardOutput = pipe
         a.launchPath = "/usr/bin/who"
         a.launch()
-        a.waitUntilExit()
         let outdata = pipe.fileHandleForReading.availableData
         let outputString = String(data: outdata, encoding: String.Encoding.utf8)!
         let timeline = outputString.components(separatedBy: "\n")[0]
@@ -1342,6 +1359,81 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         NSWorkspace.shared.selectFile(AMLPath.stringValue + "DSDT.dsl", inFileViewerRootedAtPath: AMLPath.stringValue)
     }
     
+    @IBAction func Diagnosis(_ sender: Any) {
+        Indicator1.startAnimation(self)
+        Indicator2.startAnimation(self)
+        Indicator3.startAnimation(self)
+        Indicator4.startAnimation(self)
+        Indicator5.startAnimation(self)
+        Indicator6.startAnimation(self)
+        
+        if DiagnosisCPU() {
+            Indicator1.stopAnimation(self)
+            State1.isHidden = false
+        } else {
+            Indicator1.stopAnimation(self)
+            State1.isHidden = false
+            State1.image = NSImage.init(named: "NSStatusUnavailable")
+        }
+        if DiagnosisAppleIntel().0 {
+            print(10)
+            Indicator2.stopAnimation(self)
+            State2.isHidden = false
+            State2.image = NSImage.init(named: "NSStatusUnavailable")
+        } else {
+            print(11)
+            Indicator2.stopAnimation(self)
+            State2.isHidden = false
+        }
+        if DiagnosisAppleIntel().1 {
+            print(20)
+            Indicator3.stopAnimation(self)
+            State3.isHidden = false
+            State3.image = NSImage.init(named: "NSStatusUnavailable")
+        } else {
+            print(21)
+            Indicator3.stopAnimation(self)
+            State3.isHidden = false
+        }
+        if DiagnosisVoodooI2C() {
+            Indicator4.stopAnimation(self)
+            State4.isHidden = false
+        } else {
+            Indicator4.stopAnimation(self)
+            State4.isHidden = false
+            State4.image = NSImage.init(named: "NSStatusUnavailable")
+        }
+        if DiagnosisMT2() {
+            Indicator5.stopAnimation(self)
+            State5.isHidden = false
+        } else {
+            Indicator5.stopAnimation(self)
+            State5.isHidden = false
+            State5.image = NSImage.init(named: "NSStatusUnavailable")
+        }
+        var haveError:Bool = false
+        var Errors = [String]()
+        let queue = DispatchQueue.init(label: "queue")
+        queue.async {
+            (haveError, Errors) = DiagnosisLog()
+            if haveError {
+                DispatchQueue.main.async {
+                    self.Indicator6.stopAnimation(self)
+                    self.State6.isHidden = false
+                    self.State6.image = NSImage.init(named: "NSStatusUnavailable")
+                    for error in Errors {
+                        self.ErrorLabel.string += error + "\n"
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.Indicator6.stopAnimation(self)
+                    self.State6.isHidden = false
+                }
+            }
+        }
+    }
+    
     @IBAction func Feedback(_ sender: Any) {
         Pop_up(messageText: NSLocalizedString("Report your bug", comment: ""), informativeText: NSLocalizedString("Please open a new issue on Github", comment: ""))
         NSWorkspace.shared.open(URL(string: "https://github.com/williambj1/GenI2C/issues")!)
@@ -1435,12 +1527,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     isNameFound = true
                     Gen4ThisComputer.isEnabled = true
                     NativeDeviceName = String(I2CStrings[I2CStrings.index(I2CStrings.startIndex, offsetBy: I2CStrings.positionOf(sub: "<class VoodooI2CDeviceNub")-6)..<I2CStrings.index(I2CStrings.startIndex, offsetBy: I2CStrings.positionOf(sub: "<class VoodooI2CDeviceNub")-2)])
-                } else {
-                    Gen4ThisComputer.isEnabled = false
-                    IssueLabel.stringValue += "Native device name not found\n"
                 }
             }
-            DeviceNameLabel.stringValue += NativeDeviceName
+            if isNameFound {
+                DeviceNameLabel.stringValue += NativeDeviceName
+            } else {
+                Gen4ThisComputer.isEnabled = false
+                IssueLabel.stringValue += "Native device name not found\n"
+            }
+            
             let VoodooI2CInfo = kextStrings[1][kextStrings[1].index(kextStrings[1].startIndex, offsetBy: 52)..<kextStrings[1].endIndex].components(separatedBy: " ")
             let VoodooI2CVersion = VoodooI2CInfo[1].replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
             VersionLabel.stringValue += VoodooI2CVersion
