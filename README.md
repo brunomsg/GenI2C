@@ -15,7 +15,7 @@ Generate a SSDT for your Trackpad and get ready for VoodooI2C! 😜
 
 - VoodooI2C Information
   - Loaded States
-  - ~~Attatched Submodule~~ (In development🚧)
+  - Attatched Submodules
   - Log Extracting
   - Working Mode (APIC, GPIO, Polling)
   - APIC/GPIO Pin showing
@@ -29,6 +29,13 @@ Generate a SSDT for your Trackpad and get ready for VoodooI2C! 😜
 
 - Tools
   - ACPI Disassembler
+
+- VoodooI2C Diagnosis
+  - Ckeck CPU Generation Support
+  - AppleIntelLpssI2C.kext/AppleIntelLpssI2CController block detection
+  - Check VoodooI2C Status
+  - Check Magic Trackpad 2 Simulator Engine Status
+  - Analyze VoodooI2C Logs
 
 ## Credits
 
