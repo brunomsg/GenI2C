@@ -14,14 +14,14 @@ Generate a SSDT for your Trackpad and get ready for VoodooI2C! 😜
 ## Features
 
 - VoodooI2C Information
-  - Loaded States
+  - Loaded Status
   - Attatched Submodules
   - Log Extracting
   - Working Mode (APIC, GPIO, Polling)
   - APIC/GPIO Pin showing
 
 - SSDT Generation
-  - Using **External** to maintain APIC Pin / GPIO Pin Bios injection
+  - Using **External** references to maintain APIC/GPIO Pin Bios injection
   - Generate I2C Bus Speed Patch
   - ~~Generate Skylake I2C Controller Patch~~ (In development🚧)
   - Generate GPIO Pin when manually pinning is required
@@ -32,7 +32,7 @@ Generate a SSDT for your Trackpad and get ready for VoodooI2C! 😜
 
 - VoodooI2C Diagnosis
   - Ckeck CPU Generation Support
-  - AppleIntelLpssI2C.kext/AppleIntelLpssI2CController block detection
+  - AppleIntelLpssI2C.kext/AppleIntelLpssI2CController.kext blocking detection
   - Check VoodooI2C Status
   - Check Magic Trackpad 2 Simulator Engine Status
   - Analyze VoodooI2C Logs
