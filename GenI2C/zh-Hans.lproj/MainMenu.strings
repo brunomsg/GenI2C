@@ -1,4 +1,7 @@
 
+/* Class = "NSTextFieldCell"; title = "AppleIntelLpssI2C Blocked"; ObjectID = "0F5-sl-7AZ"; */
+"0F5-sl-7AZ.title" = "AppleIntelLpssI2C 屏蔽";
+
 /* Class = "NSMenuItem"; title = "GenI2C"; ObjectID = "1Xt-HY-uBw"; */
 "1Xt-HY-uBw.title" = "GenI2C";
 
@@ -59,6 +62,9 @@
 /* Class = "NSMenuItem"; title = "Item 3"; ObjectID = "Gug-MU-563"; */
 "Gug-MU-563.title" = "保存 VoodooI2C 日志";
 
+/* Class = "NSBox"; title = "Problem diagnosis"; ObjectID = "Hs9-pG-9F7"; */
+"Hs9-pG-9F7.title" = "问题诊断";
+
 /* Class = "NSMenuItem"; title = "Feedback"; ObjectID = "ILF-f2-fBf"; */
 "ILF-f2-fBf.title" = "反馈问题";
 
@@ -67,6 +73,9 @@
 
 /* Class = "NSButtonCell"; title = "Interrupt (APIC or GPIO)"; ObjectID = "IW8-mf-mSA"; */
 "IW8-mf-mSA.title" = "中断 (APIC 或 GPIO)";
+
+/* Class = "NSTextFieldCell"; title = "CPU Generation Support"; ObjectID = "JFk-4y-K6F"; */
+"JFk-4y-K6F.title" = "CPU 型号支持";
 
 /* Class = "NSMenuItem"; title = "Show All"; ObjectID = "Kd2-mp-pUS"; */
 "Kd2-mp-pUS.title" = "显示全部";
@@ -98,6 +107,12 @@
 /* Class = "NSButtonCell"; title = "Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)"; ObjectID = "Oww-2F-PAh"; */
 "Oww-2F-PAh.title" = "Cannon Lake (Point)-H:  CFL-H (8750H, 8300H)";
 
+/* Class = "NSToolbarItem"; label = "Diagnosis"; ObjectID = "P7V-Ww-1rB"; */
+"P7V-Ww-1rB.label" = "诊断";
+
+/* Class = "NSToolbarItem"; paletteLabel = "Diagnosis"; ObjectID = "P7V-Ww-1rB"; */
+"P7V-Ww-1rB.paletteLabel" = "诊断";
+
 /* Class = "NSTabViewItem"; label = "2"; ObjectID = "PEA-LU-tIc"; */
 "PEA-LU-tIc.label" = "2";
 
@@ -119,6 +134,9 @@
 /* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "Vdr-fp-XzO"; */
 "Vdr-fp-XzO.title" = "隐藏其他";
 
+/* Class = "NSTextFieldCell"; title = "VoodooI2C Status"; ObjectID = "Vnk-Nc-3WN"; */
+"Vnk-Nc-3WN.title" = "VoodooI2C 状态";
+
 /* Class = "NSMenuItem"; title = "Verbose"; ObjectID = "Vp3-KO-htH"; */
 "Vp3-KO-htH.title" = "GenI2C 日志";
 
@@ -128,8 +146,14 @@
 /* Class = "NSToolbarItem"; paletteLabel = "Information"; ObjectID = "W46-dW-pAS"; */
 "W46-dW-pAS.paletteLabel" = "信息";
 
+/* Class = "NSTabViewItem"; label = "Item 3"; ObjectID = "X5W-ld-mUw"; */
+"X5W-ld-mUw.label" = "Item 3";
+
 /* Class = "NSBox"; title = "VoodooI2C Information"; ObjectID = "YzL-xq-EYQ"; */
 "YzL-xq-EYQ.title" = "VoodooI2C 信息";
+
+/* Class = "NSButtonCell"; title = "Diagnosis"; ObjectID = "b1k-od-bti"; */
+"b1k-od-bti.title" = "诊断";
 
 /* Class = "NSTabViewItem"; label = "View"; ObjectID = "bbV-03-1OX"; */
 "bbV-03-1OX.label" = "查看";
@@ -146,11 +170,23 @@
 /* Class = "NSButtonCell"; title = "Choose your DSDT file..."; ObjectID = "gtS-qK-5m4"; */
 "gtS-qK-5m4.title" = "导入 DSDT 文件...";
 
+/* Class = "NSButtonCell"; title = "Generate patches for this computer"; ObjectID = "gud-Qp-KhU"; */
+"gud-Qp-KhU.title" = "为本机生成补丁";
+
 /* Class = "NSTabViewItem"; label = "Item 2"; ObjectID = "h9o-BY-Bje"; */
 "h9o-BY-Bje.label" = "Item 2";
 
 /* Class = "NSButtonCell"; title = "Next"; ObjectID = "iLL-Mu-9X1"; */
 "iLL-Mu-9X1.title" = "下一步";
+
+/* Class = "NSButtonCell"; title = "Skylake"; ObjectID = "mA8-iE-ict"; */
+"mA8-iE-ict.title" = "Skylake";
+
+/* Class = "NSTextFieldCell"; title = "AppleIntelLpssI2CController Blocked"; ObjectID = "o4a-av-QqS"; */
+"o4a-av-QqS.title" = "AppleIntelLpssI2CController 屏蔽";
+
+/* Class = "NSTextFieldCell"; title = "MT2 Engine"; ObjectID = "odc-ki-ZIC"; */
+"odc-ki-ZIC.title" = "MT2 引擎";
 
 /* Class = "NSTabViewItem"; label = "3"; ObjectID = "pDx-2o-UMt"; */
 "pDx-2o-UMt.label" = "3";
@@ -178,6 +214,9 @@
 
 /* Class = "NSMenuItem"; title = "Help"; ObjectID = "wpr-3q-Mcd"; */
 "wpr-3q-Mcd.title" = "帮助";
+
+/* Class = "NSTextFieldCell"; title = "Log Analysis"; ObjectID = "x8m-Qt-XFJ"; */
+"x8m-Qt-XFJ.title" = "日志分析";
 
 /* Class = "NSButtonCell"; title = "Select ACPI table path"; ObjectID = "xHM-jo-bPF"; */
 "xHM-jo-bPF.title" = "选择 ACPI 表集";
