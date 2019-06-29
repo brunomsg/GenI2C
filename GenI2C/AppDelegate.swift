@@ -307,7 +307,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             verbose(text: "No Device Found\n")
             let noDevice = NSAlert()
             noDevice.messageText = NSLocalizedString("No Device Found", comment: "")
-            noDevice.informativeText = NSLocalizedString("There is no", comment: "") + TPAD + NSLocalizedString("in your DSDT. Please input again or exit", comment: "")
+            noDevice.informativeText = NSLocalizedString("There is no ", comment: "") + TPAD + NSLocalizedString(" in your DSDT. Please input again or exit", comment: "")
             noDevice.alertStyle = .informational
             noDevice.addButton(withTitle: NSLocalizedString("Input again", comment: ""))
             noDevice.addButton(withTitle: NSLocalizedString("Exit", comment: ""))
@@ -554,8 +554,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             }
         }
         if SLAVNameLineFound == false {
-            verbose(text: "\nThis is not a I2C Trackpad!\n")
-            Pop_up(messageText: NSLocalizedString("Warning", comment: ""), informativeText: NSLocalizedString("This is not a I2C Trackpad!", comment: ""))
+            verbose(text: "\nThis is not a I2C Device!\n")
+            Pop_up(messageText: NSLocalizedString("Warning", comment: ""), informativeText: NSLocalizedString("This is not a I2C Device!", comment: ""))
             exit(0)
         } else {
             
