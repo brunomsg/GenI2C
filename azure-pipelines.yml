@@ -14,7 +14,7 @@ steps:
   inputs:
     actions: 'build'
     scheme: 'GenI2C'
-    sdk: 'macos'
+    sdk: 'macosx10.14'
     configuration: 'Release'
     xcWorkspacePath: '**/*.xcodeproj/project.xcworkspace'
     xcodeVersion: '10'
