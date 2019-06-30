@@ -1,6 +1,6 @@
 # GenI2C
 
-[![Build Status](https://dev.azure.com/williamjiang237/GenI2C/_apis/build/status/williambj1.GenI2C?branchName=master)](https://dev.azure.com/williamjiang237/GenI2C/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/UndefinedSS/GenI2C/_apis/build/status/williambj1.GenI2C?branchName=master)](https://dev.azure.com/UndefinedSS/GenI2C/_build/latest?definitionId=1&branchName=master)
 ![Release](https://img.shields.io/github/release/williambj1/GenI2C.svg)
 ![Testers](https://img.shields.io/badge/Testers-Welcome-brightgreen.svg)
 
