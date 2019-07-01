@@ -1,10 +1,14 @@
 # GenI2C
 
 [![Build Status](https://dev.azure.com/UndefinedSS/GenI2C/_apis/build/status/williambj1.GenI2C?branchName=master)](https://dev.azure.com/UndefinedSS/GenI2C/_build/latest?definitionId=1&branchName=master)
-![Release](https://img.shields.io/github/release/williambj1/GenI2C.svg)
-![Testers](https://img.shields.io/badge/Testers-Welcome-brightgreen.svg)
+[![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-red.svg)](https://creativecommons.org/licenses/by-nc/4.0/legalcode)
+[![Release](https://img.shields.io/github/release/williambj1/GenI2C.svg)](https://github.com/williambj1/GenI2C/releases)
+[![Language](https://img.shields.io/github/languages/top/williambj1/GenI2C.svg?color=orange&label=swift)](https://github.com/williambj1/GenI2C)
+[![Repo Size](https://img.shields.io/github/repo-size/williambj1/GenI2C.svg?color=blueviolet)](https://github.com/williambj1/GenI2C)
+[![Issues](https://img.shields.io/github/issues/williambj1/GenI2C.svg)](https://github.com/williambj1/GenI2C/issues)
+[![Testers](https://img.shields.io/badge/Testers-Welcome-brightgreen.svg)](https://github.com/williambj1/GenI2C)
 
-Generate a SSDT for your Trackpad and get ready for VoodooI2C! 😜
+Generate SSDT hotpatches for your Touchable Device and get ready for VoodooI2C! 😜
 
 **[简体中文](https://github.com/williambj1/GenI2C/wiki/Readme-CN)**
 
