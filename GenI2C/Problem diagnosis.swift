@@ -214,6 +214,18 @@ func DiagnosisLog() -> (Bool, [String]) {
             errors[i] = "The Synaptics device implements F12 which is not yet supported by VoodooI2CSynaptics."
             i += 1
         }
+        if line.contains("cannot be used as IRQ") {
+            errors[i] = "GPIO Pin Out of range"
+        }
+        if line.contains("slave address not acknowledged (7bit mode)") {
+            errors[i] = "Slave Address Error"
+        }
+        if line.contains("Could not get controller") {
+            errors[i] = "Could not get controller"
+        }
+        if line.contains("Warning: Error getting bus config, using defaults where necessary") {
+            errors[i] = "Missing SSCN or FMCN bus speed config"
+        }
     }
     return (HaveError, errors)
 }
