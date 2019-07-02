@@ -1286,7 +1286,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             print("default")
         }
         var curDate:String = ""
-        curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ")[1]) \(time.components(separatedBy: " ")[2]):00"
+        curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ").filter{$0 != ""}[1]) \(time.components(separatedBy: " ").filter{$0 != ""}[2]):00"
         let dateFormatter = DateFormatter.init()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         var dateDate = dateFormatter.date(from: curDate)!
@@ -1422,33 +1422,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             State5.isHidden = false
             State5.image = NSImage.init(named: "NSStatusUnavailable")
         }
-        var haveError:Bool = false
+        var haveError:Bool = false, haveWarning:Bool = false
         var Errors = [String]()
         let queue = DispatchQueue.init(label: "queue")
         queue.async {
-            (haveError, Errors) = DiagnosisLog()
+            (haveError, haveWarning, Errors) = DiagnosisLog()
             if haveError {
-                if Errors.count == 1 {
+                DispatchQueue.main.async {
+                    self.Indicator6.stopAnimation(self)
+                    self.State6.isHidden = false
+                    self.State6.image = NSImage.init(named: "NSStatusUnavailable")
+                    for error in Errors {
+                        self.ErrorLabel.string += error + "\n"
+                    }
+                }
+            } else if haveWarning && !haveError {
+                DispatchQueue.main.async {
                     self.DiagnosisScrollView.isHidden = false
-                    if Errors[0] == "Device works in polling mode" {
-                        DispatchQueue.main.async {
-                            self.Indicator6.stopAnimation(self)
-                            self.State6.isHidden = false
-                            self.State6.image = NSImage.init(named: "NSStatusPartiallyAvailable")
-                            for error in Errors {
-                                self.ErrorLabel.string += error + "\n"
-                            }
-                        }
+                    self.Indicator6.stopAnimation(self)
+                    self.State6.isHidden = false
+                    for error in Errors {
+                        self.ErrorLabel.string += error + "\n"
                     }
-                } else {
-                    DispatchQueue.main.async {
-                        self.Indicator6.stopAnimation(self)
-                        self.State6.isHidden = false
-                        self.State6.image = NSImage.init(named: "NSStatusUnavailable")
-                        for error in Errors {
-                            self.ErrorLabel.string += error + "\n"
-                        }
-                    }
+                    self.State6.image = NSImage.init(named: "NSStatusPartiallyAvailable")
                 }
             } else {
                 DispatchQueue.main.async {

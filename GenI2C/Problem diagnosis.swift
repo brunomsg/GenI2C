@@ -93,7 +93,7 @@ func DiagnosisMT2() -> Bool {
     }
 }
 
-func DiagnosisLog() -> (Bool, [String]) {
+func DiagnosisLog() -> (Bool, Bool, [String]) {
     print("DiagnosisLog()")
     let a = Process()
     let pipe = Pipe()
@@ -142,7 +142,7 @@ func DiagnosisLog() -> (Bool, [String]) {
         print("default")
     }
     var curDate:String = ""
-    curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ")[1]) \(time.components(separatedBy: " ")[2]):00"
+    curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ").filter{$0 != ""}[1]) \(time.components(separatedBy: " ").filter{$0 != ""}[2]):00"
     let dateFormatter = DateFormatter.init()
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     var dateDate = dateFormatter.date(from: curDate)!
@@ -159,7 +159,7 @@ func DiagnosisLog() -> (Bool, [String]) {
     data = pipe1.fileHandleForReading.readDataToEndOfFile()
     let Log = String(data: data, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
     var i:Int = 0
-    var HaveError:Bool = false
+    var HaveError:Bool = false, HaveWarning:Bool = false
     for line in Log {
         if line.contains("Could not find GPIO controller") {
             HaveError = true
@@ -172,7 +172,11 @@ func DiagnosisLog() -> (Bool, [String]) {
             i += 1
         }
         if line.contains("Could not get interrupt event source") {
-            HaveError = true
+            if line.contains("using polling instead") {
+                HaveWarning = true
+            }else{
+                HaveError = true
+            }
             print(line)
             i += 1
         }
@@ -183,6 +187,26 @@ func DiagnosisLog() -> (Bool, [String]) {
         }
         if line.contains("Found F12 but this protocol is not yet implemented") {
             HaveError = true
+            print(line)
+            i += 1
+        }
+        if line.contains("cannot be used as IRQ") {
+            HaveError = true
+            print(line)
+            i += 1
+        }
+        if line.contains("slave address not acknowledged (7bit mode)") {
+            HaveError = true
+            print(line)
+            i += 1
+        }
+        if line.contains("Could not get controller") {
+            HaveError = true
+            print(line)
+            i += 1
+        }
+        if line.contains("Warning: Error getting bus config, using defaults where necessary") {
+            HaveWarning = true
             print(line)
             i += 1
         }
@@ -216,16 +240,20 @@ func DiagnosisLog() -> (Bool, [String]) {
         }
         if line.contains("cannot be used as IRQ") {
             errors[i] = "GPIO Pin Out of range"
+            i += 1
         }
         if line.contains("slave address not acknowledged (7bit mode)") {
             errors[i] = "Slave Address Error"
+            i += 1
         }
         if line.contains("Could not get controller") {
             errors[i] = "Could not get controller"
+            i += 1
         }
         if line.contains("Warning: Error getting bus config, using defaults where necessary") {
             errors[i] = "Missing SSCN or FMCN bus speed config"
+            i += 1
         }
     }
-    return (HaveError, errors)
+    return (HaveError, HaveWarning, errors)
 }
