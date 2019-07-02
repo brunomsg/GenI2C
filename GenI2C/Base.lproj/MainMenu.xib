@@ -17,12 +17,14 @@
             <connections>
                 <outlet property="AMLPath" destination="LZn-sL-AWv" id="YkG-kZ-Jqj"/>
                 <outlet property="APICPinText" destination="iYC-de-U4q" id="gBk-pb-14O"/>
+                <outlet property="About" destination="QIj-Cq-EPG" id="avZ-e9-3fg"/>
                 <outlet property="CPUModelLabel" destination="XZ7-Jk-fRV" id="xVC-CF-QwE"/>
                 <outlet property="DSDTPath" destination="kRr-hl-DHU" id="iLV-IF-aZh"/>
                 <outlet property="Decomplie" destination="Pt5-yv-gr8" id="jE7-gg-kdZ"/>
                 <outlet property="DeviceName" destination="b5P-D1-bnM" id="pIJ-sd-uqT"/>
                 <outlet property="DeviceNameLabel" destination="V8c-79-DsL" id="cDG-yt-DAc"/>
                 <outlet property="Diagnosis" destination="X5W-ld-mUw" id="ycZ-Al-A0E"/>
+                <outlet property="DiagnosisScrollView" destination="l9S-13-MO3" id="A24-bo-Soz"/>
                 <outlet property="Disassembler" destination="h9o-BY-Bje" id="3dj-z7-qNc"/>
                 <outlet property="DisassemblerVerbose" destination="aZX-d5-EDk" id="pOl-Ct-u9V"/>
                 <outlet property="ErrorLabel" destination="gTR-Mi-rhh" id="KiO-LH-Z6Y"/>
@@ -64,7 +66,8 @@
                 <outlet property="TabView" destination="FFA-If-dZJ" id="i9M-Kd-QR6"/>
                 <outlet property="VerboseTextView" destination="axz-RV-WcV" id="Fks-DL-Vu3"/>
                 <outlet property="VerboseWindow" destination="DXU-yX-phH" id="92r-rB-2MS"/>
-                <outlet property="VersionLabel" destination="omV-Z0-nk7" id="Skb-sJ-ofd"/>
+                <outlet property="Version" destination="E3N-e7-Y56" id="jnD-nB-XqV"/>
+                <outlet property="VersionLabel" destination="omV-Z0-nk7" id="cFl-4g-7tU"/>
                 <outlet property="Warning" destination="K6P-36-7Hx" id="NtG-Wf-13M"/>
                 <outlet property="isSkylake" destination="fmm-CG-4Tt" id="lcn-SS-Uil"/>
                 <outlet property="mainWindow" destination="QvC-M9-y7g" id="Fj9-mi-wX8"/>
@@ -163,7 +166,7 @@
         <window title="GenI2C" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="300" y="400" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="360"/>
             <value key="maxSize" type="size" width="480" height="360"/>
             <view key="contentView" id="EiT-Mj-1SZ">
@@ -232,7 +235,7 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="omV-Z0-nk7">
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="omV-Z0-nk7" userLabel="VoodooI2C Version :">
                                                         <rect key="frame" x="18" y="244" width="404" height="17"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="VoodooI2C Version : " id="CDj-j9-PJU">
@@ -267,7 +270,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="View" identifier="" id="bbV-03-1OX" userLabel="GenSSDT">
-                                <view key="view" ambiguous="YES" id="XCH-jh-Tg0">
+                                <view key="view" id="XCH-jh-Tg0">
                                     <rect key="frame" x="0.0" y="0.0" width="482" height="362"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -384,7 +387,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="Item 3" identifier="" id="rc1-dI-cPS" userLabel="3">
-                                                    <view key="view" id="3Dw-vN-00k">
+                                                    <view key="view" ambiguous="YES" id="3Dw-vN-00k">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -467,7 +470,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="3" identifier="" id="pDx-2o-UMt" userLabel="4">
-                                                    <view key="view" ambiguous="YES" id="SFQ-Po-2Bd">
+                                                    <view key="view" id="SFQ-Po-2Bd">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -518,7 +521,7 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="eKD-Yu-s0V">
                                                                     <rect key="frame" x="1" y="1" width="438" height="188"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="MRg-3M-lAe">
                                                                             <rect key="frame" x="0.0" y="0.0" width="438" height="188"/>
@@ -588,15 +591,15 @@
                                             <rect key="frame" x="20" y="55" width="442" height="229"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="rDD-eP-mmo">
-                                                <rect key="frame" x="1" y="1" width="440" height="227"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <rect key="frame" x="1" y="1" width="425" height="227"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="aZX-d5-EDk">
-                                                        <rect key="frame" x="0.0" y="0.0" width="440" height="227"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="425" height="227"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="minSize" width="440" height="227"/>
+                                                        <size key="minSize" width="425" height="227"/>
                                                         <size key="maxSize" width="442" height="10000000"/>
                                                         <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     </textView>
@@ -756,19 +759,19 @@
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="eia-Hw-Y0T"/>
                                                     </imageView>
-                                                    <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l9S-13-MO3">
+                                                    <scrollView hidden="YES" fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l9S-13-MO3">
                                                         <rect key="frame" x="20" y="20" width="398" height="74"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="PHQ-CO-PDe">
-                                                            <rect key="frame" x="0.0" y="0.0" width="398" height="74"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="383" height="74"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="gTR-Mi-rhh">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="398" height="74"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="383" height="74"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    <size key="minSize" width="398" height="74"/>
+                                                                    <size key="minSize" width="383" height="74"/>
                                                                     <size key="maxSize" width="440" height="10000000"/>
                                                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                 </textView>
@@ -787,6 +790,90 @@
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
+                                    </subviews>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="About" identifier="" id="QIj-Cq-EPG">
+                                <view key="view" ambiguous="YES" id="eNn-N3-3BX">
+                                    <rect key="frame" x="0.0" y="0.0" width="482" height="362"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZG-dV-Kco">
+                                            <rect key="frame" x="20" y="142" width="200" height="200"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon" id="sgZ-bk-mg7"/>
+                                        </imageView>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E3N-e7-Y56">
+                                            <rect key="frame" x="226" y="212" width="238" height="17"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" id="4hQ-kM-pu2">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iZD-9T-8f4">
+                                            <rect key="frame" x="226" y="187" width="238" height="17"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Copyright © 2019 梁怀宇. All rights reserved" id="7My-v9-yrG">
+                                                <font key="font" metaFont="system" size="11"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nvL-wg-zBL">
+                                            <rect key="frame" x="14" y="13" width="147" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Visit us on Github" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2tp-mP-aX6">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="Github:" target="Voe-Tx-rLC" id="dta-gW-gRg"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i6o-B3-BCV">
+                                            <rect key="frame" x="384" y="13" width="84" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Donate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sjt-xX-br0">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="Donate:" target="Voe-Tx-rLC" id="iil-Jh-TBi"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T1j-sS-T6p">
+                                            <rect key="frame" x="161" y="13" width="134" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="VoodooI2C Site" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IAY-zZ-Lpp">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="VoodooI2C:" target="Voe-Tx-rLC" id="bl8-ph-ZJp"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1tC-hF-5x9">
+                                            <rect key="frame" x="295" y="13" width="76" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Guide" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IMW-Eq-fzj">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="Guide:" target="Voe-Tx-rLC" id="SvP-yt-PgC"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SOV-fj-zZN">
+                                            <rect key="frame" x="277" y="243" width="136" height="48"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="GenI2C" id="9ae-UK-LiQ">
+                                                <font key="font" metaFont="system" size="40"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                     </subviews>
                                 </view>
                             </tabViewItem>
@@ -824,6 +911,11 @@
                             <action selector="DiagnosisClick:" target="Voe-Tx-rLC" id="TJD-2F-JcR"/>
                         </connections>
                     </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="67E981F2-4AE0-4EEF-919C-C445E7DBBFB5" label="About" paletteLabel="About" tag="-1" selectable="YES" id="NdC-zt-OfG">
+                        <connections>
+                            <action selector="AboutClick:" target="Voe-Tx-rLC" id="ZQy-dr-9Mz"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="W46-dW-pAS"/>
@@ -831,6 +923,7 @@
                     <toolbarItem reference="N1r-h3-WYy"/>
                     <toolbarItem reference="P7V-Ww-1rB"/>
                     <toolbarItem reference="kmC-cy-Z7Y"/>
+                    <toolbarItem reference="NdC-zt-OfG"/>
                 </defaultToolbarItems>
             </toolbar>
             <point key="canvasLocation" x="1131" y="327"/>
@@ -868,7 +961,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
@@ -1770,5 +1863,6 @@
         <image name="NSMultipleDocuments" width="32" height="32"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSTouchBarFolderCopyToTemplate" width="26" height="30"/>
+        <image name="icon" width="512" height="512"/>
     </resources>
 </document>

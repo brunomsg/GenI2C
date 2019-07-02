@@ -15,6 +15,7 @@
 		8B355DAC22B4D26800BB042B /* iasl in Resources */ = {isa = PBXBuildFile; fileRef = 8B355DAB22B4D26700BB042B /* iasl */; };
 		8B355DB122B524C800BB042B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B355DB322B524C800BB042B /* Localizable.strings */; };
 		8B355DB622B5400100BB042B /* maclog in Resources */ = {isa = PBXBuildFile; fileRef = 8B355DB522B5400100BB042B /* maclog */; };
+		8B511CC122C9B01E0082ED70 /* GenReadme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B511CC022C9B01E0082ED70 /* GenReadme.swift */; };
 		8BB738DE22C65B430071A5D1 /* Problem diagnosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB738DD22C65B430071A5D1 /* Problem diagnosis.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		8B355DB222B524C800BB042B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8B355DB422B524F100BB042B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B355DB522B5400100BB042B /* maclog */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = maclog; sourceTree = "<group>"; };
+		8B511CC022C9B01E0082ED70 /* GenReadme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenReadme.swift; sourceTree = "<group>"; };
 		8BB738DD22C65B430071A5D1 /* Problem diagnosis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Problem diagnosis.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -106,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				8B3271A8229A5E3D005FCBB7 /* AppDelegate.swift */,
+				8B511CC022C9B01E0082ED70 /* GenReadme.swift */,
 				8BB738DD22C65B430071A5D1 /* Problem diagnosis.swift */,
 				8B3271AA229A5E3E005FCBB7 /* Assets.xcassets */,
 				8B3271AC229A5E3E005FCBB7 /* MainMenu.xib */,
@@ -274,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B511CC122C9B01E0082ED70 /* GenReadme.swift in Sources */,
 				8BB738DE22C65B430071A5D1 /* Problem diagnosis.swift in Sources */,
 				8B3271A9229A5E3D005FCBB7 /* AppDelegate.swift in Sources */,
 			);

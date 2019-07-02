@@ -8,6 +8,12 @@
 
 import Cocoa
 
+var CPUInfo:String = "", NativeDeviceName:String = "", NativePin = "", isVooLoaded:Bool = false, isNameFound:Bool = false, isPinFound:Bool = false
+var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16), ScopeSelect:String = "", RenameFile:String = "", HexI2C:String = "", HexI2X:String = ""
+var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6), SKL_CTRL = [String](repeating: "", count: 65)
+var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false, MultiTPAD:Bool = false, MultiScopeBool:Bool = false
+var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1, MultiScopeCount:Int = 0, MultiTPADLineCount = [Int](repeating: 0, count: 6), MultiTPADLineCountIndex:Int = 0, MultiTPADUSRSelect:Int = 0, TargetTPAD:Int = 0, isSKL:Int = 0
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
 
@@ -47,6 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var Information: NSTabViewItem!
     @IBOutlet weak var GenSSDTTab: NSTabViewItem!
     @IBOutlet weak var Disassembler: NSTabViewItem!
+    @IBOutlet weak var About: NSTabViewItem!
     @IBOutlet weak var Gen4ThisComputer: NSButton!
     @IBOutlet weak var IssueLabel: NSTextFieldCell!
     @IBOutlet weak var GenStep2: NSTabViewItem!
@@ -65,14 +72,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBOutlet weak var State5: NSImageView!
     @IBOutlet weak var State6: NSImageView!
     @IBOutlet var ErrorLabel: NSTextView!
+    @IBOutlet weak var DiagnosisScrollView: NSScrollView!
+    @IBOutlet weak var Version: NSTextField!
     
-    var CPUInfo:String = "", NativeDeviceName:String = "", NativePin = "", isVooLoaded:Bool = false, isNameFound:Bool = false, isPinFound:Bool = false
     let SelectDevice = NSAlert()
     var alert = NSAlert()
-    var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16), ScopeSelect:String = "", RenameFile:String = "", HexI2C:String = "", HexI2X:String = ""
-    var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6), SKL_CTRL = [String](repeating: "", count: 65)
-    var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false, MultiTPAD:Bool = false, MultiScopeBool:Bool = false
-    var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1, MultiScopeCount:Int = 0, MultiTPADLineCount = [Int](repeating: 0, count: 6), MultiTPADLineCountIndex:Int = 0, MultiTPADUSRSelect:Int = 0, TargetTPAD:Int = 0, isSKL:Int = 0
     
     @IBAction func InformationClick(_ sender: Any) {
         MainTab.selectTabViewItem(Information)
@@ -93,6 +97,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     @IBAction func SelectMode(_ sender: Any) {
         Choice = (sender as! NSButton).tag
         Next4.isEnabled = true
+    }
+    
+    @IBAction func AboutClick(_ sender: Any) {
+        MainTab.selectTabViewItem(About)
     }
     
     @IBAction func SelectDevice(_ sender: Any) {
@@ -152,9 +160,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 let pathStr = path.absoluteString!.removingPercentEncoding!
                 let index1 = pathStr.index(pathStr.startIndex, offsetBy: 7)
                 let index2 = pathStr.index(pathStr.startIndex, offsetBy: pathStr.count)
-                self.DSDTFile = String(pathStr[index1..<index2])
-                self.DSDTPath.stringValue = self.DSDTFile
-                self.verbose(text: "\(self.DSDTFile)\n")
+                DSDTFile = String(pathStr[index1..<index2])
+                self.DSDTPath.stringValue = DSDTFile
+                self.verbose(text: "\(DSDTFile)\n")
                 self.Next1.isEnabled = true
             }
         })
@@ -190,7 +198,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 IssueLabel.stringValue += "This CPU Model (\(CPUInfo)) is not supported\n"
             }
             Countline()
-            TabView.selectTabViewItem(GenStep4)
         }
     }
     
@@ -303,7 +310,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             }
         }
         if Matched == false{
-            TabView.selectTabViewItem(at: 0)
+            TabView.selectTabViewItem(GenStep2)
             verbose(text: "No Device Found\n")
             let noDevice = NSAlert()
             noDevice.messageText = NSLocalizedString("No Device Found", comment: "")
@@ -318,9 +325,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     exit(0)
                 }
             })
-        }
-        else{
-            TabView.selectTabViewItem(at: 1)
+        } else {
+            if Gen4ThisComputer.state.rawValue == 1 {
+                TabView.selectTabViewItem(GenStep4)
+            } else {
+                TabView.selectTabViewItem(at: 1)
+            }
             preAnalysis()
         }
     }
@@ -947,35 +957,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         }
         RenameLabel.string += "++++++++++++++++++++++++++++++++++++++\n\n"
         if InterruptEnabled || PollingEnabled {
-            RenameLabel.string += "Find _CRS:          5F 43 52 53\n"
-            RenameLabel.string += "Replace XCRS:       58 43 52 53\n"
-            RenameLabel.string += "Target Bridge \(TPAD): \(HexTPAD)\n\n"
+            RenameLabel.string += "    Find _CRS:          5F 43 52 53\n"
+            RenameLabel.string += "    Replace XCRS:       58 43 52 53\n"
+            RenameLabel.string += "    Target Bridge \(TPAD): \(HexTPAD)\n\n"
             if InterruptEnabled && (APICPIN > 47 || (APICPIN == 0 && ExGPIO && ExAPIC)) {
-                RenameLabel.string += "Find _STA:          5F 53 54 41\n"
-                RenameLabel.string += "Replace XSTA:       58 53 54 41\n"
-                RenameLabel.string += "Target Bridge GPI0: 47 50 49 30\n\n"
+                RenameLabel.string += "    Find _STA:          5F 53 54 41\n"
+                RenameLabel.string += "    Replace XSTA:       58 53 54 41\n"
+                RenameLabel.string += "    Target Bridge GPI0: 47 50 49 30\n\n"
             }
             if isSKL == 1 {
-                RenameLabel.string += "Find I2C" + scope + ":          " + HexI2C + "\n"
-                RenameLabel.string += "Replace I2X" + scope + ":       " + HexI2X + "\n"
-                RenameLabel.string += "Find _STA:          5F 53 54 41\n"
-                RenameLabel.string += "Replace XSTA:       58 53 54 41\n"
-                RenameLabel.string += "Target Bridge I2X" + scope + ": " + HexI2X + "\n"
+                RenameLabel.string += "    Find I2C" + scope + ":          " + HexI2C + "\n"
+                RenameLabel.string += "    Replace I2X" + scope + ":       " + HexI2X + "\n"
+                RenameLabel.string += "    Find _STA:          5F 53 54 41\n"
+                RenameLabel.string += "    Replace XSTA:       58 53 54 41\n"
+                RenameLabel.string += "    Target Bridge I2X" + scope + ": " + HexI2X + "\n"
             }
             if ExUSTP && BlockI2C == false {
-                RenameLabel.string += "Find USTP:          55 53 54 50 08\n"
-                RenameLabel.string += "Replace XSTP:       58 53 54 50 08\n\n"
+                RenameLabel.string += "    Find USTP:          55 53 54 50 08\n"
+                RenameLabel.string += "    Replace XSTP:       58 53 54 50 08\n\n"
             } else if ExUSTP == false && ExSSCN && ExFMCN == false && CPUChoice == 1 && BlockI2C == false {
-                RenameLabel.string += "Find SSCN:          53 53 43 4E\n"
-                RenameLabel.string += "Replace XSCN:       58 53 43 4E\n"
+                RenameLabel.string += "    Find SSCN:          53 53 43 4E\n"
+                RenameLabel.string += "    Replace XSCN:       58 53 43 4E\n"
             }
         } else if BlockI2C {
-            RenameLabel.string += "Find _STA:          5F 53 54 41\n"
-            RenameLabel.string += "Replace XSTA:       58 53 54 41\n"
-            RenameLabel.string += "Target Bridge \(BlockBus): \(HexBlockBus)\n\n"
+            RenameLabel.string += "    Find _STA:          5F 53 54 41\n"
+            RenameLabel.string += "    Replace XSTA:       58 53 54 41\n"
+            RenameLabel.string += "    Target Bridge \(BlockBus): \(HexBlockBus)\n\n"
         }
         RenameLabel.string += "Please use the Rename(s) above in the given order\n\n"
         RenameLabel.string += "++++++++++++++++++++++++++++++++++++++"
+        GenReadme(Rename: RenameLabel.string)
     }
     
     func BreakCombine() {
@@ -1317,8 +1328,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 let pathStr = path.absoluteString!.removingPercentEncoding!
                 let index1 = pathStr.index(pathStr.startIndex, offsetBy: 7)
                 let index2 = pathStr.index(pathStr.startIndex, offsetBy: pathStr.count)
-                self.DSDTFile = String(pathStr[index1..<index2])
-                self.AMLPath.stringValue = self.DSDTFile
+                DSDTFile = String(pathStr[index1..<index2])
+                self.AMLPath.stringValue = DSDTFile
                 self.Decomplie.isEnabled = true
             }
         })
@@ -1417,12 +1428,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         queue.async {
             (haveError, Errors) = DiagnosisLog()
             if haveError {
-                DispatchQueue.main.async {
-                    self.Indicator6.stopAnimation(self)
-                    self.State6.isHidden = false
-                    self.State6.image = NSImage.init(named: "NSStatusUnavailable")
-                    for error in Errors {
-                        self.ErrorLabel.string += error + "\n"
+                if Errors.count == 1 {
+                    self.DiagnosisScrollView.isHidden = false
+                    if Errors[0] == "Device works in polling mode" {
+                        DispatchQueue.main.async {
+                            self.Indicator6.stopAnimation(self)
+                            self.State6.isHidden = false
+                            self.State6.image = NSImage.init(named: "NSStatusPartiallyAvailable")
+                            for error in Errors {
+                                self.ErrorLabel.string += error + "\n"
+                            }
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.Indicator6.stopAnimation(self)
+                        self.State6.isHidden = false
+                        self.State6.image = NSImage.init(named: "NSStatusUnavailable")
+                        for error in Errors {
+                            self.ErrorLabel.string += error + "\n"
+                        }
                     }
                 }
             } else {
@@ -1441,6 +1466,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
+        let infoDictionary = Bundle.main.infoDictionary!
+        let minorVersion = infoDictionary["CFBundleShortVersionString"]!//版本号（内部标示） let appVersion = minorVersion as! String
+        Version.stringValue = "Version \(minorVersion)"
         
         mainWindow.standardWindowButton(.zoomButton)?.isHidden = true
         mainWindow = NSApplication.shared.windows[0]
@@ -1613,7 +1641,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
         DSDTFile = filename
         DSDTPath.stringValue = DSDTFile
-        verbose(text: "\(self.DSDTFile)\n")
+        verbose(text: "\(DSDTFile)\n")
         MainTab.selectTabViewItem(GenSSDTTab)
         Next1.isEnabled = true
         return true
@@ -1632,6 +1660,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+    }
+    
+    @IBAction func Github(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/williambj1/GenI2C")!)
+    }
+    @IBAction func VoodooI2C(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/alexandred/VoodooI2C")!)
+    }
+    @IBAction func Guide(_ sender: Any) {
+        //NSWorkspace.shared.open(URL(string: "https://github.com/alexandred/VoodooI2C")!)
+    }
+    @IBAction func Donate(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/williambj1/GenI2C#donation")!)
     }
 }
 
