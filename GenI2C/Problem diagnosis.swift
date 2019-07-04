@@ -108,10 +108,7 @@ func DiagnosisLog() -> (Bool, Bool, [String]) {
     let outdata = pipe.fileHandleForReading.availableData
     let outputString = String(data: outdata, encoding: String.Encoding.utf8)!
     let timeline = outputString.components(separatedBy: "\n")[0]
-    let index1 = timeline.index(timeline.startIndex, offsetBy: 18)
-    let index2 = timeline.index(timeline.startIndex, offsetBy: timeline.count)
-    let time = timeline[index1..<index2]
-    let month = time.components(separatedBy: " ")[0]
+    let month = timeline.components(separatedBy: " ").filter{$0 != ""}[2]//time.components(separatedBy: " ")[0]
     let date = Date()
     let dateFormat = DateFormatter()
     dateFormat.dateFormat = "yyyy"
@@ -146,7 +143,7 @@ func DiagnosisLog() -> (Bool, Bool, [String]) {
         print("default")
     }
     var curDate:String = ""
-    curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ").filter{$0 != ""}[1]) \(time.components(separatedBy: " ").filter{$0 != ""}[2]):00"
+    curDate = "\(year)-\(month_num)-\(timeline.components(separatedBy: " ").filter{$0 != ""}[3]) \(timeline.components(separatedBy: " ").filter{$0 != ""}[4]):00"
     let dateFormatter = DateFormatter.init()
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     var dateDate = dateFormatter.date(from: curDate)!

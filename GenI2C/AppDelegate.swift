@@ -407,7 +407,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         }
         for i in 0...total {
             if Code[i].contains("Method (_CRS,") {
-                print("CRS")
                 var CRSStart, CRSEnd, CRSRangeScan:Int
                 CRSRangeScan = i + 1
                 CRSStart = Code[CRSRangeScan].positionOf(sub: "{") - 1
@@ -1247,13 +1246,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         a.standardOutput = pipe
         a.launchPath = "/usr/bin/who"
         a.launch()
+        a.waitUntilExit()
         let outdata = pipe.fileHandleForReading.availableData
         let outputString = String(data: outdata, encoding: String.Encoding.utf8)!
         let timeline = outputString.components(separatedBy: "\n")[0]
-        let index1 = timeline.index(timeline.startIndex, offsetBy: 18)
-        let index2 = timeline.index(timeline.startIndex, offsetBy: timeline.count)
-        let time = timeline[index1..<index2]
-        let month = time.components(separatedBy: " ")[0]
+        let month = timeline.components(separatedBy: " ").filter{$0 != ""}[2]//time.components(separatedBy: " ")[0]
         let date = Date()
         let dateFormat = DateFormatter()
         dateFormat.dateFormat = "yyyy"
@@ -1288,7 +1285,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             print("default")
         }
         var curDate:String = ""
-        curDate = "\(year)-\(month_num)-\(time.components(separatedBy: " ").filter{$0 != ""}[1]) \(time.components(separatedBy: " ").filter{$0 != ""}[2]):00"
+        curDate = "\(year)-\(month_num)-\(timeline.components(separatedBy: " ").filter{$0 != ""}[3]) \(timeline.components(separatedBy: " ").filter{$0 != ""}[4]):00"
         let dateFormatter = DateFormatter.init()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         var dateDate = dateFormatter.date(from: curDate)!
@@ -1389,22 +1386,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             State1.image = NSImage.init(named: "NSStatusUnavailable")
         }
         if DiagnosisAppleIntel().0 {
-            print(10)
             Indicator2.stopAnimation(self)
             State2.isHidden = false
             State2.image = NSImage.init(named: "NSStatusUnavailable")
         } else {
-            print(11)
             Indicator2.stopAnimation(self)
             State2.isHidden = false
         }
         if DiagnosisAppleIntel().1 {
-            print(20)
             Indicator3.stopAnimation(self)
             State3.isHidden = false
             State3.image = NSImage.init(named: "NSStatusUnavailable")
         } else {
-            print(21)
             Indicator3.stopAnimation(self)
             State3.isHidden = false
         }
