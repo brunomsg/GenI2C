@@ -20,10 +20,14 @@ func DiagnosisCPU() -> Bool {
     let CPUString = String(data: CPUdata, encoding: String.Encoding.utf8)!
     let CPUInfo = String(CPUString[CPUString.index(CPUString.startIndex, offsetBy: 26)..<CPUString.endIndex])
     let CPUModel = CPUInfo.components(separatedBy: " ")[2].components(separatedBy: "-")[1]
-    if Int(String(CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)]))! < 4 {
-        return false
+    if CPUInfo.components(separatedBy: " ")[1].contains("Core") {
+        if Int(String(CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)]))! < 4 {
+            return false
+        } else {
+            return true
+        }
     } else {
-        return true
+        return false
     }
 }
 

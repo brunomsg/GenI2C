@@ -29,3 +29,6 @@
 "This is not a I2C Device!" = "这不是一个 I2C 设备!";
 "Report your bug" = "反馈你的问题";
 "Please open a new issue on Github" = "请在 Github 上提交你的问题";
+"1. Put VoodooI2C and the Satellite into Clover/Kexts/Other\n" = "1. 将 VoodooI2C 及附属驱动放入 Clover/Kexts/Other\n";
+"2. Add rename(s) to Clover config.plist\n\n" = "2. 将重命名填入 Clover 的配置文件（config.plist）\n\n";
+"\n\n3. Place SSDT aml files into Clover/ACPI/patched" = "\n\n3. 将编译好的SSDT文件（*.aml）放入 Clover/ACPI/patched";
