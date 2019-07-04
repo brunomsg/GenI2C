@@ -668,57 +668,59 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     func PatchCRS2GPIO() {
-        print("PatchCRS2GPIO()")
-        verbose(text: "Start func : PatchCRS2GPIO")
-        for CRSLine in 0...n {
-            if CRSInfo[CRSLine].contains("Return (ConcatenateResTemplate") {
-                if ExI2CM {
-                    let index = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "BADR, "))
-                    CRSInfo[CRSLine] = String(CRSInfo[CRSLine][..<index]) + "\\_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, " + "\\_SB.PCI0.I2C" + scope + "." + TPAD + ".SPED)" + ", " + GPIONAME + "))"
-                } else {
-                    let index = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: ", SBF"))
-                    CRSInfo[CRSLine] = String(CRSInfo[CRSLine][..<index]) + ", " + GPIONAME + "))"
+        if CPUChoice != 3 {
+            print("PatchCRS2GPIO()")
+            verbose(text: "Start func : PatchCRS2GPIO")
+            for CRSLine in 0...n {
+                if CRSInfo[CRSLine].contains("Return (ConcatenateResTemplate") {
+                    if ExI2CM {
+                        let index = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "BADR, "))
+                        CRSInfo[CRSLine] = String(CRSInfo[CRSLine][..<index]) + "\\_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, " + "\\_SB.PCI0.I2C" + scope + "." + TPAD + ".SPED)" + ", " + GPIONAME + "))"
+                    } else {
+                        let index = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: ", SBF"))
+                        CRSInfo[CRSLine] = String(CRSInfo[CRSLine][..<index]) + ", " + GPIONAME + "))"
+                    }
+                    CRSPatched = true
+                } else if CRSInfo[CRSLine].contains("Return (SBF") {
+                    let index = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "("))
+                    CRSInfo[CRSLine] = String(CRSInfo[CRSLine][..<index]) + "(ConcatenateResTemplate (" + SLAVName + ", " + GPIONAME + ")) // Usually this return won't function, please check your Windows Patch"
+                    CRSPatched = true
                 }
-                CRSPatched = true
-            } else if CRSInfo[CRSLine].contains("Return (SBF") {
-                let index = CRSInfo[CRSLine].index(CRSInfo[CRSLine].startIndex, offsetBy: CRSInfo[CRSLine].positionOf(sub: "("))
-                CRSInfo[CRSLine] = String(CRSInfo[CRSLine][..<index]) + "(ConcatenateResTemplate (" + SLAVName + ", " + GPIONAME + ")) // Usually this return won't function, please check your Windows Patch"
-                CRSPatched = true
             }
+            if CRSPatched == false {
+                verbose(text: "Error! No _CRS Patch Applied!")
+            }
+            GPI0SSDT[0] = #"/* "#
+            GPI0SSDT[1] = #" * Find _STA:          5F 53 54 41"#
+            GPI0SSDT[2] = #" * Replace XSTA:       58 53 54 41"#
+            GPI0SSDT[3] = #" * Target Bridge GPI0: 47 50 49 30"#
+            GPI0SSDT[4] = #" */"#
+            GPI0SSDT[5] = "DefinitionBlock(\"\", \"SSDT\", 2, \"hack\", \"GPI0\", 0)"
+            GPI0SSDT[6] = #"{"#
+            GPI0SSDT[7] = #"    External(_SB.PCI0.GPI0, DeviceObj)"#
+            GPI0SSDT[8] = #"    Scope (_SB.PCI0.GPI0)"#
+            GPI0SSDT[9] = #"    {"#
+            GPI0SSDT[10] = #"        Method (_STA, 0, NotSerialized)"#
+            GPI0SSDT[11] = #"        {"#
+            GPI0SSDT[12] = #"            Return (0x0F)"#
+            GPI0SSDT[13] = #"        }"#
+            GPI0SSDT[14] = #"    }"#
+            GPI0SSDT[15] = #"}"#
+            var SSDT:String = ""
+            try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
+            let path:String = FolderPath + "/SSDT-GPI0.dsl"
+            if FileManager.default.fileExists(atPath: path) {
+                try! FileManager.default.removeItem(atPath: path)
+                FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+            } else {
+                FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+            }
+            for Genindex in 0...15{
+                SSDT += GPI0SSDT[Genindex] + "\n"
+            }
+            try! SSDT.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+            iasl(path: path)
         }
-        if CRSPatched == false {
-            verbose(text: "Error! No _CRS Patch Applied!")
-        }
-        GPI0SSDT[0] = #"/* "#
-        GPI0SSDT[1] = #" * Find _STA:          5F 53 54 41"#
-        GPI0SSDT[2] = #" * Replace XSTA:       58 53 54 41"#
-        GPI0SSDT[3] = #" * Target Bridge GPI0: 47 50 49 30"#
-        GPI0SSDT[4] = #" */"#
-        GPI0SSDT[5] = "DefinitionBlock(\"\", \"SSDT\", 2, \"hack\", \"GPI0\", 0)"
-        GPI0SSDT[6] = #"{"#
-        GPI0SSDT[7] = #"    External(_SB.PCI0.GPI0, DeviceObj)"#
-        GPI0SSDT[8] = #"    Scope (_SB.PCI0.GPI0)"#
-        GPI0SSDT[9] = #"    {"#
-        GPI0SSDT[10] = #"        Method (_STA, 0, NotSerialized)"#
-        GPI0SSDT[11] = #"        {"#
-        GPI0SSDT[12] = #"            Return (0x0F)"#
-        GPI0SSDT[13] = #"        }"#
-        GPI0SSDT[14] = #"    }"#
-        GPI0SSDT[15] = #"}"#
-        var SSDT:String = ""
-        try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
-        let path:String = FolderPath + "/SSDT-GPI0.dsl"
-        if FileManager.default.fileExists(atPath: path) {
-            try! FileManager.default.removeItem(atPath: path)
-            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
-        } else {
-            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
-        }
-        for Genindex in 0...15{
-            SSDT += GPI0SSDT[Genindex] + "\n"
-        }
-        try! SSDT.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
-        iasl(path: path)
     }
     
     func PatchCRS2APIC() {
@@ -752,7 +754,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             verbose(text: "APIC Pin value < 2F, Native APIC Supported, Generation Cancelled")
         } else {
             switch CPUChoice {
-            case 0 :
+            case 0, 3 :
                 if APICPIN > 47 && APICPIN <= 79 {
                     GPIOPIN = APICPIN - 24
                     GPIOPIN2 = APICPIN + 72
@@ -923,7 +925,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 }
                 if ExUSTP == false && (ExFMCN == false || ExSSCN == false) {
                     GenSPED()
-                    if CPUChoice == 0 {
+                    if CPUChoice == 0 || CPUChoice == 3 {
                         if ExSSCN == false && ExFMCN {
                             fileContent += ManualSPED[0] + "\n"
                         } else if ExFMCN == false && ExSSCN {
@@ -1000,7 +1002,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     func GenSPED() {
         print("GenSPED()")
         verbose(text: "Start func : GenSPED()")
-        if CPUChoice == 0 {
+        if CPUChoice == 0 || CPUChoice == 3 {
             if scope == "0" || scope == "2" || scope == "3" {
                 ManualSPED[0] = Spacing + "Name (SSCN, Package () { 432, 507, 30 })"
                 ManualSPED[1] = Spacing + "Name (FMCN, Package () { 72, 160, 30 })"

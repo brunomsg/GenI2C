@@ -11,10 +11,10 @@ import Foundation
 func GenReadme (Rename: String) {
     print("GenReadme()")
     var Readme:String = ""
-    Readme += "1. Put VoodooI2C and the Satellite into Clover/Kexts/Other\n"
-    Readme += "2. Add rename(s) to Clover config.plist\n\n"
+    Readme += NSLocalizedString("1. Put VoodooI2C and the Satellite into Clover/Kexts/Other\n", comment: "")
+    Readme += NSLocalizedString("2. Add rename(s) to Clover config.plist\n\n", comment: "")
     Readme += Rename
-    Readme += "\n\n3. Place SSDT aml files into Clover/ACPI/patched"
+    Readme += NSLocalizedString("\n\n3. Place SSDT aml files into Clover/ACPI/patched", comment: "")
     let path:String = FolderPath + "/Readme.txt"
     try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
     if FileManager.default.fileExists(atPath: path) {
