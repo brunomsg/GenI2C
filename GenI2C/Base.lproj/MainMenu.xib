@@ -166,7 +166,7 @@
         <window title="GenI2C" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="300" y="400" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
             <value key="minSize" type="size" width="480" height="360"/>
             <value key="maxSize" type="size" width="480" height="360"/>
             <view key="contentView" id="EiT-Mj-1SZ">
@@ -179,7 +179,7 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Tab" identifier="" id="PHJ-AI-Dzw" userLabel="Information">
-                                <view key="view" id="6h2-he-Jk2">
+                                <view key="view" ambiguous="YES" id="6h2-he-Jk2">
                                     <rect key="frame" x="0.0" y="0.0" width="482" height="362"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -270,7 +270,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="View" identifier="" id="bbV-03-1OX" userLabel="GenSSDT">
-                                <view key="view" ambiguous="YES" id="XCH-jh-Tg0">
+                                <view key="view" id="XCH-jh-Tg0">
                                     <rect key="frame" x="0.0" y="0.0" width="482" height="362"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -280,7 +280,7 @@
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
                                                 <tabViewItem label="1" identifier="" id="Ltf-1y-wwP">
-                                                    <view key="view" id="uJQ-2U-CmX">
+                                                    <view key="view" ambiguous="YES" id="uJQ-2U-CmX">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -387,7 +387,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="Item 3" identifier="" id="rc1-dI-cPS" userLabel="3">
-                                                    <view key="view" ambiguous="YES" id="3Dw-vN-00k">
+                                                    <view key="view" id="3Dw-vN-00k">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -917,12 +917,12 @@
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="lvj-w0-5gk"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="kmC-cy-Z7Y"/>
-                    <toolbarItem implicitItemIdentifier="DD4E9017-1230-4E79-B766-60C4F208148F" label="Diagnosis" paletteLabel="Diagnosis" tag="-1" selectable="YES" id="P7V-Ww-1rB">
+                    <toolbarItem implicitItemIdentifier="DD4E9017-1230-4E79-B766-60C4F208148F" label="Diagnosis" paletteLabel="Diagnosis" tag="-1" image="NSAdvanced" selectable="YES" id="P7V-Ww-1rB">
                         <connections>
                             <action selector="DiagnosisClick:" target="Voe-Tx-rLC" id="TJD-2F-JcR"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="67E981F2-4AE0-4EEF-919C-C445E7DBBFB5" label="About" paletteLabel="About" tag="-1" selectable="YES" id="NdC-zt-OfG">
+                    <toolbarItem implicitItemIdentifier="67E981F2-4AE0-4EEF-919C-C445E7DBBFB5" label="About" paletteLabel="About" tag="-1" image="NSInfo" selectable="YES" id="NdC-zt-OfG">
                         <connections>
                             <action selector="AboutClick:" target="Voe-Tx-rLC" id="ZQy-dr-9Mz"/>
                         </connections>
@@ -972,7 +972,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
@@ -1870,7 +1870,9 @@
         </customView>
     </objects>
     <resources>
+        <image name="NSAdvanced" width="32" height="32"/>
         <image name="NSComputer" width="32" height="32"/>
+        <image name="NSInfo" width="32" height="32"/>
         <image name="NSMultipleDocuments" width="32" height="32"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSTouchBarFolderCopyToTemplate" width="26" height="30"/>
