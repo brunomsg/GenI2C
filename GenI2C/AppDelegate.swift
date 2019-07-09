@@ -1571,9 +1571,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             for line in 0..<ioregStrings.count {
                 if ioregStrings[line].contains("<class VoodooI2CDeviceNub") {
                     openline = line + 2
-                }
-                if ioregStrings[line] == "  | }" {
-                    closeline = line - 1
+                    for i in 1..<ioregStrings.count - line {
+                        if ioregStrings[line + i].contains("}") {
+                            closeline = line + i - 1
+                            break
+                        }
+                    }
+                    break
                 }
             }
             var ioregVoodooI2C = [String](repeating: "", count: closeline - openline + 1)
