@@ -1295,7 +1295,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         let pipe1 = Pipe()
         b.standardOutput = pipe1
         b.launchPath = "/usr/bin/log"
-        b.arguments = ["show", "--predicate", "(eventMessage CONTAINS[c] \"VoodooI2C\") || (eventMessage CONTAINS[c] \"VoodooGPIO\")", "--start", "\(curDate)"]
+        b.arguments = ["show", "--predicate", "(eventMessage CONTAINS[c] \"VoodooI2C\") || (eventMessage CONTAINS[c] \"VoodooGPIO\")", "--last", "boot"]// "--start", "\(curDate)"]
         b.launch()
         b.waitUntilExit()
         var data:Data
@@ -1370,6 +1370,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     @IBAction func Diagnosis(_ sender: Any) {
+        State1.isHidden = true
+        State2.isHidden = true
+        State3.isHidden = true
+        State4.isHidden = true
+        State5.isHidden = true
+        State6.isHidden = true
         Indicator1.startAnimation(self)
         Indicator2.startAnimation(self)
         Indicator3.startAnimation(self)
@@ -1496,18 +1502,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         } else {
             isVooLoaded = true
             StateLabel.stringValue += NSLocalizedString("Loaded", comment: "")
-            let Satellites = ["HID", "ELAN", "Synaptics", "CFTE", "AtmelMXT", "UPDDEngine"]
+            let Satellites = ["com.alexandred.VoodooI2CHID", "me.kishorprins.VoodooI2CELAN", "com.alexandred.VoodooI2CSynaptics", "me.kishorprins.VoodooI2CFTE", "org.coolstar.VoodooI2CAtmelMXT", "com.blankmac.VoodooI2CUPDDEngine"]
             for i in Satellites {
                 let Satellite = Process()
                 let SatellitePipe = Pipe()
                 Satellite.standardOutput = SatellitePipe
                 Satellite.launchPath = "/usr/sbin/kextstat"
-                Satellite.arguments = ["-b", "com.alexandred.VoodooI2C" + i]
+                Satellite.arguments = ["-b", i]
                 Satellite.launch()
                 let Satellitedata = SatellitePipe.fileHandleForReading.readDataToEndOfFile()
                 let SatelliteStrings = String(data: Satellitedata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
                 if SatelliteStrings.count > 2 {
-                    SatelliteLabel.stringValue += "VoodooI2C" + i + " "
+                    SatelliteLabel.stringValue += i + " "
                 }
             }
             let ioregPCI = Process()
