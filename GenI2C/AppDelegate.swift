@@ -10,9 +10,9 @@ import Cocoa
 
 var CPUInfo:String = "", NativeDeviceName:String = "", NativePin = "", isVooLoaded:Bool = false, isNameFound:Bool = false, isPinFound:Bool = false
 var TPAD:String = "", Device:String = "", DSDTFile:String = "", Paranthesesopen:String = "", Paranthesesclose:String = "", DSDTLine:String = "", scope:String = "", Spacing:String = "", APICNAME:String = "", SLAVName:String = "", GPIONAME:String = "", APICPin:String = "", HexTPAD:String = "", BlockBus:String = "", HexBlockBus:String = "", FolderPath:String = "\(NSHomeDirectory())/desktop/I2C-PATCH", BlockSSDT = [String](repeating: "", count: 16), GPI0SSDT = [String](repeating: "", count: 16), ScopeSelect:String = "", RenameFile:String = "", HexI2C:String = "", HexI2X:String = ""
-var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6), SKL_CTRL = [String](repeating: "", count: 65)
+var ManualGPIO = [String](repeating: "", count: 9), ManualAPIC = [String](repeating: "", count: 7),  ManualSPED = [String](repeating: "", count: 2), CRSInfo = [String](), CNL_H_SPED = [String](repeating: "", count: 44), Code = [String](), lines = [String](), IfLLess = [String](repeating: "", count: 6), IfLEqual = [String](repeating: "", count: 6), If2Brackets = [String](repeating: "", count: 6), MultiScope = [String](repeating: "", count: 6)
 var Matched:Bool = false, CRSPatched:Bool = false, ExUSTP:Bool = false, ExSSCN:Bool = false, ExFMCN:Bool = false, ExAPIC:Bool = false, ExSLAV:Bool = false, ExGPIO:Bool = false, CatchSpacing:Bool = false, APICNameLineFound:Bool = false, SLAVNameLineFound:Bool = false, GPIONameLineFound:Bool = false, InterruptEnabled:Bool = false, PollingEnabled:Bool = false, Hetero:Bool = false, BlockI2C:Bool = false, ExI2CM:Bool = false, ExBADR:Bool = false, ExHID2:Bool = false, LLess:Bool = false, LEqual:Bool = false, If2BracketsBool:Bool = false, MultiTPAD:Bool = false, MultiScopeBool:Bool = false
-var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1, MultiScopeCount:Int = 0, MultiTPADLineCount = [Int](repeating: 0, count: 6), MultiTPADLineCountIndex:Int = 0, MultiTPADUSRSelect:Int = 0, TargetTPAD:Int = 0, isSKL:Int = 0
+var line:Int = 0, i:Int = 0, n:Int = 0, total:Int = 0, APICPinLine:Int = 0, GPIOPinLine:Int = 0, APICPIN:Int = 0, GPIOPIN:Int = 0, GPIOPIN2:Int = 0, GPIOPIN3:Int = 0, APICNameLine:Int = 0, SLAVNameLine:Int = 0, GPIONAMELine:Int = 0, CheckConbLine:Int = 0, Choice:Int = -1, preChoice:Int = -1, ScopeLine:Int = 0, count:Int = 0, CRSLocation:Int = 0, CheckSLAVLocation:Int = 0, CPUChoice:Int = -1, MultiScopeCount:Int = 0, MultiTPADLineCount = [Int](repeating: 0, count: 6), MultiTPADLineCountIndex:Int = 0, MultiTPADUSRSelect:Int = 0, TargetTPAD:Int = 0
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
@@ -112,17 +112,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     
     @IBAction func SelectCPU(_ sender: Any) {
         CPUChoice = (sender as! NSButton).tag
-        if CPUChoice == 0 {
-            isSkylake.isEnabled = true
-        } else {
-            isSkylake.isEnabled = false
-        }
         Next3.isEnabled = true
-    }
-    
-    @IBOutlet weak var isSkylake: NSButton!
-    @IBAction func Skylake(_ sender: Any) {
-        isSKL = isSkylake.state.rawValue
     }
     
     @IBAction func InputAPICPin(_ sender: Any) {
@@ -178,10 +168,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
             let CPUModel = CPUInfo.components(separatedBy: " ")[2].components(separatedBy: "-")[1]
             if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)] == "6" {
                 CPUChoice = 0
-                isSKL = 1
             } else if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)] == "7" {
                 CPUChoice = 1
-                isSKL = 0
             } else if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 0)] == "8" {
                 if CPUModel.count == 5 {
                     if CPUModel[CPUModel.index(CPUModel.startIndex, offsetBy: 4)] == "H" {
@@ -201,18 +189,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         }
     }
     
+    @IBAction func Next3(_ sender: Any) {
+        TabView.selectNextTabViewItem(Any?.self)
+    }
+    
     @IBAction func Next2(_ sender: Any) {
         verbose(text: "\nDevice: \(TPAD)\n")
         HexTPAD = Data(TPAD.utf8).map{String(format: "%02x", $0)}.joined()
         verbose(text: "\(HexTPAD)\n")
         Countline()
-    }
-    
-    @IBAction func Next3(_ sender: Any) {
-        TabView.selectNextTabViewItem(Any?.self)
-        if isSKL == 1 {
-            GenSKL()
-        }
     }
     
     @IBAction func Next4(_ sender: Any) {
@@ -860,12 +845,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 Filehead[1] = "{"
                 Filehead[2] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ", DeviceObj)"
                 if CheckSLAVLocation < CRSLocation {
-                    Filehead[3] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + "." + SLAVName + ", UnknownObj)"
+                    Filehead[3] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + "." + SLAVName + ", IntObj)"
                     if (PollingEnabled && ExAPIC && Hetero == false) || APICPIN < 47 && APICPIN != 0 && ExAPIC && Hetero == false {
-                        Filehead[4] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + "." + APICNAME + ", UnknownObj)"
+                        Filehead[4] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + "." + APICNAME + ", IntObj)"
                     }
                     if InterruptEnabled && ExGPIO && (APICPIN > 47 || APICPIN == 0 || ExAPIC == false) {
-                        Filehead[5] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + "." + GPIONAME + ", UnknownObj)"
+                        Filehead[5] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + "." + GPIONAME + ", IntObj)"
                     }
                 }
                 
@@ -888,7 +873,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     }
                 }
                 if ExI2CM {
-                    Filehead[24] = "    External(_SB.PCI0.I2C" + scope + ".I2CX, UnknownObj)"
+                    Filehead[24] = "    External(_SB.PCI0.I2C" + scope + ".I2CX, IntObj)"
                     Filehead[25] = "    External(_SB.PCI0.I2CM, MethodObj)"
                     Filehead[26] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, IntObj)"
                     Filehead[27] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".SPED, IntObj)"
@@ -897,7 +882,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                     Filehead[28] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".BADR, IntObj)"
                 }
                 if ExHID2 {
-                    Filehead[29] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".HID2, UnknownObj)"
+                    Filehead[29] = "    External(_SB.PCI0.I2C" + scope + "." + TPAD + ".HID2, IntObj)"
                 }
                 if ExUSTP {
                     Filehead[30] = "    Name (USTP, One)"
@@ -965,13 +950,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 RenameLabel.string += "    Find _STA:          5F 53 54 41\n"
                 RenameLabel.string += "    Replace XSTA:       58 53 54 41\n"
                 RenameLabel.string += "    Target Bridge GPI0: 47 50 49 30\n\n"
-            }
-            if isSKL == 1 {
-                RenameLabel.string += "    Find I2C" + scope + ":          " + HexI2C + "\n"
-                RenameLabel.string += "    Replace I2X" + scope + ":       " + HexI2X + "\n"
-                RenameLabel.string += "    Find _STA:          5F 53 54 41\n"
-                RenameLabel.string += "    Replace XSTA:       58 53 54 41\n"
-                RenameLabel.string += "    Target Bridge I2X" + scope + ": " + HexI2X + "\n"
             }
             if ExUSTP && BlockI2C == false {
                 RenameLabel.string += "    Find USTP:          55 53 54 50 08\n"
@@ -1077,92 +1055,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
     }
     
     func GenSKL() {
-        for GenIndex in 0...3 {
-            HexI2C += Data((("I2C" + scope)[("I2C" + scope).index(("I2C" + scope).startIndex, offsetBy: GenIndex)..<("I2C" + scope).index(("I2C" + scope).startIndex, offsetBy: GenIndex + 1)]).utf8).map{String(format: "%02x", $0)}.joined() + " "
-            HexI2X += Data((("I2X" + scope)[("I2X" + scope).index(("I2X" + scope).startIndex, offsetBy: GenIndex)..<("I2X" + scope).index(("I2X" + scope).startIndex, offsetBy: GenIndex + 1)]).utf8).map{String(format: "%02x", $0)}.joined() + " "
-        }
-        SKL_CTRL[0] = "/*"
-        SKL_CTRL[1] = " * Find I2C" + scope + ":          " + HexI2C
-        SKL_CTRL[2] = " * Replace I2X" + scope + ":       " + HexI2X
-        SKL_CTRL[3] = " *"
-        SKL_CTRL[4] = " * Find _STA:          5F 53 54 41"
-        SKL_CTRL[5] = " * Replace XSTA:       58 53 54 41"
-        SKL_CTRL[6] = " * Target Bridge I2X" + scope + ": " + HexI2X
-        SKL_CTRL[7] = " */"
-        SKL_CTRL[8] = "DefinitionBlock(\"\", \"SSDT\", 2, \"hack\", \"I2C\(scope)-SKL\", 0)"
-        SKL_CTRL[9] = "{"
-        SKL_CTRL[10] = "    External(_SB.PCI0.I2X" + scope + ", DeviceObj)"
-        SKL_CTRL[11] = "    External(SB1" + scope + ", FieldUnitObj)"
-        SKL_CTRL[12] = "    External(SMD" + scope + ", FieldUnitObj)"
-        SKL_CTRL[13] = "    External(SB0" + scope + ", FieldUnitObj)"
-        SKL_CTRL[14] = "    External(SIR" + scope + ", FieldUnitObj)"
-        SKL_CTRL[15] = "    External(_SB.PCI0, DeviceObj)"
-        SKL_CTRL[16] = "    External(_SB.PCI0.GETD, MethodObj)"
-        SKL_CTRL[17] = "    External(_SB.PCI0.LPD0, MethodObj)"
-        SKL_CTRL[18] = "    External(_SB.PCI0.LPD3, MethodObj)"
-        SKL_CTRL[19] = "    External(_SB.PCI0.LHRV, MethodObj)"
-        SKL_CTRL[20] = "    External(_SB.PCI0.LCRS, MethodObj)"
-        SKL_CTRL[21] = "    External(_SB.PCI0.LSTA, MethodObj)"
-        SKL_CTRL[22] = "    Scope (_SB.PCI0.I2X" + scope + ")"
-        SKL_CTRL[23] = "    {"
-        SKL_CTRL[24] = "        Method (_STA, 0, NotSerialized)"
-        SKL_CTRL[25] = "        {"
-        SKL_CTRL[26] = "            Return (0)"
-        SKL_CTRL[27] = "        }"
-        SKL_CTRL[28] = "    }"
-        SKL_CTRL[29] = "    Scope (_SB.PCI0)"
-        SKL_CTRL[30] = "    {"
-        SKL_CTRL[31] = "        Device (I2C" + scope + ")"
-        SKL_CTRL[32] = "        {"
-        SKL_CTRL[33] = "            Name (LINK,\"\\_SB.PCI0.I2C\(scope)\")"
-        SKL_CTRL[34] = "            Method (_PSC, 0, NotSerialized)"
-        SKL_CTRL[35] = "            {"
-        SKL_CTRL[36] = "                Return (GETD (SB1" + scope + "))"
-        SKL_CTRL[37] = "            }"
-        SKL_CTRL[38] = "            Method (_PS0, 0, NotSerialized)"
-        SKL_CTRL[39] = "            {"
-        SKL_CTRL[40] = "                LPD0 (SB1" + scope + ")"
-        SKL_CTRL[41] = "            }"
-        SKL_CTRL[42] = "            Method (_PS3, 0, NotSerialized)"
-        SKL_CTRL[43] = "            {"
-        SKL_CTRL[44] = "                LPD3 (SB1" + scope + ")"
-        SKL_CTRL[45] = "            }"
-        SKL_CTRL[46] = "        }"
-        SKL_CTRL[47] = "    }"
-        SKL_CTRL[48] = "    Scope (_SB.PCI0.I2C" + scope + ")"
-        SKL_CTRL[49] = "    {"
-        SKL_CTRL[50] = "        Name (_HID,\"INT3443\")"
-        SKL_CTRL[51] = "        Method (_HRV, 0, NotSerialized)"
-        SKL_CTRL[52] = "        {"
-        SKL_CTRL[53] = "            Return (LHRV (SB1" + scope + "))"
-        SKL_CTRL[54] = "        }"
-        SKL_CTRL[55] = "        Method (_CRS, 0, NotSerialized)"
-        SKL_CTRL[56] = "        {"
-        SKL_CTRL[57] = "            Return (LCRS (SMD\(scope), SB0\(scope), SIR\(scope)))"
-        SKL_CTRL[58] = "        }"
-        SKL_CTRL[59] = "        Method (_STA, 0, NotSerialized)"
-        SKL_CTRL[60] = "        {"
-        SKL_CTRL[61] = "            Return (LSTA (SMD\(scope)))"
-        SKL_CTRL[62] = "        }"
-        SKL_CTRL[63] = "    }"
-        SKL_CTRL[64] = "}"
-        
-        let path:String = FolderPath + "/SSDT-I2C" + scope + "-CTRL.dsl"
-        var fileContent:String = ""
-        for Genindex in 0..<SKL_CTRL.count{
-            if SKL_CTRL[Genindex] != "" && SKL_CTRL[Genindex] != "\n" {
-                fileContent += SKL_CTRL[Genindex] + "\n"
-            }
-        }
-        try! FileManager.default.createDirectory(atPath: FolderPath, withIntermediateDirectories: true, attributes: nil)
-        if FileManager.default.fileExists(atPath: path) {
-            try! FileManager.default.removeItem(atPath: path)
-            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
-        } else {
-            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
-        }
-        try! fileContent.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
-        iasl(path: path)
+
     }
     
     func GenBlockI2C() {
