@@ -1471,7 +1471,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 if ioregStrings[line].contains("<class VoodooI2CDeviceNub") {
                     openline = line + 2
                     for i in 1..<ioregStrings.count - line {
-                        if ioregStrings[line + i].contains("}") {
+                        if ioregStrings[line + i].contains("}") && !ioregStrings[line + i].contains("=") {
                             closeline = line + i - 1
                             break
                         }
