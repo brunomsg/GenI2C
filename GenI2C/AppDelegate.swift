@@ -1406,7 +1406,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
                 let Satellitedata = SatellitePipe.fileHandleForReading.readDataToEndOfFile()
                 let SatelliteStrings = String(data: Satellitedata, encoding: String.Encoding.utf8)!.components(separatedBy: "\n")
                 if SatelliteStrings.count > 2 {
-                    SatelliteLabel.stringValue += i + " "
+                    SatelliteLabel.stringValue += i.components(separatedBy: ".")[2] + " "
                 }
             }
             let ioregPCI = Process()
