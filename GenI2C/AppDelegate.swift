@@ -1232,7 +1232,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         let DisassemblePipe = Pipe()
         Disassemble.standardOutput = DisassemblePipe
         Disassemble.launchPath = Bundle.main.path(forResource: "iasl", ofType: nil)
-        Disassemble.arguments = ["-dl"]
+        Disassemble.arguments = ["-d"]
         for file in try! FileManager.default.contentsOfDirectory(atPath: AMLPath.stringValue) {
             if file == "DSDT.aml" || (file.contains("SSDT-") && file.contains(".aml")) {
                 Disassemble.arguments?.append(AMLPath.stringValue + file)
@@ -1243,7 +1243,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         if FileManager.default.fileExists(atPath: AMLPath.stringValue + "DSDT.dsl") && (Int((try! FileManager.default.attributesOfItem(atPath: AMLPath.stringValue + "DSDT.aml") as NSDictionary).fileSize()) > 128){
             
         } else {
-            Disassemble.arguments = ["-dl", "-da"]
+            Disassemble.arguments = ["-d", "-da"]
             for file in try! FileManager.default.contentsOfDirectory(atPath: AMLPath.stringValue) {
                 if file == "DSDT.aml" || (file.contains("SSDT-") && file.contains(".aml")) {
                     Disassemble.arguments?.append(AMLPath.stringValue + file)
