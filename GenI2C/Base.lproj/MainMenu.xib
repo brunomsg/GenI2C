@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -41,7 +41,6 @@
                 <outlet property="Indicator6" destination="hfa-xU-8ua" id="7BX-zt-GGS"/>
                 <outlet property="Information" destination="PHJ-AI-Dzw" id="g2h-zW-0X2"/>
                 <outlet property="InputAPICPin" destination="6pp-Al-9XI" id="CyC-yZ-fKt"/>
-                <outlet property="IssueLabel" destination="9EO-Vm-nST" id="M7P-Qu-WjJ"/>
                 <outlet property="MainTab" destination="2zk-3Y-aNv" id="dHY-JD-FSp"/>
                 <outlet property="ModeLabel" destination="Bn3-SP-vYy" id="ych-be-G6v"/>
                 <outlet property="Next1" destination="5CX-x3-MYO" id="rJ4-I8-S99"/>
@@ -69,7 +68,6 @@
                 <outlet property="Version" destination="E3N-e7-Y56" id="jnD-nB-XqV"/>
                 <outlet property="VersionLabel" destination="omV-Z0-nk7" id="cFl-4g-7tU"/>
                 <outlet property="Warning" destination="K6P-36-7Hx" id="NtG-Wf-13M"/>
-                <outlet property="isSkylake" destination="fmm-CG-4Tt" id="lcn-SS-Uil"/>
                 <outlet property="mainWindow" destination="QvC-M9-y7g" id="Fj9-mi-wX8"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
@@ -166,7 +164,7 @@
         <window title="GenI2C" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="300" y="400" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="360"/>
             <value key="maxSize" type="size" width="480" height="360"/>
             <view key="contentView" id="EiT-Mj-1SZ">
@@ -187,7 +185,7 @@
                                             <rect key="frame" x="17" y="23" width="448" height="319"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="i3t-iY-T41">
-                                                <rect key="frame" x="3" y="3" width="442" height="298"/>
+                                                <rect key="frame" x="3" y="3" width="442" height="299"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QBC-Y3-9T4">
@@ -323,15 +321,37 @@
                                                                     <font key="font" metaFont="system"/>
                                                                 </buttonCell>
                                                             </button>
-                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ndn-6D-f7e">
-                                                                <rect key="frame" x="20" y="49" width="442" height="210"/>
+                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r4a-pM-1Vf">
+                                                                <rect key="frame" x="18" y="240" width="71" height="19"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
-                                                                <textFieldCell key="cell" lineBreakMode="clipping" id="9EO-Vm-nST">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Patch for:" id="dxy-hm-Coa">
+                                                                    <font key="font" metaFont="system" size="15"/>
+                                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
                                                             </textField>
+                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X07-fZ-VRd">
+                                                                <rect key="frame" x="19" y="215" width="61" height="18"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="radio" title="Clover" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="aKf-rY-wYQ">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="PatchFor:" target="Voe-Tx-rLC" id="TCX-ZS-tNx"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="DuE-Yn-JIA">
+                                                                <rect key="frame" x="19" y="186" width="84" height="18"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <buttonCell key="cell" type="radio" title="OpenCore" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="y9F-Vl-UNs">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="PatchFor:" target="Voe-Tx-rLC" id="aWA-QH-7EB"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                     </view>
                                                 </tabViewItem>
@@ -442,17 +462,6 @@
                                                                 </buttonCell>
                                                                 <connections>
                                                                     <action selector="Back3:" target="Voe-Tx-rLC" id="fdy-5E-FVl"/>
-                                                                </connections>
-                                                            </button>
-                                                            <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fmm-CG-4Tt">
-                                                                <rect key="frame" x="-2" y="-2" width="69" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="check" title="Skylake" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="mA8-iE-ict">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <action selector="Skylake:" target="Voe-Tx-rLC" id="AS5-o7-qqB"/>
                                                                 </connections>
                                                             </button>
                                                             <button verticalHuggingPriority="750" fixedFrame="YES" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="NZb-Qo-a0j">
@@ -659,7 +668,7 @@
                                             <rect key="frame" x="17" y="57" width="448" height="285"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="PkD-5b-c9i">
-                                                <rect key="frame" x="3" y="3" width="442" height="264"/>
+                                                <rect key="frame" x="3" y="3" width="442" height="265"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ya7-ne-IBO">
@@ -708,47 +717,47 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="0uq-GA-iK0">
-                                                        <rect key="frame" x="402" y="227" width="16" height="16"/>
+                                                        <rect key="frame" x="402" y="228" width="16" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     </progressIndicator>
                                                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="F68-zW-qt0">
-                                                        <rect key="frame" x="402" y="202" width="16" height="16"/>
+                                                        <rect key="frame" x="402" y="203" width="16" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     </progressIndicator>
                                                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="pAr-za-x0S">
-                                                        <rect key="frame" x="402" y="177" width="16" height="16"/>
+                                                        <rect key="frame" x="402" y="178" width="16" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     </progressIndicator>
                                                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="NGC-5x-9JY">
-                                                        <rect key="frame" x="402" y="152" width="16" height="16"/>
+                                                        <rect key="frame" x="402" y="153" width="16" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     </progressIndicator>
                                                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="1m8-CX-r93">
-                                                        <rect key="frame" x="402" y="127" width="16" height="16"/>
+                                                        <rect key="frame" x="402" y="128" width="16" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     </progressIndicator>
                                                     <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xTO-ov-9Q5">
-                                                        <rect key="frame" x="401" y="226" width="17" height="17"/>
+                                                        <rect key="frame" x="401" y="227" width="17" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="bJA-MJ-jVB"/>
                                                     </imageView>
                                                     <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sg9-gv-ZJM">
-                                                        <rect key="frame" x="401" y="201" width="17" height="17"/>
+                                                        <rect key="frame" x="401" y="202" width="17" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="0Ge-2j-Baz"/>
                                                     </imageView>
                                                     <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DEW-9e-mH8">
-                                                        <rect key="frame" x="401" y="176" width="17" height="17"/>
+                                                        <rect key="frame" x="401" y="177" width="17" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="Bjg-ir-eic"/>
                                                     </imageView>
                                                     <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pJJ-xr-NPr">
-                                                        <rect key="frame" x="401" y="152" width="17" height="17"/>
+                                                        <rect key="frame" x="401" y="153" width="17" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="YwW-BU-0uW"/>
                                                     </imageView>
                                                     <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qyW-ws-Yjt">
-                                                        <rect key="frame" x="401" y="127" width="17" height="17"/>
+                                                        <rect key="frame" x="401" y="128" width="17" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="Ccx-XM-tjz"/>
                                                     </imageView>
@@ -762,11 +771,11 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="hfa-xU-8ua">
-                                                        <rect key="frame" x="402" y="102" width="16" height="16"/>
+                                                        <rect key="frame" x="402" y="103" width="16" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     </progressIndicator>
                                                     <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qgT-Xa-LoD">
-                                                        <rect key="frame" x="401" y="101" width="17" height="17"/>
+                                                        <rect key="frame" x="401" y="102" width="17" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="eia-Hw-Y0T"/>
                                                     </imageView>
@@ -827,7 +836,7 @@
                                             <rect key="frame" x="226" y="187" width="238" height="17"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Copyright © 2019 梁怀宇. All rights reserved" id="7My-v9-yrG">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -972,7 +981,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="921"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1080"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
@@ -983,7 +992,7 @@
                         <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="R5C-z3-a9M">
                             <rect key="frame" x="0.0" y="0.0" width="440" height="250"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="axz-RV-WcV">
                                     <rect key="frame" x="0.0" y="0.0" width="440" height="250"/>
