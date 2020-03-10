@@ -1,7 +1,6 @@
 # GenI2C
 
 [![Build Status](https://dev.azure.com/UndefinedSS/GenI2C/_apis/build/status/williambj1.GenI2C?branchName=master)](https://dev.azure.com/UndefinedSS/GenI2C/_build/latest?definitionId=1&branchName=master)
-[![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-red.svg)](https://creativecommons.org/licenses/by-nc/4.0/legalcode)
 [![Release](https://img.shields.io/github/release/williambj1/GenI2C.svg)](https://github.com/williambj1/GenI2C/releases)
 [![Language](https://img.shields.io/github/languages/top/williambj1/GenI2C.svg?color=orange&label=swift)](https://github.com/williambj1/GenI2C)
 [![Repo Size](https://img.shields.io/github/repo-size/williambj1/GenI2C.svg?color=blueviolet)](https://github.com/williambj1/GenI2C)
@@ -11,6 +10,14 @@
 Generate SSDT hotpatches for your Touchable Device and get ready for VoodooI2C! 😜
 
 **[简体中文](https://github.com/williambj1/GenI2C/wiki/Readme-CN)**
+
+## WARNING
+
+THIS TOOL IS *NOT* SUPPORTED BY VoodooI2C DEVELOPER TEAM
+
+DO NOT REQUEST ANY SUPPORT FROM VOODOOI2C GITTER CHAT ROOM WITH ANY INFORMATION GENERATED FROM THIS APPLICATION. INFORMATION INCLUDED BUT NOT LIMITED TO SCREENSHOTS, GENERATED PATCHES, SYSTEM LOGS.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## Download
 
@@ -54,7 +61,7 @@ Generate SSDT hotpatches for your Touchable Device and get ready for VoodooI2C! 
 
 ## Donation
 
-**Writing Code and Debugging are not easy, if you appreciate my work, please buy me a coffee. It's not required but will be highly appreciated.😋😋😋**
+**Writing Code and Debugging are not easy, if you appreciate my work, please buy me a coffee. It's not required but will be highly appreciated😋😋😋.**
 
 <details>
 <summary>WeChat Pay & Alipay</summary>
