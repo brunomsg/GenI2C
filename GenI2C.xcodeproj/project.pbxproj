@@ -18,7 +18,7 @@
 		8B511CC122C9B01E0082ED70 /* GenReadme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B511CC022C9B01E0082ED70 /* GenReadme.swift */; };
 		8BB738DE22C65B430071A5D1 /* Problem diagnosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB738DD22C65B430071A5D1 /* Problem diagnosis.swift */; };
 		BC2BBE1024179E160013B2BB /* ReadDSDT.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2BBE0F24179E160013B2BB /* ReadDSDT.swift */; };
-		BC2BBE122417A67C0013B2BB /* Variate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2BBE112417A67C0013B2BB /* Variate.swift */; };
+		BC2BBE122417A67C0013B2BB /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2BBE112417A67C0013B2BB /* Variable.swift */; };
 		BCE1D5462417D313002ECD78 /* GetInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D5452417D313002ECD78 /* GetInfo.swift */; };
 		BCE1D5482417DCEB002ECD78 /* Analysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D5472417DCEB002ECD78 /* Analysis.swift */; };
 		BCE1D54A2417DEE8002ECD78 /* Analysis2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D5492417DEE8002ECD78 /* Analysis2.swift */; };
@@ -31,6 +31,7 @@
 		BCE1D5582417E3D0002ECD78 /* GenAPIC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D5572417E3D0002ECD78 /* GenAPIC.swift */; };
 		BCE1D55A2417E3F2002ECD78 /* GenSSDT.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D5592417E3F2002ECD78 /* GenSSDT.swift */; };
 		BCE1D55E2417E47A002ECD78 /* GenSPED.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D55D2417E47A002ECD78 /* GenSPED.swift */; };
+		BCE1D56024189896002ECD78 /* GetVarPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D55F24189896002ECD78 /* GetVarPath.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +72,7 @@
 		8B511CC022C9B01E0082ED70 /* GenReadme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenReadme.swift; sourceTree = "<group>"; };
 		8BB738DD22C65B430071A5D1 /* Problem diagnosis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Problem diagnosis.swift"; sourceTree = "<group>"; };
 		BC2BBE0F24179E160013B2BB /* ReadDSDT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadDSDT.swift; sourceTree = "<group>"; };
-		BC2BBE112417A67C0013B2BB /* Variate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variate.swift; sourceTree = "<group>"; };
+		BC2BBE112417A67C0013B2BB /* Variable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variable.swift; sourceTree = "<group>"; };
 		BCE1D5452417D313002ECD78 /* GetInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetInfo.swift; sourceTree = "<group>"; };
 		BCE1D5472417DCEB002ECD78 /* Analysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analysis.swift; sourceTree = "<group>"; };
 		BCE1D5492417DEE8002ECD78 /* Analysis2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analysis2.swift; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 		BCE1D5572417E3D0002ECD78 /* GenAPIC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenAPIC.swift; sourceTree = "<group>"; };
 		BCE1D5592417E3F2002ECD78 /* GenSSDT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenSSDT.swift; sourceTree = "<group>"; };
 		BCE1D55D2417E47A002ECD78 /* GenSPED.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenSPED.swift; sourceTree = "<group>"; };
+		BCE1D55F24189896002ECD78 /* GetVarPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetVarPath.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,8 +150,9 @@
 				BCE1D5552417E3B8002ECD78 /* GenGPIO.swift */,
 				BCE1D5572417E3D0002ECD78 /* GenAPIC.swift */,
 				BCE1D5592417E3F2002ECD78 /* GenSSDT.swift */,
+				BCE1D55F24189896002ECD78 /* GetVarPath.swift */,
 				BCE1D54D2417E281002ECD78 /* Functions.swift */,
-				BC2BBE112417A67C0013B2BB /* Variate.swift */,
+				BC2BBE112417A67C0013B2BB /* Variable.swift */,
 				8B511CC022C9B01E0082ED70 /* GenReadme.swift */,
 				8BB738DD22C65B430071A5D1 /* Problem diagnosis.swift */,
 				8B3271AA229A5E3E005FCBB7 /* Assets.xcassets */,
@@ -322,10 +325,11 @@
 				BCE1D55A2417E3F2002ECD78 /* GenSSDT.swift in Sources */,
 				BCE1D54A2417DEE8002ECD78 /* Analysis2.swift in Sources */,
 				BCE1D54C2417DF46002ECD78 /* Analysis3.swift in Sources */,
-				BC2BBE122417A67C0013B2BB /* Variate.swift in Sources */,
+				BC2BBE122417A67C0013B2BB /* Variable.swift in Sources */,
 				BCE1D5582417E3D0002ECD78 /* GenAPIC.swift in Sources */,
 				BCE1D54E2417E281002ECD78 /* Functions.swift in Sources */,
 				BC2BBE1024179E160013B2BB /* ReadDSDT.swift in Sources */,
+				BCE1D56024189896002ECD78 /* GetVarPath.swift in Sources */,
 				BCE1D55E2417E47A002ECD78 /* GenSPED.swift in Sources */,
 				BCE1D5522417E35B002ECD78 /* PatchCRS2APIC.swift in Sources */,
 				BCE1D5542417E37F002ECD78 /* APIC2GPIO.swift in Sources */,

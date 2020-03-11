@@ -48,7 +48,30 @@ func PatchCRS2GPIO() {
             GPI0SSDT[14] = #"    }"#
             GPI0SSDT[15] = #"}"#
         } else {
-            
+            var GPI0STA = [String]()
+            var line:Int = 0
+            var spaceopen, spaceclose, startline, closeline:Int
+            var Paranthesesopen:String = ""
+            var Paranthesesclose:String = ""
+            while line < GPI0Lines.count {
+                if GPI0Lines[line].contains("Method (_STA") {
+                    startline = line + 1
+                    Paranthesesopen = GPI0Lines[line + 1]
+                    line += 1
+                    spaceopen = Paranthesesopen.positionOf(sub: "{")
+                    repeat {
+                        Paranthesesclose = GPI0Lines[line]
+                        line += 1
+                        spaceclose = Paranthesesclose.positionOf(sub: "}")
+                        closeline = line
+                    } while spaceclose != spaceopen
+                    GPI0STA = [String](repeating: "", count: closeline - startline + 1)
+                    for i in startline...closeline {
+                        GPI0STA[i - startline] = GPI0Lines[i - 1]
+                    }
+                }
+                line += 1
+            }
         }
         
         var SSDT:String = ""

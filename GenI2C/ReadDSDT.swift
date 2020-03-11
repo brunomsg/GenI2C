@@ -23,13 +23,14 @@ var MultiScope = [String](repeating: "", count: 6)
 var MultiScopeCount:Int = 0
 var MultiTPADLineCount = [Int](repeating: 0, count: 6)
 var MultiTPADLineCountIndex:Int = 0
+var GPI0Lines = [String]()
 
 func ReadDSDT() {
     
     var line:Int = 0
+    var DSDTLine:String = ""
     var Paranthesesopen:String = ""
     var Paranthesesclose:String = ""
-    var DSDTLine:String = ""
     
     //Verbose?.string += "start"//verbose(text: "Start func : Countline()")
     let readHandler =  FileHandle(forReadingAtPath: DSDTFile)
@@ -42,6 +43,7 @@ func ReadDSDT() {
     ExSSCN = false
     ExFMCN = false
     total = 0
+
     while line < count
     {
         DSDTLine = lines[line]
@@ -58,19 +60,20 @@ func ReadDSDT() {
             //AD.verbose(text: "Found for FMCN in DSDT at line \(line)\n")
             ExFMCN = true
         }
-        var spaceopen, spaceclose, startline:Int
         if DSDTLine.contains(Device){
+            var spaceopen, spaceclose, startline:Int
+            
             if Matched {
                 MultiTPAD = true
                 MultiScopeBool = false
                 total = 0
             }
-           // AD.verbose(text: "Found for \(Device) in DSDT at line \(line)\n")
+            //AD.verbose(text: "Found for \(Device) in DSDT at line \(line)\n")
             startline = line
             Paranthesesopen = lines[line]
             line += 1
             spaceopen = Paranthesesopen.positionOf(sub: "{")
-            repeat{
+            repeat {
                 Paranthesesclose = lines[line]
                 line += 1
                 spaceclose = Paranthesesclose.positionOf(sub: "}")
@@ -96,6 +99,23 @@ func ReadDSDT() {
             Matched = true
             MultiTPADLineCount[MultiTPADLineCountIndex] = total
             MultiTPADLineCountIndex += 1
+        }
+        if DSDTLine.contains("Device (GPI0)") {
+            var spaceopen, spaceclose, startline, closeline:Int
+            startline = line
+            Paranthesesopen = lines[line]
+            line += 1
+            spaceopen = Paranthesesopen.positionOf(sub: "{")
+            repeat {
+                Paranthesesclose = lines[line]
+                line += 1
+                spaceclose = Paranthesesclose.positionOf(sub: "}")
+                closeline = line
+            } while spaceclose != spaceopen
+            GPI0Lines = [String](repeating: "", count: closeline - startline + 1)
+            for i in startline...closeline {
+                GPI0Lines[i - startline] = lines[i - 1]
+            }
         }
     }
 }
