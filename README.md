@@ -65,6 +65,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 <details>
 <summary>WeChat Pay & Alipay</summary>
-<img src="https://img.rruu.net/image/5e707e7a1aff7" align=center>
-<img src="https://img.rruu.net/image/5e707ea58ede8" align=center>
+<img src="https://ae01.alicdn.com/kf/U8f449565bed240fc93de99bec805d013q.jpg" align=center>
+<img src="https://ae01.alicdn.com/kf/Uf2e732f03573407e883ca4120cc7df8fB.jpg" align=center>
 </details>
