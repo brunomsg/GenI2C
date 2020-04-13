@@ -32,6 +32,7 @@
 		BCE1D55A2417E3F2002ECD78 /* GenSSDT.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D5592417E3F2002ECD78 /* GenSSDT.swift */; };
 		BCE1D55E2417E47A002ECD78 /* GenSPED.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D55D2417E47A002ECD78 /* GenSPED.swift */; };
 		BCE1D56024189896002ECD78 /* GetVarPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D55F24189896002ECD78 /* GetVarPath.swift */; };
+		BCE1D566241A347B002ECD78 /* _STA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE1D565241A347B002ECD78 /* _STA.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		BCE1D5592417E3F2002ECD78 /* GenSSDT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenSSDT.swift; sourceTree = "<group>"; };
 		BCE1D55D2417E47A002ECD78 /* GenSPED.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenSPED.swift; sourceTree = "<group>"; };
 		BCE1D55F24189896002ECD78 /* GetVarPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetVarPath.swift; sourceTree = "<group>"; };
+		BCE1D565241A347B002ECD78 /* _STA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _STA.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 				BCE1D5592417E3F2002ECD78 /* GenSSDT.swift */,
 				BCE1D55F24189896002ECD78 /* GetVarPath.swift */,
 				BCE1D54D2417E281002ECD78 /* Functions.swift */,
+				BCE1D565241A347B002ECD78 /* _STA.swift */,
 				BC2BBE112417A67C0013B2BB /* Variable.swift */,
 				8B511CC022C9B01E0082ED70 /* GenReadme.swift */,
 				8BB738DD22C65B430071A5D1 /* Problem diagnosis.swift */,
@@ -328,6 +331,7 @@
 				BC2BBE122417A67C0013B2BB /* Variable.swift in Sources */,
 				BCE1D5582417E3D0002ECD78 /* GenAPIC.swift in Sources */,
 				BCE1D54E2417E281002ECD78 /* Functions.swift in Sources */,
+				BCE1D566241A347B002ECD78 /* _STA.swift in Sources */,
 				BC2BBE1024179E160013B2BB /* ReadDSDT.swift in Sources */,
 				BCE1D56024189896002ECD78 /* GetVarPath.swift in Sources */,
 				BCE1D55E2417E47A002ECD78 /* GenSPED.swift in Sources */,

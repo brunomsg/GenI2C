@@ -144,5 +144,6 @@ func GetPath(Name:String) -> String {
             AllPATH += PATH + "\n"
         }
     }
+    print(AllPATH)
     return AllPATH
 }

@@ -356,7 +356,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="2" identifier="" id="PEA-LU-tIc">
-                                                    <view key="view" id="9U2-N1-s5z">
+                                                    <view key="view" ambiguous="YES" id="9U2-N1-s5z">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -407,7 +407,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="Item 3" identifier="" id="rc1-dI-cPS" userLabel="3">
-                                                    <view key="view" ambiguous="YES" id="3Dw-vN-00k">
+                                                    <view key="view" id="3Dw-vN-00k">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -981,7 +981,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES"/>
             <rect key="contentRect" x="1076" y="506" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1080"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="480" height="270"/>
             <view key="contentView" id="hJs-94-vct">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>

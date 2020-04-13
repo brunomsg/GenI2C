@@ -72,6 +72,8 @@ func PatchCRS2GPIO() {
                 }
                 line += 1
             }
+            line = 0
+            STA(STACode: GPI0STA, mode: 0)
         }
         
         var SSDT:String = ""

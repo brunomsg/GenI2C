@@ -43,6 +43,8 @@ func ReadDSDT() {
     ExSSCN = false
     ExFMCN = false
     total = 0
+    
+    GetPath(Name: "_STA")
 
     while line < count
     {
