@@ -1358,7 +1358,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTextFieldDelegate {
         // Insert code here to initialize your application
         let attention = NSAlert()
         attention.messageText = "Terms of Use"
-        attention.informativeText = "THIS TOOL IS NOT SUPPORTED BY VoodooI2C DEVELOPER TEAM\n\nDO NOT REQUEST ANY SUPPORT FROM VOODOOI2C GITTER CHAT ROOM WITH ANY INFORMATION GENERATED FROM THIS APPLICATION. INFORMATION INCLUDED BUT NOT LIMITED TO SCREENSHOTS, GENERATED PATCHES, SYSTEM LOGS."
+        attention.informativeText = "THIS SOFTWARE IS *NOT* SUPPORTED BY THE VoodooI2C DEVELOPER TEAM\n\nDO NOT REQUEST ANY SUPPORT FROM GITHUB ISSUES IN VoodooI2C OR THE VoodooI2C GITTER CHAT ROOM WITH ANY INFORMATION GENERATED FROM THIS APPLICATION. INFORMATION INCLUDED BUT NOT LIMITED TO SCREENSHOTS, GENERATED PATCHES, SYSTEM LOGS.\n\nAutomated patches are not granted to always correct, please open an issue if you descovered a bug, pull requests will be highly appreciated.\n\nThis software is released under the MIT License."
         attention.addButton(withTitle: "Agree")
         attention.addButton(withTitle: "Disagree")
         attention.beginSheetModal(for: self.window, completionHandler: {response -> Void in
